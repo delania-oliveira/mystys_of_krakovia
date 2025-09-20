@@ -9,7 +9,6 @@ services:
       - DATABASE_URL=postgres://test:123456@db:5432/colyseus
     volumes:
       - .:/app   
-      - /app/node_modules
     command: npm start
   db:
     image: bitnami/postgresql
@@ -21,7 +20,7 @@ services:
       - POSTGRES_DB=colyseus
       - DATABASE_URL=postgres://test:123456@db:5432/colyseus
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/bitnami/postgresql
 
 volumes:
   db_data:

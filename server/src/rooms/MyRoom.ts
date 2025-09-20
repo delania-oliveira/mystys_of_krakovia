@@ -34,9 +34,9 @@ export class MyRoom extends Room<MyRoomState> {
           const existing = await db.select().from(accounts).where(eq(accounts.account_name, data.name))
           if (existing.length > 0) {
             if (existing[0].password === data.password) {
-              client.send("loginSuccess", {message: "Login Successful!"})
+              client.send("loginResult", { success: true, message: "Login successful!" });
             } else {
-              client.send("loginFail", {message: "Wrong account name or password!"})
+              client.send("loginFail", { success: false, message: "Wrong account name or password!"})
             }
             return
           }
@@ -48,10 +48,10 @@ export class MyRoom extends Room<MyRoomState> {
           if (!newAccount) {
             throw new Error("Failed to create account")
           }
-          client.send("accountCreated", { message: newAccount.account_name })
+          client.send("accountCreated", { success: true, message: newAccount.account_name })
         } catch (error) {
           console.log(error)
-          client.send("loginError", { message: "Database error" })          
+          client.send("loginError", { success: false, message: "Database error" })          
         }
       }
     });

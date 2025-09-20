@@ -7,6 +7,7 @@ import { playground } from "@colyseus/playground";
  */
 import { MyRoom } from "./rooms/MyRoom";
 import { env } from "./env";
+import routes from "./http/routes";
 
 export default config({
 
@@ -23,11 +24,12 @@ export default config({
          * Bind your custom express routes here:
          * Read more: https://expressjs.com/en/starter/basic-routing.html
          */
+        routes.forEach((router) => app.use(router))
         app.get("/hello_world", (req, res) => {
             res.send("It's time to kick ass and chew bubblegum!");
             console.log(env.DATABASE_URL)
         });
-
+        
         /**
          * Use @colyseus/playground
          * (It is not recommended to expose this route in a production environment)

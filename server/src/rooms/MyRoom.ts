@@ -1,6 +1,9 @@
 import { Room, Client } from "@colyseus/core";
 import { MyRoomState } from "./schema/MyRoomState";
 import { Player } from "./schema/Player";
+import { db } from "../db/connection";
+import { accounts } from "../db/schema/accounts";
+import { eq } from "drizzle-orm";
 
 const GRAVITY = 20;
 const JUMP_STRENGTH = 10;
@@ -20,6 +23,36 @@ export class MyRoom extends Room<MyRoomState> {
         player.x += data.x;
         player.y += data.y;
         player.z += data.z;
+      }
+    });
+
+    this.onMessage("login", async (client: Client, data: { name: string; password?: string }) => {
+      const player = this.state.players.get(client.sessionId);
+      if (player) {
+        player.name = data.name;
+        try {
+          const existing = await db.select().from(accounts).where(eq(accounts.account_name, data.name))
+          if (existing.length > 0) {
+            if (existing[0].password === data.password) {
+              client.send("loginSuccess", {message: "Login Successful!"})
+            } else {
+              client.send("loginFail", {message: "Wrong account name or password!"})
+            }
+            return
+          }
+          const result = await db.insert(accounts).values({
+            account_name: data.name,
+            password: data.password
+          }).returning()
+          const newAccount = result[0]
+          if (!newAccount) {
+            throw new Error("Failed to create account")
+          }
+          client.send("accountCreated", { message: newAccount.account_name })
+        } catch (error) {
+          console.log(error)
+          client.send("loginError", { message: "Database error" })          
+        }
       }
     });
 
@@ -66,9 +99,6 @@ export class MyRoom extends Room<MyRoomState> {
     player.x = 0;
     player.y = 0;
     player.z = 0;
-    player.dirZ = -1;
-    player.dirY = 0;
-    player.dirX = 0
     this.state.players.set(client.sessionId, player);
     // THIS will trigger players:add on all clients
   }

@@ -1,12 +1,12 @@
 import config from "@colyseus/tools";
 import { monitor } from "@colyseus/monitor";
 import { playground } from "@colyseus/playground";
-import { Schema, type, MapSchema } from "@colyseus/schema";
 
 /**
  * Import your Room files
  */
 import { MyRoom } from "./rooms/MyRoom";
+import { env } from "./env";
 
 export default config({
 
@@ -25,6 +25,7 @@ export default config({
          */
         app.get("/hello_world", (req, res) => {
             res.send("It's time to kick ass and chew bubblegum!");
+            console.log(env.DATABASE_URL)
         });
 
         /**

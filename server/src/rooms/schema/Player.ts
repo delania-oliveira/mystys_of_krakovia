@@ -11,4 +11,6 @@ export class Player extends Schema {
     @type("number") dirY = 0;
     @type("number") dirZ = -1;
     @type("boolean") isGrounded = true;
+    @type("string") name = "";
+    @type("string") password = "";
 }

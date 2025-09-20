@@ -5,6 +5,8 @@ services:
       - db
     ports:
       - "2567:2567"
+    environment:
+      - DATABASE_URL=postgres://test:123456@db:5432/colyseus
     volumes:
       - .:/app   
       - /app/node_modules
@@ -17,6 +19,7 @@ services:
       - POSTGRES_USER=test
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=colyseus
+      - DATABASE_URL=postgres://test:123456@db:5432/colyseus
     volumes:
       - db_data:/var/lib/postgresql/data
 

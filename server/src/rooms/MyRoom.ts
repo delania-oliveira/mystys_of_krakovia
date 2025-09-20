@@ -29,8 +29,6 @@ export class MyRoom extends Room<MyRoomState> {
         player.dirX = data.dirX;
         player.dirY = 0;
         player.dirZ = data.dirZ;
-        console.log(player.dirX)
-        console.log(player.dirZ)
       }
     });
 
@@ -42,7 +40,7 @@ export class MyRoom extends Room<MyRoomState> {
       }
     });
 
-    this.setSimulationInterval((dtMs) => this.update(dtMs), 50);
+    this.setSimulationInterval((dtMs) => this.update(dtMs), 25);
   }
   update(dtMs: number) {
     const dt = dtMs / 1000; // convert to seconds

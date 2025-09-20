@@ -1,0 +1,25 @@
+services:
+  colyseus:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "2567:2567"
+    volumes:
+      - .:/app   
+      - /app/node_modules
+    command: npm start
+  db:
+    image: bitnami/postgresql
+    ports: 
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=colyseus
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
+    

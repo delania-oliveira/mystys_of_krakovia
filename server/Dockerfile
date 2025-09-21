@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY . ./
 RUN npm install
+RUN npm run build
 
 EXPOSE 2567
-
-CMD ["npm", "start"]
+ENV NODE_ENV=production
+CMD ["node", "build/index.js"]

@@ -1,3 +1,8 @@
-[gd_scene format=3 uid="uid://8huoinl0shh"]
+[gd_scene load_steps=2 format=3 uid="uid://8huoinl0shh"]
+
+[ext_resource type="PackedScene" uid="uid://2iy04eh05ui5" path="res://assets/character/cac-1758665492797.gltf" id="1_a202f"]
 
 [node name="Node3D" type="Node3D"]
+
+[node name="Character Arissa" parent="." instance=ExtResource("1_a202f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29214597, 0, 0.60896087)

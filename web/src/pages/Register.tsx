@@ -25,7 +25,6 @@ type RegisterSchemaType = z.infer<typeof RegisterSchema>;
 
 // Função que simula a chamada a API para verificar o username
 async function checkUsernameAvailability(username: string): Promise<boolean> {
-  console.log(`Verificando username: ${username}`);
   const response = await api.post('/check_username', { username: username })
   return response.data.available;
 }

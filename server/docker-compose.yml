@@ -9,7 +9,7 @@ services:
       - DATABASE_URL=postgres://test:123456@db:5432/colyseus
     volumes:
       - .:/app   
-    command: npm start
+    command: node build/index.js
   db:
     image: bitnami/postgresql
     ports: 

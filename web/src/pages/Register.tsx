@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { data, Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -25,7 +25,6 @@ type RegisterSchemaType = z.infer<typeof RegisterSchema>;
 
 // Função que simula a chamada a API para verificar o username
 async function checkUsernameAvailability(username: string): Promise<boolean> {
-  console.log(`Verificando username: ${username}`);
   const response = await api.post('/check_username', { username: username })
   return response.data.available;
 }

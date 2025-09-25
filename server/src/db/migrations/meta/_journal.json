@@ -8,6 +8,13 @@
       "when": 1758388052757,
       "tag": "0000_common_drax",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1758834427483,
+      "tag": "0001_tricky_the_hand",
+      "breakpoints": true
     }
   ]
 }

@@ -5,8 +5,8 @@ services:
       - db
     ports:
       - "2567:2567"
-    volumes:
-      - .:/app   
+    env_file:
+      - .env.production
     command: node build/index.js
   db:
     image: bitnami/postgresql

@@ -10,7 +10,7 @@ router.get("/accounts/:account_id/characters", async (req, res) => {
   
   const charactersList = await db.select()
                                   .from(schema.characters)
-                                  .where(eq(schema.characters.account_id, parseInt(account_id)))
+                                  .where(eq(schema.characters.account_id, account_id))
                                   .orderBy(desc(schema.characters.level))
 
   res.status(200).json({ characters: charactersList })

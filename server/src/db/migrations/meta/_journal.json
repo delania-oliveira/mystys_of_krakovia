@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1758388052757,
-      "tag": "0000_common_drax",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1758834427483,
-      "tag": "0001_tricky_the_hand",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1758835630566,
-      "tag": "0002_oval_johnny_storm",
+      "when": 1758926666130,
+      "tag": "0000_young_taskmaster",
       "breakpoints": true
     }
   ]

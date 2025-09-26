@@ -14,9 +14,8 @@ services:
       - '5432:5432'
     env_file:
       - .env.docker
-    volumes:
       - db_data:/bitnami/postgresql
-
+      
 volumes:
   db_data:
     

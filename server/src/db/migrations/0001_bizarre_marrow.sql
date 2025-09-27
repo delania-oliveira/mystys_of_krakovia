@@ -1,0 +1,1 @@
+ALTER TABLE "characters" ALTER COLUMN "class" SET DATA TYPE text;

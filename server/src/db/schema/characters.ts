@@ -8,9 +8,9 @@ export const characters = pgTable("characters", {
   y_position: doublePrecision().notNull().default(0),
   z_position: doublePrecision().notNull().default(0),
   name: text().notNull(),
-  class: integer().notNull(),
+  class: text().notNull(),
   level: integer().notNull().default(1),
   health: integer().notNull(),
   mana: integer().notNull(),
-  experience: integer().notNull(),
+  experience: integer().notNull().default(0),
 })

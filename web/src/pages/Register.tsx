@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { api } from '../../api/axios'
 
 const RegisterSchema = z.object({
   username: z.string()
@@ -22,14 +23,10 @@ const RegisterSchema = z.object({
 
 type RegisterSchemaType = z.infer<typeof RegisterSchema>;
 
-// Simula nosso "banco de dados" de usuários existentes
-const existingUsers = ['admin', 'joao', 'ana_dev'];
-
 // Função que simula a chamada a API para verificar o username
 async function checkUsernameAvailability(username: string): Promise<boolean> {
-  console.log(`Verificando username: ${username}`);
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simula latência da rede
-  return !existingUsers.includes(username.toLowerCase());
+  const response = await api.post('/check_username', { username: username })
+  return response.data.available;
 }
 
 export function Register() {
@@ -86,12 +83,14 @@ export function Register() {
       form.setError('username', { type: 'manual', message: 'Este nome de usuário já está em uso.' });
       setIsSubmitting(false);
       return;
+    } else {
+      api.post("/register", {username: data.username, password: data.password})
+      toast.success('Conta criada com sucesso!', {
+        description: `Bem-vindo(a), ${data.username}!`,
+      });
+      setTimeout(() => navigate('/'), 2000);
     }
 
-    toast.success('Conta criada com sucesso!', {
-      description: `Bem-vindo(a), ${data.username}!`,
-    });
-    setTimeout(() => navigate('/'), 2000);
   }
 
   return (

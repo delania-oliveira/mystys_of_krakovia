@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express'
 import { db } from '../../db/connection';
 import { accounts } from '../../db/schema/accounts';
 import { eq } from 'drizzle-orm';
+import { hashPassword } from '../lib/bcrypt';
 
 const router = Router()
 
@@ -12,6 +13,7 @@ interface LoginProps {
 
 router.post("/register", async (req: Request<{}, {}, LoginProps>, res: Response) => {
   const { username, password } = req.body;
+  const hashedPassword = await hashPassword(password)
   try {
     const existing = await db.select().from(accounts).where(eq(accounts.account_name, username))
     if (existing.length > 0) {
@@ -19,7 +21,7 @@ router.post("/register", async (req: Request<{}, {}, LoginProps>, res: Response)
     } else {
       const result = await db.insert(accounts).values({
         account_name: username,
-        password: password
+        password: hashedPassword
       }).returning()
       const newAccount = result[0]
       if (!newAccount) {

@@ -15,9 +15,9 @@ router.post("/check_username", async (req: Request<{}, {}, LoginProps>, res: Res
   try {
     const existing = await db.select().from(accounts).where(eq(accounts.account_name, username))
     if (existing.length > 0) {
-      res.status(401).json( { available: false });
+      res.status(200).json({ available: false });
     } else {
-      res.status(201).json({ available: true });
+      res.status(200).json({ available: true });
     }
   } catch (error) {
     console.log(error)

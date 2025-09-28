@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Layout } from '@/pages/Layout';
 import { Home } from '@/pages/Home';
 import { Register } from '@/pages/Register';
+import { Profile } from './pages/Profile';
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         {/* <Route path="download" element={<Download />} /> */}
         <Route path="*" element={<Home />} />
       </Route>
+      <Route path="profile" element={<Profile />} />
     </Routes>
   );
 }

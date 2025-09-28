@@ -1,5 +1,5 @@
-import { api } from "api/axios"
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
+import { api } from "../../api/axios"
 
 
 interface User {

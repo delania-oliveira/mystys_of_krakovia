@@ -4,6 +4,7 @@ import health_check from './health_check'
 import check_username from './check_username'
 import get_account_characters from './get_account_characters'
 import create_account_character from './create_account_character'
+import user from './user'
 
 export default [
   login,
@@ -11,5 +12,6 @@ export default [
   health_check,
   check_username,
   get_account_characters,
-  create_account_character
+  create_account_character,
+  user
 ]

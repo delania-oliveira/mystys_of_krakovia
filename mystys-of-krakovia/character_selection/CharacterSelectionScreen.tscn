@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3 uid="uid://bkh7eitherq8e"]
+
+[ext_resource type="Script" uid="uid://c1bmd3awydutt" path="res://character_selection/character_selection_screen.gd" id="1_c8f5h"]
+
+[node name="CharacterSelectionScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_c8f5h")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
+[node name="CharacterOptionList" type="ItemList" parent="."]
+layout_mode = 0
+offset_left = 910.0
+offset_top = 203.0
+offset_right = 950.0
+offset_bottom = 243.0
+auto_width = true
+auto_height = true
+
+[node name="ErrorDialog" type="AcceptDialog" parent="."]
+
+[node name="CharacterPreview3D" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CharacterPreview3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="CharacterPreview3D"]
+
+[node name="JoinGameButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 584.0
+offset_top = 472.0
+offset_right = 702.0
+offset_bottom = 503.0
+text = "Entrar no Jogo"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 613.0
+offset_top = 253.0
+offset_right = 653.0
+offset_bottom = 276.0
+
+[node name="ExitButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 547.0
+offset_right = 166.0
+offset_bottom = 578.0
+text = "Sair"
+
+[node name="CreateCharacterButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 727.0
+offset_top = 473.0
+offset_right = 874.0
+offset_bottom = 504.0
+text = "Criar Personagem"

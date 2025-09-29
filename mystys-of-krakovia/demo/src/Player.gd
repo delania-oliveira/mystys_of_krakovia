@@ -33,6 +33,10 @@ func _physics_process(p_delta) -> void:
 		h_veloc *= 2
 	velocity.x = h_veloc.x
 	velocity.z = h_veloc.y
+	if h_veloc.x != 0 || h_veloc.y != 0:
+		$AuxScene/AnimationPlayer.play("Running")
+	else:
+		$AuxScene/AnimationPlayer.play("Idle")
 	if gravity_enabled:
 		velocity.y -= 40 * p_delta
 	move_and_slide()

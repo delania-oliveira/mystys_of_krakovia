@@ -24,6 +24,9 @@ func _ready():
 	http_request.request_completed.connect(_on_http_request_completed)
 	create_button.pressed.connect(_on_create_pressed)
 	exit_button.pressed.connect(_on_exit_pressed)
+	class_select.select(0)
+	_on_class_selected(0)
+	
 func _on_create_pressed():
 	var char_name = name_input.text.strip_edges()
 	var char_class = ""
@@ -55,11 +58,9 @@ func prepare_preview():
 	var camera = preview.get_node("Camera3D")
 	camera.position = Vector3(0, 2, 5)
 	camera.look_at(Vector3.ZERO, Vector3.UP)
-	preview.add_child(camera)
 	
 	var light = preview.get_node("DirectionalLight3D")
 	light.rotation_degrees = Vector3(-45, 45, 0)
-	preview.add_child(light)
 	
 	var char_scene = preload("res://assets/character/cac-1758665492797.gltf").instantiate()
 	char_scene.position = Vector3(0, 0, 0)   # moves model to origin
@@ -95,4 +96,4 @@ func _on_http_request_completed(result, response_code, headers, body):
 			error_panel.popup_centered()
 
 func _on_exit_pressed():
-	get_tree().change_scene_to_file("res://login/LoginScreen.tscn")
+	get_tree().change_scene_to_file("res://character_selection/CharacterSelectionScreen.tscn")

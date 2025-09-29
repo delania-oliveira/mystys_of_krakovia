@@ -23,7 +23,7 @@ router.post("/login", async (req: Request<{}, {}, LoginProps>, res: Response) =>
           env.PRIVATE_KEY,
           { expiresIn: "30d" }
         )
-        res.status(200).json({ accountId: existing[0].id, data: { username, token } });
+        res.status(200).json({ data: { username, token } });
     } else {
         res.status(401).json({ message: "Login failed. Wrong username or password!" });
     } 

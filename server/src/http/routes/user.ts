@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Request, Response, Router } from 'express'
 import { db } from '../../db/connection';
 import { eq, desc } from 'drizzle-orm';
 import { schema } from '../../db/schema';
@@ -6,7 +6,7 @@ import { authenticateToken } from '../middleware/auth';
 
 const router = Router()
 
-router.get("/user", authenticateToken, async (req, res) => {
+router.get("/user", authenticateToken, async (req: Request, res: Response) => {
   const account_id = (req as any).account_id;
 
   const charactersList = await db.select()

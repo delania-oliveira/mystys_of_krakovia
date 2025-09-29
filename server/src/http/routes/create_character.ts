@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express'
 import { db } from '../../db/connection';
 import { eq } from 'drizzle-orm';
 import { schema } from '../../db/schema';
+import { authenticateToken } from '../middleware/auth';
 
 const router = Router()
 
@@ -10,9 +11,10 @@ interface CharacterCreationProps {
   character_class: string,
 }
 
-router.post("/accounts/:account_id/create_character", async (req: Request<{account_id: string}, {}, CharacterCreationProps>, res: Response) => {
+router.post("/characters/create_character", authenticateToken, async (req: Request<{}, {}, CharacterCreationProps>, res: Response) => {
   const { name, character_class } = req.body;
-  const { account_id } = req.params
+  const account_id = (req as any).account_id;
+  
   try {
     const existing = await db.select().from(schema.characters).where(eq(schema.characters.name, name))
     if (existing.length > 0) {

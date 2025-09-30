@@ -12,6 +12,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { api } from '../../api/axios'
+import { useAuth } from '@/hooks/useAuth';
+import axios from 'axios';
 
 const RegisterSchema = z.object({
   username: z.string()
@@ -23,7 +25,6 @@ const RegisterSchema = z.object({
 
 type RegisterSchemaType = z.infer<typeof RegisterSchema>;
 
-// Função que simula a chamada a API para verificar o username
 async function checkUsernameAvailability(username: string): Promise<boolean> {
   const response = await api.post('/check_username', { username: username })
   return response.data.available;
@@ -35,6 +36,7 @@ export function Register() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const form = useForm<RegisterSchemaType>({
     resolver: zodResolver(RegisterSchema),
@@ -78,19 +80,35 @@ export function Register() {
     setIsSubmitting(true);
     setFormError('');
 
-    const isAvailable = await checkUsernameAvailability(data.username);
-    if (!isAvailable) {
-      form.setError('username', { type: 'manual', message: 'Este nome de usuário já está em uso.' });
-      setIsSubmitting(false);
-      return;
-    } else {
-      api.post("/register", {username: data.username, password: data.password})
+    try {
+      const isAvailable = await checkUsernameAvailability(data.username);
+
+      if (!isAvailable) {
+        form.setError('username', { type: 'manual', message: 'Este nome de usuário já está em uso.' });
+        return;
+      }
+
+      const response = await api.post("/register", { username: data.username, password: data.password })
+      const { token } = response.data
+
+      await login(token)
+
       toast.success('Conta criada com sucesso!', {
         description: `Bem-vindo(a), ${data.username}!`,
       });
-      setTimeout(() => navigate('/'), 2000);
-    }
 
+      navigate('/profile')
+    } catch (error) {
+      toast.error('Falha ao criar a conta.')
+
+      if (axios.isAxiosError(error) && error.response) {
+        setFormError(error.response.data.message || 'Ocorreu um erro no servidor')
+      } else {
+        setFormError('Não foi possível conectar ao servidor')
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -121,7 +139,6 @@ export function Register() {
                   <FormControl>
                     <div className="relative">
                       <Input placeholder="seu_usuario" {...field} />
-                      {/* 4. Feedback visual em tempo real */}
                       <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
                         {isCheckingUsername && <Loader2 className="h-4 w-4 animate-spin text-gray-400" />}
                         {!isCheckingUsername && isUsernameAvailable === true && <CheckCircle2 className="h-4 w-4 text-green-500" />}

@@ -4,6 +4,7 @@ import { Home } from '@/pages/Home';
 import { Register } from '@/pages/Register';
 import { Profile } from './pages/Profile';
 import { Login } from './pages/Login';
+import { ProtectedRoute } from './components/layout/ProtectedRoute';
 
 export default function App() {
   return (
@@ -16,7 +17,9 @@ export default function App() {
         {/* <Route path="download" element={<Download />} /> */}
         <Route path="*" element={<Home />} />
       </Route>
-      <Route path="profile" element={<Profile />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="profile" element={<Profile />} />
+      </Route>
     </Routes>
   );
 }

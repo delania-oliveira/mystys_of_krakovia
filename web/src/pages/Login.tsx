@@ -10,7 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
+
 import { api } from '../../api/axios'
 import axios from 'axios';
 
@@ -48,7 +49,7 @@ export function Login() {
         description: `Bem-vindo(a) de volta, ${data.username}`
       })
 
-      navigate('/profile')
+      setTimeout(() => navigate('/profile'), 0)
 
     } catch (error) {
       toast.error('Falha no login.')
@@ -112,7 +113,6 @@ export function Login() {
             <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isSubmitting ? 'Entrando...' : 'Entrar'}
-              Entrar
             </Button>
           </form>
         </Form>

@@ -1,21 +1,19 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
+import { createContext, useEffect, useState, type ReactNode } from "react"
 import { api } from "../../api/axios"
 
-
 interface User {
-  id: string
   username: string
 }
 
-interface AuthContextType {
+export interface AuthContextType {
   user: User | null
   token: string | null
   isAuthenticated: boolean
-  login: (token: string) => Promise<void>
+  login: (token: string) => void
   logout: () => void
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -38,14 +36,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loadUserFromToken()
   }, [token])
 
-  const login = async (newToken: string) => {
+  const login = (newToken: string) => {
     localStorage.setItem('authToken', newToken)
     setToken(newToken)
 
     api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`
-
-    const { data } = await api.get('/user')
-    setUser(data.user)
   }
 
   const logout = () => {
@@ -62,12 +57,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       {children}
     </AuthContext.Provider>
   )
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error('useAth deve ser usado dentro de um AuthProvider')
-  }
-  return context
 }

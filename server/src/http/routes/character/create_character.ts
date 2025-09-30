@@ -3,6 +3,7 @@ import { db } from '../../../db/connection';
 import { eq } from 'drizzle-orm';
 import { schema } from '../../../db/schema';
 import { authenticateToken } from '../../middleware/auth';
+import { classDefaults } from '../../../db/game/characterDefaults';
 
 const router = Router()
 
@@ -20,12 +21,13 @@ router.post("/characters", authenticateToken, async (req: Request<{}, {}, Charac
     if (existing.length > 0) {
         res.status(401).json( { message: `Character with name ${name} already exists!` });
     } else {
+      const defaults = classDefaults[character_class] || { health: 100, mana: 85 };
       const result = await db.insert(schema.characters).values({
         name: name,
         class: character_class,
         account_id: account_id,
-        health: 100,
-        mana: 85,
+        health: defaults.health,
+        mana: defaults.mana,
       }).returning()
       const newCharacter = result[0]
       if (!newCharacter) {

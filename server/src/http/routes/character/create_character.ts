@@ -1,8 +1,8 @@
 import { Request, Response, Router } from 'express'
-import { db } from '../../db/connection';
+import { db } from '../../../db/connection';
 import { eq } from 'drizzle-orm';
-import { schema } from '../../db/schema';
-import { authenticateToken } from '../middleware/auth';
+import { schema } from '../../../db/schema';
+import { authenticateToken } from '../../middleware/auth';
 
 const router = Router()
 
@@ -11,7 +11,7 @@ interface CharacterCreationProps {
   character_class: string,
 }
 
-router.post("/characters/create_character", authenticateToken, async (req: Request<{}, {}, CharacterCreationProps>, res: Response) => {
+router.post("/characters", authenticateToken, async (req: Request<{}, {}, CharacterCreationProps>, res: Response) => {
   const { name, character_class } = req.body;
   const account_id = (req as any).account_id;
   

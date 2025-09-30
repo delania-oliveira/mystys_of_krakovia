@@ -1,10 +1,10 @@
 import { Request, Response, Router } from 'express'
-import { db } from '../../db/connection';
-import { accounts } from '../../db/schema/accounts';
+import { db } from '../../../db/connection';
+import { accounts } from '../../../db/schema/accounts';
 import { eq } from 'drizzle-orm';
-import { comparePassword } from '../lib/bcrypt';
+import { comparePassword } from '../../lib/bcrypt';
 import jsonwebtoken from 'jsonwebtoken'
-import { env } from '../../env';
+import { env } from '../../../env';
 
 const router = Router()
 

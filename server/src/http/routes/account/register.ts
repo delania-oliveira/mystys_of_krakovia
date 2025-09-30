@@ -1,8 +1,8 @@
 import { Request, Response, Router } from 'express'
-import { db } from '../../db/connection';
-import { accounts } from '../../db/schema/accounts';
+import { db } from '../../../db/connection';
+import { accounts } from '../../../db/schema/accounts';
 import { eq } from 'drizzle-orm';
-import { hashPassword } from '../lib/bcrypt';
+import { hashPassword } from '../../lib/bcrypt';
 
 const router = Router()
 

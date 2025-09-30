@@ -19,9 +19,9 @@ router.delete("/characters/:character_name", authenticateToken, async (req: Requ
     if (existing[0].account_id != account_id) {
       return res.status(403).json({ message: `You don't have permission to delete '${character_name}'.` });
     }
-    
+
     await db.delete(schema.characters).where(eq(schema.characters.name, character_name));
-    res.status(200).json({ message: "Character deleted with success!" });
+    res.status(204).json({ message: "Character deleted with success!" });
   } catch (error) {
     console.log(error)
     res.status(401).json({ message: "Database error!" });       

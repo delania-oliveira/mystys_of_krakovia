@@ -11,9 +11,9 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_c8f5h")
 
-[node name="HTTPRequest" type="HTTPRequest" parent="."]
+[node name="GetCharacterListRequest" type="HTTPRequest" parent="."]
 
-[node name="CharacterOptionList" type="ItemList" parent="."]
+[node name="CharacterSelectList" type="ItemList" parent="."]
 layout_mode = 0
 offset_left = 910.0
 offset_top = 203.0
@@ -21,6 +21,14 @@ offset_right = 950.0
 offset_bottom = 243.0
 auto_width = true
 auto_height = true
+
+[node name="CharacterSelectLabel" type="Label" parent="CharacterSelectList"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = -55.0
+offset_right = 162.0
+offset_bottom = -32.0
+text = "Meus Personagens"
 
 [node name="ErrorDialog" type="AcceptDialog" parent="."]
 
@@ -32,10 +40,10 @@ auto_height = true
 
 [node name="JoinGameButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 584.0
-offset_top = 472.0
-offset_right = 702.0
-offset_bottom = 503.0
+offset_left = 381.0
+offset_top = 496.0
+offset_right = 499.0
+offset_bottom = 527.0
 text = "Entrar no Jogo"
 
 [node name="Label" type="Label" parent="."]
@@ -47,16 +55,73 @@ offset_bottom = 276.0
 
 [node name="ExitButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 128.0
-offset_top = 547.0
-offset_right = 166.0
-offset_bottom = 578.0
+offset_left = 160.0
+offset_top = 494.0
+offset_right = 198.0
+offset_bottom = 525.0
 text = "Sair"
 
 [node name="CreateCharacterButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 727.0
-offset_top = 473.0
-offset_right = 874.0
-offset_bottom = 504.0
+offset_left = 736.0
+offset_top = 497.0
+offset_right = 883.0
+offset_bottom = 528.0
 text = "Criar Personagem"
+
+[node name="LoadingScreen" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="LoadingScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08468992, 0.08468992, 0.08468992, 1)
+
+[node name="Label" type="Label" parent="LoadingScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -52.0
+offset_top = -11.5
+offset_right = 52.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Carregando..."
+
+[node name="DeleteCharacterButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 851.0
+offset_top = 627.0
+offset_right = 1029.0
+offset_bottom = 658.0
+text = "Remover Personagem"
+
+[node name="DeleteCharacterRequest" type="HTTPRequest" parent="."]
+
+[node name="SuccessDialog" type="AcceptDialog" parent="."]
+
+[node name="ConfirmDeletionDialog" type="ConfirmationDialog" parent="."]
+title = "Confirmar Remoção"
+size = Vector2i(400, 100)
+
+[node name="ConfirmDeletionInput" type="LineEdit" parent="ConfirmDeletionDialog"]
+offset_right = 68.5625
+offset_bottom = 31.0
+placeholder_text = "Digite o nome do personagem para confirmar"
+
+[connection signal="confirmed" from="SuccessDialog" to="." method="_on_success_dialog_confirmed"]
+[connection signal="confirmed" from="ConfirmDeletionDialog" to="." method="_on_confirm_deletion_dialog_confirmed"]

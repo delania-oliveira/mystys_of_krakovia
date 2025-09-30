@@ -70,3 +70,5 @@ offset_top = 580.0
 offset_right = 250.0
 offset_bottom = 632.0
 text = "Sair"
+
+[connection signal="confirmed" from="CharacterCreatedSuccess" to="." method="_on_character_created_success_confirmed"]

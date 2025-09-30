@@ -9,7 +9,7 @@ extends Control
 @onready var http_request = $HTTPRequest
 @onready var exit_button = $Exit
 
-const SERVER_URL = "http://week-characterized.gl.at.ply.gg:29821/api/characters/create_character"
+const SERVER_URL = "http://week-characterized.gl.at.ply.gg:29821/api/characters"
 
 func _ready():
 	# Populate class dropdown
@@ -25,7 +25,7 @@ func _ready():
 	create_button.pressed.connect(_on_create_pressed)
 	exit_button.pressed.connect(_on_exit_pressed)
 	class_select.select(0)
-	_on_class_selected(0)
+	_on_class_selected()
 	
 func _on_create_pressed():
 	var char_name = name_input.text.strip_edges()
@@ -50,7 +50,7 @@ func _on_create_pressed():
 	var headers = ["Content-Type: application/json", "Authorization: Bearer " + token]
 	http_request.request(SERVER_URL, headers, HTTPClient.METHOD_POST, body)
 	
-func _on_class_selected(index: int) -> void:
+func _on_class_selected():
 	clear_preview()
 	prepare_preview()
 	
@@ -76,18 +76,12 @@ func clear_preview():
 	for child in preview.get_children():
 		if child.name != "Camera3D" and child.name != "DirectionalLight3D":
 			child.queue_free()
-
-func _on_http_request_completed(result, response_code, headers, body):
-	var json = JSON.new()
-
-	json.parse(body.get_string_from_utf8())
-	var response = json.get_data()
 	
+func _on_http_request_completed(result, response_code, headers, body):
 	match response_code:
 		201: 
 			success_panel.dialog_text = "Personagem criado com sucesso!"
 			success_panel.popup_centered()
-			get_tree().change_scene_to_file("res://CharacterSelect.tscn")
 		401:
 			error_panel.dialog_text = "Nome já existe!"
 			error_panel.popup_centered()
@@ -96,4 +90,8 @@ func _on_http_request_completed(result, response_code, headers, body):
 			error_panel.popup_centered()
 
 func _on_exit_pressed():
+	get_tree().change_scene_to_file("res://character_selection/CharacterSelectionScreen.tscn")
+
+
+func _on_character_created_success_confirmed() -> void:
 	get_tree().change_scene_to_file("res://character_selection/CharacterSelectionScreen.tscn")

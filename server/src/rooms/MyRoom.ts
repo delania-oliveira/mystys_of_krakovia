@@ -2,7 +2,7 @@ import { Room, Client } from "@colyseus/core";
 import { MyRoomState } from "./schema/MyRoomState";
 import { Player } from "./schema/Player";
 import { db } from "../db/connection";
-import { accounts } from "../db/schema/accounts";
+import { schema } from "../db/schema";
 import { eq } from "drizzle-orm";
 
 const GRAVITY = 20;
@@ -26,29 +26,23 @@ export class MyRoom extends Room<MyRoomState> {
       }
     });
 
-    this.onMessage("login", async (client: Client, data: { name: string; password?: string }) => {
+    this.onMessage("login", async (client: Client, data: { id: string; }) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
-        player.name = data.name;
         try {
-          const existing = await db.select().from(accounts).where(eq(accounts.account_name, data.name))
-          if (existing.length > 0) {
-            if (existing[0].password === data.password) {
-              client.send("loginResult", { success: true, message: "Login successful!" });
-            } else {
-              client.send("loginFail", { success: false, message: "Wrong account name or password!"})
-            }
-            return
+          const characterFound = await db.select().from(schema.characters).where(eq(schema.characters.id, data.id))
+          if (characterFound.length > 0) {
+            const character = characterFound[0]
+            player.name = character.name
+            player.health = character.health
+            player.mana = character.mana
+            player.experience = character.experience
+            player.level = character.level
+            player.x = character.x_position
+            player.y = character.y_position
+            player.z = character.z_position
           }
-          const result = await db.insert(accounts).values({
-            account_name: data.name,
-            password: data.password
-          }).returning()
-          const newAccount = result[0]
-          if (!newAccount) {
-            throw new Error("Failed to create account")
-          }
-          client.send("accountCreated", { success: true, message: newAccount.account_name })
+          client.send("login", { success: true })
         } catch (error) {
           console.log(error)
           client.send("loginError", { success: false, message: "Database error" })          

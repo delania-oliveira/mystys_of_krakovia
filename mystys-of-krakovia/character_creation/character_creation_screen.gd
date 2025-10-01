@@ -8,6 +8,7 @@ extends Control
 @onready var success_panel = $CharacterCreatedSuccess
 @onready var http_request = $HTTPRequest
 @onready var exit_button = $Exit
+@onready var config_menu = $ConfigMenuButton
 
 const SERVER_URL = "http://week-characterized.gl.at.ply.gg:29821/api/characters"
 
@@ -24,8 +25,9 @@ func _ready():
 	http_request.request_completed.connect(_on_http_request_completed)
 	create_button.pressed.connect(_on_create_pressed)
 	exit_button.pressed.connect(_on_exit_pressed)
+	config_menu.pressed.connect(_on_config_menu_pressed)
 	class_select.select(0)
-	_on_class_selected()
+	_on_class_selected(0)
 	
 func _on_create_pressed():
 	var char_name = name_input.text.strip_edges()
@@ -50,11 +52,15 @@ func _on_create_pressed():
 	var headers = ["Content-Type: application/json", "Authorization: Bearer " + token]
 	http_request.request(SERVER_URL, headers, HTTPClient.METHOD_POST, body)
 	
-func _on_class_selected():
+func _on_class_selected(index: int) -> void:
 	clear_preview()
 	prepare_preview()
+
+func _on_config_menu_pressed() -> void:
+	var options_scene = load("res://ui/OptionsMenu.tscn").instantiate()
+	add_child(options_scene)
 	
-func prepare_preview():
+func prepare_preview() -> void:
 	var camera = preview.get_node("Camera3D")
 	camera.position = Vector3(0, 2, 5)
 	camera.look_at(Vector3.ZERO, Vector3.UP)
@@ -72,12 +78,12 @@ func prepare_preview():
 	if anim_player:
 		anim_player.play("Idle")
 
-func clear_preview():
+func clear_preview() -> void:
 	for child in preview.get_children():
 		if child.name != "Camera3D" and child.name != "DirectionalLight3D":
 			child.queue_free()
 	
-func _on_http_request_completed(result, response_code, headers, body):
+func _on_http_request_completed(result, response_code, headers, body) -> void:
 	match response_code:
 		201: 
 			success_panel.dialog_text = "Personagem criado com sucesso!"
@@ -89,7 +95,7 @@ func _on_http_request_completed(result, response_code, headers, body):
 			error_panel.dialog_text = "Erro de conexão com o servidor."
 			error_panel.popup_centered()
 
-func _on_exit_pressed():
+func _on_exit_pressed() -> void:
 	get_tree().change_scene_to_file("res://character_selection/CharacterSelectionScreen.tscn")
 
 

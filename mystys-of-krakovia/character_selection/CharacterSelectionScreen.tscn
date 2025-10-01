@@ -61,6 +61,14 @@ offset_right = 198.0
 offset_bottom = 525.0
 text = "Sair"
 
+[node name="DeleteCharacterButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 851.0
+offset_top = 627.0
+offset_right = 1029.0
+offset_bottom = 658.0
+text = "Remover Personagem"
+
 [node name="CreateCharacterButton" type="Button" parent="."]
 layout_mode = 0
 offset_left = 736.0
@@ -68,6 +76,12 @@ offset_top = 497.0
 offset_right = 883.0
 offset_bottom = 528.0
 text = "Criar Personagem"
+
+[node name="ConfigMenuButton" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Configurações"
 
 [node name="LoadingScreen" type="Panel" parent="."]
 visible = false
@@ -101,14 +115,6 @@ offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
 text = "Carregando..."
-
-[node name="DeleteCharacterButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 851.0
-offset_top = 627.0
-offset_right = 1029.0
-offset_bottom = 658.0
-text = "Remover Personagem"
 
 [node name="DeleteCharacterRequest" type="HTTPRequest" parent="."]
 

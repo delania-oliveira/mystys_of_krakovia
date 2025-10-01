@@ -15,6 +15,7 @@ extends Control
 @onready var delete_character_button = $DeleteCharacterButton
 @onready var confirm_deletion_dialog = $ConfirmDeletionDialog
 @onready var confirm_deletion_input = $ConfirmDeletionDialog/ConfirmDeletionInput
+@onready var config_menu_button = $ConfigMenuButton
 
 var characters = []
 var character_selected = {}
@@ -34,6 +35,7 @@ func _ready():
 	delete_character_button.pressed.connect(_on_delete_character_pressed)
 	create_character_button.pressed.connect(_on_create_character_pressed)
 	delete_character_request.request_completed.connect(_on_delete_character_request_completed)
+	config_menu_button.pressed.connect(_on_config_menu_pressed)
 	
 func _on_class_selected(index: int) -> void:
 	if characters.size() > 0:
@@ -41,8 +43,12 @@ func _on_class_selected(index: int) -> void:
 		character_selected = characters[index]
 		clear_preview()
 		prepare_preview()
-	
-func prepare_preview():
+		
+func _on_config_menu_pressed():
+	var options_scene = load("res://ui/OptionsMenu.tscn").instantiate()
+	add_child(options_scene)
+		
+func prepare_preview() -> void:
 	var camera = preview.get_node("Camera3D")
 	camera.position = Vector3(0, 2, 5)
 	camera.look_at(Vector3.ZERO, Vector3.UP)
@@ -60,12 +66,12 @@ func prepare_preview():
 	if anim_player:
 		anim_player.play("Idle")
 
-func clear_preview():
+func clear_preview() -> void:
 	for child in preview.get_children():
 		if child.name != "Camera3D" and child.name != "DirectionalLight3D":
 			child.queue_free()
 			
-func _on_get_character_list_request_completed(result, response_code, headers, body):
+func _on_get_character_list_request_completed(result, response_code, headers, body) -> void:
 	var json = JSON.new()
 	
 	json.parse(body.get_string_from_utf8())
@@ -86,7 +92,7 @@ func _on_get_character_list_request_completed(result, response_code, headers, bo
 			error_dialog.dialog_text = "Erro de conexão com o servidor."
 			error_dialog.popup_centered()
 			
-func _on_delete_character_request_completed(result, response_code, headers, body):
+func _on_delete_character_request_completed(result, response_code, headers, body) -> void:
 	match response_code:
 		204:
 			success_dialog.dialog_text = "Personagem removido com sucesso!"
@@ -95,14 +101,14 @@ func _on_delete_character_request_completed(result, response_code, headers, body
 			error_dialog.dialog_text = "Erro de conexão com o servidor."
 			error_dialog.popup_centered()
 			
-func _on_create_character_pressed():
+func _on_create_character_pressed() -> void:
 	if characters.size() >= 5:
 		error_dialog.dialog_text = "Você atingiu o número máximo de personagens."
 		error_dialog.popup_centered()
 		return
 	get_tree().change_scene_to_file("res://character_creation/CharacterCreationScreen.tscn")
 
-func _on_delete_character_pressed():
+func _on_delete_character_pressed() -> void:
 	if character_selected == {}:
 		error_dialog.dialog_text = "Selecione um personagem para remover."
 		error_dialog.popup_centered()
@@ -116,7 +122,6 @@ func _on_exit_pressed():
 
 func _on_success_dialog_confirmed() -> void:
 	get_tree().reload_current_scene()
-
 
 func _on_confirm_deletion_dialog_confirmed() -> void:
 	if (confirm_deletion_input.text.strip_edges() == character_selected.name):

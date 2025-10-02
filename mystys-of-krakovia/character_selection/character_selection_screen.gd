@@ -8,7 +8,6 @@ extends Control
 @onready var exit_button = $ExitButton
 @onready var create_character_button = $CreateCharacterButton
 @onready var join_game_button = $JoinGameButton
-@onready var no_character_button = $NoCharacterButton
 @onready var loading_screen = $LoadingScreen
 @onready var character_name = $Label
 @onready var success_dialog = $SuccessDialog
@@ -19,8 +18,8 @@ extends Control
 
 var characters = []
 var character_selected = {}
-const SERVER_URL = "http://week-characterized.gl.at.ply.gg:29821/api/user"
-var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiMjhkY2VjM2QtNTg3Yy00YjYyLTk2NGYtNWQ1ZjQ1MjVhZmRkIiwiaWF0IjoxNzU5MTU1MDA4LCJleHAiOjE3NjE3NDcwMDh9.q_ToUCisL8InxF58BTdVMCmu-edNfDQnBxuxJYiZKps"
+const SERVER_URL = "http://localhost:2567/api/user"
+var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiODEwNWFlYmEtZGNlOS00YThiLThlYmUtNmQyM2Q1ZDVjMDhkIiwiaWF0IjoxNzU5NDA5OTA1LCJleHAiOjE3NjIwMDE5MDV9.8Hymgv1CNyEQJL90QW2M42vQrq_BU94vyKtoIvDkp1M"
 var headers = ["Content-Type: application/json", "Authorization: Bearer " + token]
 
 func _ready():
@@ -36,6 +35,7 @@ func _ready():
 	create_character_button.pressed.connect(_on_create_character_pressed)
 	delete_character_request.request_completed.connect(_on_delete_character_request_completed)
 	config_menu_button.pressed.connect(_on_config_menu_pressed)
+	join_game_button.pressed.connect(_on_join_game_pressed)
 	
 func _on_class_selected(index: int) -> void:
 	if characters.size() > 0:
@@ -119,7 +119,10 @@ func _on_delete_character_pressed() -> void:
 func _on_exit_pressed():
 	get_tree().change_scene_to_file("res://login/LoginScreen.tscn")
 
-
+func _on_join_game_pressed():
+	Character.character_id = character_selected.id
+	get_tree().change_scene_to_file("res://tests/TestMap.tscn")
+	
 func _on_success_dialog_confirmed() -> void:
 	get_tree().reload_current_scene()
 

@@ -1,28 +1,32 @@
 import { Room, Client } from "@colyseus/core";
-import { MyRoomState } from "./schema/MyRoomState";
+import { KrakoviaState } from "./schema/KrakoviaState";
 import { Player } from "./schema/Player";
 import { db } from "../db/connection";
 import { schema } from "../db/schema";
 import { eq } from "drizzle-orm";
 
-const GRAVITY = 20;
-const JUMP_STRENGTH = 10;
-const GROUND_LEVEL = 0;
+const GRAVITY = 75;
+const JUMP_STRENGTH = 20;
+const GROUND_LEVEL = 2;
 
-export class MyRoom extends Room<MyRoomState> {
+export class Krakovia extends Room<KrakoviaState> {
   maxClients = 4;
-  SPEED = 0.24
+  SPEED = 14
    
   onCreate(options: any) {
-    this.state = new MyRoomState();
+    this.state = new KrakoviaState();
     
     // Example: handle custom messages
     this.onMessage("move", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
-        player.x += data.x;
-        player.y += data.y;
-        player.z += data.z;
+        player.inputX = data.x ?? 0;
+        player.inputZ = data.z ?? 0;
+        if (data.x !== 0 || data.z !== 0 && player.animation === "Idle") {
+          player.animation = "Running";
+        } else {
+          player.animation = "Idle"
+        }
       }
     });
 
@@ -42,7 +46,13 @@ export class MyRoom extends Room<MyRoomState> {
             player.y = character.y_position
             player.z = character.z_position
           }
-          client.send("login", { success: true })
+          client.send("login", { 
+            success: true,
+            sessionId: client.sessionId,
+            x: player.x,
+            y: player.y,
+            z: player.z
+          })
         } catch (error) {
           console.log(error)
           client.send("loginError", { success: false, message: "Database error" })          
@@ -61,12 +71,12 @@ export class MyRoom extends Room<MyRoomState> {
 
     this.onMessage("jump", (client) => {
       const player = this.state.players.get(client.sessionId);
-      if (player && player.onGround) {
+      if (player && player.isGrounded) {
         player.vy = JUMP_STRENGTH;
-        player.onGround = false;
+        player.isGrounded = false;
       }
     });
-
+    
     this.setSimulationInterval((dtMs) => this.update(dtMs), 25);
   }
   update(dtMs: number) {
@@ -75,24 +85,29 @@ export class MyRoom extends Room<MyRoomState> {
     this.state.players.forEach((player) => {
       // apply gravity
       player.vy -= GRAVITY * dt;
-
+      const dx = player.inputX;
+      const dz = player.inputZ;
       // integrate vertical position
       player.y += player.vy * dt;
-
+      const len = Math.sqrt(dx * dx + dz * dz);
+      if (len > 0) {
+        player.x += (dx / len) * this.SPEED * dt;
+        player.z += (dz / len) * this.SPEED * dt;
+      }
       // ground collision
       if (player.y <= GROUND_LEVEL) {
         player.y = GROUND_LEVEL;
         player.vy = 0;
-        player.onGround = true;
+        player.isGrounded = true;
       }
+      player.inputX = 0;
+      player.inputZ = 0;
     });
   }
+  
   onJoin(client: Client, options: any) {
     console.log(client.sessionId, "joined!");
     const player = new Player();
-    player.x = 0;
-    player.y = 0;
-    player.z = 0;
     this.state.players.set(client.sessionId, player);
     // THIS will trigger players:add on all clients
   }

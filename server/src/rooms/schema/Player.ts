@@ -10,10 +10,13 @@ export class Player extends Schema {
     @type("number") dirX = 0;
     @type("number") dirY = 0;
     @type("number") dirZ = -1;
+    @type("number") inputX = 0;
+    @type("number") inputZ = 0;
     @type("boolean") isGrounded = true;
     @type("string") name = "";
     @type("number") health = 1;
     @type("number") mana = 1;
     @type("number") level = 1;
     @type("number") experience = 1;
+    @type("string") animation = "Idle"
 }

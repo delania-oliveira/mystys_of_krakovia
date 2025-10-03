@@ -62,7 +62,6 @@ offset_bottom = 525.0
 text = "Sair"
 
 [node name="DeleteCharacterButton" type="Button" parent="."]
-visible = false
 layout_mode = 0
 offset_left = 851.0
 offset_top = 627.0

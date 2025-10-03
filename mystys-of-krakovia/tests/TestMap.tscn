@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://bnjrm71j7pxmb"]
+
+[ext_resource type="Script" uid="uid://y3l1opa12q0l" path="res://tests/test_map.gd" id="1_humit"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_20cu6"]
+size = Vector3(200, 2, 200)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6dlia"]
+size = Vector3(200, 2, 200)
+
+[node name="TestMap" type="Node3D"]
+script = ExtResource("1_humit")
+
+[node name="Ground" type="StaticBody3D" parent="."]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("BoxShape3D_20cu6")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("BoxMesh_6dlia")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.7667913, 0.6340088, -0.10031989, 0.019866165, 0.1327719, 0.9909474, 0.64158905, -0.76184285, 0.089213006, 35.09532, 143.58704, 65.02204)

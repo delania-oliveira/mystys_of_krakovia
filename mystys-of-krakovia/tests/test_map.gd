@@ -1,7 +1,7 @@
 extends Node
-var Char = preload("res://tests/Player.tscn")
 var room
 var state
+
 func _ready():
 	if Network.client:
 		_on_network_ready()
@@ -9,29 +9,23 @@ func _ready():
 		Network.connection_ready.connect(_on_network_ready)
 	
 func _on_network_ready():
-	var promise = Network.client.join_or_create(Network.RoomState, "my_room")
+	var join_options = { "character_id": Character.character_id }
+	var promise = Network.client.join_or_create(Network.RoomState, "Krakovia", join_options)
 	await promise.completed
 	if promise.get_state() == promise.State.Failed:
 		print("Failed")
 		return
 	room = promise.get_data()
 	state = room.get_state()
-	room.on_message("login").on(Callable(self, "_on_login_success"))
 	state.listen("players:add").on(Callable(self, "_on_players_add"))
 	state.listen("players:remove").on(Callable(self, "_on_players_remove"))
-	room.send("login", {"id": Character.character_id})
-	
-func _on_login_success(data):
-	Character.login_x = data.x
-	Character.login_y = 0
-	Character.login_z = data.z
-	var local_value = state.players.at(room.session_id)
-	if local_value:
-		_on_players_add(null, local_value, room.session_id)
 	
 func _on_players_add(target, value, key):
+	var characterScene = "res://tests/" + value.character_class + ".tscn"
+	var Char = load(characterScene)
 	var ch = Char.instantiate()
-	ch.position = Vector3(Character.login_x, Character.login_y, Character.login_z)
+	ch.position = Vector3(value.x, value.y, value.z)
+	ch.get_node("Name").set_text(value.name)
 	add_child(ch)	
 	value.node = ch
 	ch.room = room

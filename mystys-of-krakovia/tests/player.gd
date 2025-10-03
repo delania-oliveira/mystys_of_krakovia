@@ -61,7 +61,7 @@ func on_network_data_received(data):
 	network_position = Vector3(data.x, data.y, data.z)
 	network_direction = Vector3(-data.dirX, 0, -data.dirZ)
 	$Pivot/AuxScene/AnimationPlayer.play(data.animation)
-		
+	
 func _process(delta):
 	if is_local:
 		return

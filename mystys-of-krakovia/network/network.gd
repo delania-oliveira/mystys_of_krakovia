@@ -22,8 +22,11 @@ class Player extends colyseus.Schema:
 			colyseus.Field.new("dirX", colyseus.NUMBER),
 			colyseus.Field.new("dirY", colyseus.NUMBER),
 			colyseus.Field.new("dirZ", colyseus.NUMBER),
+			colyseus.Field.new("inputX", colyseus.NUMBER),
+			colyseus.Field.new("inputZ", colyseus.NUMBER),
 			colyseus.Field.new("isGrounded", colyseus.BOOLEAN),
 			colyseus.Field.new("name", colyseus.STRING),
+			colyseus.Field.new("character_class", colyseus.STRING),
 			colyseus.Field.new("health", colyseus.NUMBER),
 			colyseus.Field.new("mana", colyseus.NUMBER),
 			colyseus.Field.new("level", colyseus.NUMBER),
@@ -37,7 +40,7 @@ class Player extends colyseus.Schema:
 		return str("(",self.x,",",self.y,",",self.z,")")
 
 var client
+
 func _ready():
 	client = colyseus.Client.new("ws://localhost:2567")
 	connection_ready.emit()
-	

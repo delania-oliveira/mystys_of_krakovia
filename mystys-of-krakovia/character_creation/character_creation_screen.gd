@@ -10,7 +10,7 @@ extends Control
 @onready var exit_button = $Exit
 @onready var config_menu = $ConfigMenuButton
 
-const SERVER_URL = "http://week-characterized.gl.at.ply.gg:29821/api/characters"
+const SERVER_URL = "http://localhost:2567/api/characters"
 
 func _ready():
 	# Populate class dropdown
@@ -48,7 +48,7 @@ func _on_create_pressed():
 		"name": char_name,
 		"character_class": char_class
 	})
-	var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiMjhkY2VjM2QtNTg3Yy00YjYyLTk2NGYtNWQ1ZjQ1MjVhZmRkIiwiaWF0IjoxNzU5MTU1MDA4LCJleHAiOjE3NjE3NDcwMDh9.q_ToUCisL8InxF58BTdVMCmu-edNfDQnBxuxJYiZKps"
+	var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiODEwNWFlYmEtZGNlOS00YThiLThlYmUtNmQyM2Q1ZDVjMDhkIiwiaWF0IjoxNzU5NTMzMTQ4LCJleHAiOjE3NjIxMjUxNDh9.Nx3crWo4tdGXN_eoaOlrWpI-txFFURwyIAElQ4SI9wU"
 	var headers = ["Content-Type: application/json", "Authorization: Bearer " + token]
 	http_request.request(SERVER_URL, headers, HTTPClient.METHOD_POST, body)
 	

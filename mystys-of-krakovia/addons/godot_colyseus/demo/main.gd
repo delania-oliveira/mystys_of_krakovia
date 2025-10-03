@@ -25,7 +25,8 @@ var room: colyseus.Room
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var promise = Global.client.join_or_create(RoomState, "state_handler")
+	var client = colyseus.Client.new("ws://localhost:2567")
+	var promise = client.join_or_create(RoomState, "state_handler")
 	await promise.completed
 	if promise.get_state() == promise.State.Failed:
 		print("Failed")

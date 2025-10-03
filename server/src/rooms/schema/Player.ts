@@ -14,6 +14,7 @@ export class Player extends Schema {
     @type("number") inputZ = 0;
     @type("boolean") isGrounded = true;
     @type("string") name = "";
+    @type("string") character_class = "";
     @type("number") health = 1;
     @type("number") mana = 1;
     @type("number") level = 1;

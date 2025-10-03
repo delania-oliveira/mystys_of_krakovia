@@ -16,7 +16,6 @@ export class Krakovia extends Room<KrakoviaState> {
   onCreate(options: any) {
     this.state = new KrakoviaState();
     
-    // Example: handle custom messages
     this.onMessage("move", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
@@ -26,36 +25,6 @@ export class Krakovia extends Room<KrakoviaState> {
           player.animation = "Running";
         } else {
           player.animation = "Idle"
-        }
-      }
-    });
-
-    this.onMessage("login", async (client: Client, data: { id: string; }) => {
-      const player = this.state.players.get(client.sessionId);
-      if (player) {
-        try {
-          const characterFound = await db.select().from(schema.characters).where(eq(schema.characters.id, data.id))
-          if (characterFound.length > 0) {
-            const character = characterFound[0]
-            player.name = character.name
-            player.health = character.health
-            player.mana = character.mana
-            player.experience = character.experience
-            player.level = character.level
-            player.x = character.x_position
-            player.y = character.y_position
-            player.z = character.z_position
-          }
-          client.send("login", { 
-            success: true,
-            sessionId: client.sessionId,
-            x: player.x,
-            y: player.y,
-            z: player.z
-          })
-        } catch (error) {
-          console.log(error)
-          client.send("loginError", { success: false, message: "Database error" })          
         }
       }
     });
@@ -100,22 +69,39 @@ export class Krakovia extends Room<KrakoviaState> {
         player.vy = 0;
         player.isGrounded = true;
       }
-      player.inputX = 0;
-      player.inputZ = 0;
     });
   }
   
-  onJoin(client: Client, options: any) {
+  async onJoin(client: Client, options: { character_id: string }) {
     console.log(client.sessionId, "joined!");
     const player = new Player();
+          
+    if (options.character_id) {
+      try {
+        const characterFound = await db.select().from(schema.characters).where(eq(schema.characters.id, options.character_id));
+        if (characterFound.length > 0) {
+          const character = characterFound[0];
+          player.name = character.name;
+          player.character_class = character.class;
+          player.health = character.health;
+          player.mana = character.mana;
+          player.experience = character.experience;
+          player.level = character.level;
+          player.x = character.x_position;
+          player.y = character.y_position;
+          player.z = character.z_position;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+          
     this.state.players.set(client.sessionId, player);
-    // THIS will trigger players:add on all clients
   }
 
   onLeave(client: Client, consented: boolean) {
     console.log(client.sessionId, "left!");
     this.state.players.delete(client.sessionId);
-    // THIS will trigger players:remove on all clients
   }
 
   onDispose() {

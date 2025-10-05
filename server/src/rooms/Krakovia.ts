@@ -4,19 +4,35 @@ import { Player } from "./schema/Player";
 import { db } from "../db/connection";
 import { schema } from "../db/schema";
 import { eq } from "drizzle-orm";
+import { Monster } from "./schema/Monster";
+import { loadMonsters } from "../data/monsters/load_monsters";
 
-const GRAVITY = 75;
-const JUMP_STRENGTH = 20;
-const GROUND_LEVEL = 2;
+const GRAVITY = 75
+const JUMP_STRENGTH = 20
+const GROUND_LEVEL = 3
+const PLAYER_SPEED = 14
 
 export class Krakovia extends Room<KrakoviaState> {
   maxClients = 4;
-  SPEED = 14
    
   onCreate(options: any) {
     this.state = new KrakoviaState();
-    
-    this.onMessage("move", (client, data) => {
+    const monsters = loadMonsters()
+    monsters.map(monster => {
+      const loadedMonster = new Monster().assign({
+        monster_id: monster.id,
+        type: monster.type,
+        name: monster.name,
+        x: monster.x,
+        y: GROUND_LEVEL - 1,
+        z: monster.z,
+        speed: monster.speed
+      });
+  
+      this.state.monsters.set(loadedMonster.monster_id, loadedMonster);
+    })
+
+    this.onMessage("movePlayer", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
         player.inputX = data.x ?? 0;
@@ -26,10 +42,16 @@ export class Krakovia extends Room<KrakoviaState> {
         } else {
           player.animation = "Idle"
         }
-      }
+      } 
     });
 
-    this.onMessage("look", (client, data) => {
+    this.onMessage("moveMonster", (client, data) => {
+      const monster = this.state.monsters.get(data.monster_id);
+      monster.inputX = data.x ?? 0;
+      monster.inputZ = data.z ?? 0;
+    });
+
+    this.onMessage("lookPlayer", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
         player.dirX = data.dirX;
@@ -38,7 +60,7 @@ export class Krakovia extends Room<KrakoviaState> {
       }
     });
 
-    this.onMessage("jump", (client) => {
+    this.onMessage("jumpPlayer", (client) => {
       const player = this.state.players.get(client.sessionId);
       if (player && player.isGrounded) {
         player.vy = JUMP_STRENGTH;
@@ -48,6 +70,7 @@ export class Krakovia extends Room<KrakoviaState> {
     
     this.setSimulationInterval((dtMs) => this.update(dtMs), 25);
   }
+
   update(dtMs: number) {
     const dt = dtMs / 1000; // convert to seconds
 
@@ -60,14 +83,24 @@ export class Krakovia extends Room<KrakoviaState> {
       player.y += player.vy * dt;
       const len = Math.sqrt(dx * dx + dz * dz);
       if (len > 0) {
-        player.x += (dx / len) * this.SPEED * dt;
-        player.z += (dz / len) * this.SPEED * dt;
+        player.x += (dx / len) * PLAYER_SPEED * dt;
+        player.z += (dz / len) * PLAYER_SPEED * dt;
       }
       // ground collision
-      if (player.y <= GROUND_LEVEL) {
+      if (player.y <= GROUND_LEVEL ) {
         player.y = GROUND_LEVEL;
         player.vy = 0;
         player.isGrounded = true;
+      }
+    });
+
+    this.state.monsters.forEach((monster) => {
+      const dx = monster.inputX;
+      const dz = monster.inputZ;
+      const len = Math.sqrt(dx * dx + dz * dz);
+      if (len > 0) {
+        monster.x += (dx / len) * monster.speed * dt;
+        monster.z += (dz / len) * monster.speed * dt;
       }
     });
   }
@@ -95,7 +128,7 @@ export class Krakovia extends Room<KrakoviaState> {
         console.log(error);
       }
     }
-          
+
     this.state.players.set(client.sessionId, player);
   }
 

@@ -18,9 +18,9 @@ router.get("/user", authenticateToken, async (req: Request, res: Response) => {
                             .from(schema.accounts)
                             .where(eq(schema.accounts.id, account_id))
 
-  const accountName = user[0].account_name
+  const account = user[0]
 
-  res.status(200).json({ userName: accountName, characters: charactersList })
+  res.status(200).json({ user: account, characters: charactersList })
 })
 
 export default router

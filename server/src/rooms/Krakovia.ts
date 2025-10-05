@@ -3,7 +3,7 @@ import { KrakoviaState } from "./schema/KrakoviaState";
 import { Player } from "./schema/Player";
 import { db } from "../db/connection";
 import { schema } from "../db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { Monster } from "./schema/Monster";
 import { loadMonsters } from "../data/monsters/load_monsters";
 
@@ -123,6 +123,10 @@ export class Krakovia extends Room<KrakoviaState> {
           player.x = character.x_position;
           player.y = character.y_position;
           player.z = character.z_position;
+          await db.update(schema.characters).set({
+            lastLogin: sql`NOW()`
+          })
+          .where(eq(schema.characters.id, character.id))
         }
       } catch (error) {
         console.log(error);

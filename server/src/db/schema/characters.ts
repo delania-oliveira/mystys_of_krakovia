@@ -1,4 +1,4 @@
-import { doublePrecision, integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { doublePrecision, integer, pgTable, text, uuid, timestamp } from "drizzle-orm/pg-core";
 import { accounts } from "./accounts";
 
 export const characters = pgTable("characters", {
@@ -13,4 +13,6 @@ export const characters = pgTable("characters", {
   health: integer().notNull(),
   mana: integer().notNull(),
   experience: integer().notNull().default(0),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  lastLogin: timestamp('last_login')
 })

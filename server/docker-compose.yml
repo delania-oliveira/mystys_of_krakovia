@@ -9,13 +9,13 @@ services:
       - .env.production
     command: node build/index.js
   db:
-    image: bitnami/postgresql
+    image: postgres:18
     ports: 
       - '5432:5432'
     env_file:
       - .env.docker
     volumes:
-      - db_data:/bitnami/postgresql
+      - db_data:/var/lib/postgresql/data
       
 volumes:
   db_data:

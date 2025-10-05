@@ -18,9 +18,13 @@ router.post("/change_password", authenticateToken, async (req: Request<{}, {}, C
   const { currentPassword, newPassword } = req.body;
   if (!currentPassword || !newPassword) return res.status(400).json({message: "Must provide current or new password!"})
   try {
-    const hashedPassword = await hashPassword(newPassword)
-    const match = comparePassword(newPassword, currentPassword);
+    const account = await db.select().from(schema.accounts).where(eq(account_id, schema.accounts.id))
+    const match = await comparePassword(account[0].password, currentPassword);
+    console.log(match)
+    console.log(currentPassword)
+    console.log(account[0].password)
     if (!match) return res.status(400).json({message: "Current Password incorrect!"})
+    const hashedPassword = await hashPassword(newPassword)
     await db.update(schema.accounts).set({password: hashedPassword}).where(eq(schema.accounts.id, account_id))
     res.status(200).json({ message: "Password updated with success!" });
   }

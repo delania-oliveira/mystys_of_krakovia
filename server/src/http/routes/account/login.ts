@@ -8,16 +8,17 @@ import { env } from '../../../env';
 
 const router = Router()
 
-interface LoginProps {
+interface LoginParams {
   username: string
   password: string
 }
 
-router.post("/login", async (req: Request<{}, {}, LoginProps>, res: Response) => {
+router.post("/login", async (req: Request<{}, {}, LoginParams>, res: Response) => {
   const { username, password } = req.body;
   try {
     const existing = await db.select().from(accounts).where(eq(accounts.account_name, username))
-    if (existing.length > 0 && comparePassword(password, existing[0].password)) {
+    const match = await comparePassword(password, existing[0].password)
+    if (existing.length > 0 && match) {
         const token = jsonwebtoken.sign(
           { account_id: existing[0].id },
           env.PRIVATE_KEY,

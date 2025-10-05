@@ -14,7 +14,7 @@ router.get("/user", authenticateToken, async (req: Request, res: Response) => {
                                   .where(eq(schema.characters.account_id, account_id))
                                   .orderBy(desc(schema.characters.level))
 
-  const user = await db.select({account_name: schema.accounts.account_name})
+  const user = await db.select({account_name: schema.accounts.account_name, createdAt: schema.accounts.createdAt})
                             .from(schema.accounts)
                             .where(eq(schema.accounts.id, account_id))
 

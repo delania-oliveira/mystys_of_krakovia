@@ -6,12 +6,12 @@ import { hashPassword } from '../../lib/bcrypt';
 
 const router = Router()
 
-interface LoginProps {
+interface RegistrationParams {
   username: string
   password: string
 }
 
-router.post("/register", async (req: Request<{}, {}, LoginProps>, res: Response) => {
+router.post("/register", async (req: Request<{}, {}, RegistrationParams>, res: Response) => {
   const { username, password } = req.body;
   const hashedPassword = await hashPassword(password)
   try {

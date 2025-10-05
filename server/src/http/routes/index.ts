@@ -5,6 +5,7 @@ import check_username from './check_username'
 import create_character from './character/create_character'
 import user from './account/user'
 import delete_character from './character/delete_character'
+import change_password from './account/change_password'
 
 export default [
   login,
@@ -13,5 +14,6 @@ export default [
   check_username,
   create_character,
   user,
-  delete_character
+  delete_character,
+  change_password
 ]

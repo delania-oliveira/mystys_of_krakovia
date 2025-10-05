@@ -4,16 +4,14 @@ var monster_id
 @export var detection_range = 10.0
 @export var attack_range = 2.0
 @export var attack_cooldown = 1.0
-
+var is_targeting = false
 var target_velocity = Vector3.ZERO
-var network_position = Vector3.ZERO
-var network_direction = Vector3.ZERO
-var network_animation = "Idle"
 const LERP_SPEED = 10.0
-
+var spawn_position = Vector3.ZERO
 var target_player: Node3D = null
 var attack_timer = 0.0
 var room
+var was_idle
 
 func _physics_process(delta):
 	attack_timer -= delta
@@ -26,10 +24,23 @@ func _physics_process(delta):
 		if dist < closest_dist:
 			closest_dist = dist
 			target_player = player
-
 	if target_player:
 		move_toward_player(delta)
-
+	else:
+		return_to_spawn_point()
+		
+func return_to_spawn_point():
+	var dist_to_spawn = global_position.distance_to(spawn_position)
+	var direction = (spawn_position - global_position).normalized()
+	if dist_to_spawn > 0.1:
+		velocity = direction * speed
+	else:
+		velocity = Vector3.ZERO
+		global_position = spawn_position
+	move_and_slide()
+	_send_monster_state(direction)
+	
+	
 func move_toward_player(delta):
 	var dir = (target_player.global_position - global_position).normalized()
 	var distance_to_player = global_position.distance_to(target_player.global_position)
@@ -40,4 +51,17 @@ func move_toward_player(delta):
 		
 	velocity = move_direction * speed
 	move_and_slide()
-	room.send("moveMonster", { "x": move_direction.x, "y": 0, "z": move_direction.z, "monster_id": monster_id })
+	_send_monster_state(move_direction)
+
+func _send_monster_state(move_direction: Vector3):
+	var is_idle = move_direction == Vector3.ZERO
+
+	if is_idle != was_idle:
+		room.send("moveMonster", {
+		"x": move_direction.x,
+		"y": 0,
+		"z": move_direction.z,
+		"isTargeting": is_targeting,
+		"monster_id": monster_id
+		})
+		was_idle = is_idle

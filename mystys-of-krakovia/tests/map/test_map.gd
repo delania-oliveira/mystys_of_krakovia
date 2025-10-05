@@ -32,6 +32,7 @@ func _spawn_monster(value, key):
 	monster.speed = value.speed
 	monster.get_node("Name").set_text(value.name)
 	monster.position = Vector3(value.x, value.y, value.z)
+	monster.spawn_position = Vector3(value.x, value.y, value.z)
 	monster.room = room
 	add_child(monster)
 	value.listen(":change").on(func():

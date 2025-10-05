@@ -13,7 +13,7 @@ var network_position = Vector3.ZERO
 var network_direction = Vector3.ZERO
 var network_animation = "Idle"
 const LERP_SPEED = 10.0
-
+var was_idle
 var room
 
 func _physics_process(delta):
@@ -45,9 +45,13 @@ func _physics_process(delta):
 		move_and_slide()
 		if velocity.length() == 0:
 			anim_player.play("Idle")
+			if not was_idle:
+				room.send("movePlayer", { "x": 0, "y": 0, "z": 0 })
+				was_idle = true
 		else:
+			was_idle = false
 			anim_player.play("Running")
-		room.send("movePlayer", { "x": direction.x, "y": 0, "z": direction.z })
+			room.send("movePlayer", { "x": direction.x, "y": 0, "z": direction.z })
 		# Jumping.
 		if is_on_floor() and Input.is_action_just_pressed("jump"):
 			target_velocity.y = jump_impulse

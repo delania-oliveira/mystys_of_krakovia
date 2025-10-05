@@ -4,8 +4,7 @@ extends Control
 @onready var class_select = $ClassOptionButton
 @onready var preview = $CharacterPreview3D
 @onready var create_button = $CreateButton
-@onready var error_panel = $BlankNameError
-@onready var success_panel = $CharacterCreatedSuccess
+@onready var alert_panel = $AlertPanel
 @onready var http_request = $HTTPRequest
 @onready var exit_button = $Exit
 @onready var config_menu = $ConfigMenuButton
@@ -19,8 +18,7 @@ func _ready():
 	class_select.add_item("Hunter")
 	class_select.add_item("Assassin")
 	class_select.add_item("Priest")
-	error_panel.hide()
-	success_panel.hide()
+	alert_panel.hide()
 	class_select.item_selected.connect(_on_class_selected)
 	http_request.request_completed.connect(_on_http_request_completed)
 	create_button.pressed.connect(_on_create_pressed)
@@ -36,19 +34,19 @@ func _on_create_pressed():
 	for index in selected_indices:
 		char_class = class_select.get_item_text(index)
 	if char_class == "":
-		error_panel.dialog_text = "Selecione um personagem!"
-		error_panel.popup_centered()
+		alert_panel.dialog_text = "Selecione um personagem!"
+		alert_panel.popup_centered()
 		return
 	if char_name == "":
-		error_panel.dialog_text = "Nome não pode ficar em branco"
-		error_panel.popup_centered()
+		alert_panel.dialog_text = "Nome não pode ficar em branco"
+		alert_panel.popup_centered()
 		return
 	# Store the character data (for now just print, but you might save to global or send to server)
 	var body = JSON.stringify({
 		"name": char_name,
 		"character_class": char_class
 	})
-	var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiODEwNWFlYmEtZGNlOS00YThiLThlYmUtNmQyM2Q1ZDVjMDhkIiwiaWF0IjoxNzU5NTMzMTQ4LCJleHAiOjE3NjIxMjUxNDh9.Nx3crWo4tdGXN_eoaOlrWpI-txFFURwyIAElQ4SI9wU"
+	var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiMzEzOGVkYWItYzViMC00OGYzLWExZjgtZWIzZjM4MWZiZjFkIiwiaWF0IjoxNzU5NjgxNzk5LCJleHAiOjE3NjIyNzM3OTl9.VOXIGd28FSBkJtx4s1av0NiwIu1idElgBYzFj9xT1WY"
 	var headers = ["Content-Type: application/json", "Authorization: Bearer " + token]
 	http_request.request(SERVER_URL, headers, HTTPClient.METHOD_POST, body)
 	
@@ -87,14 +85,14 @@ func clear_preview() -> void:
 func _on_http_request_completed(result, response_code, headers, body) -> void:
 	match response_code:
 		201: 
-			success_panel.dialog_text = "Personagem criado com sucesso!"
-			success_panel.popup_centered()
+			alert_panel.dialog_text = "Personagem criado com sucesso!"
+			alert_panel.popup_centered()
 		401:
-			error_panel.dialog_text = "Nome já existe!"
-			error_panel.popup_centered()
+			alert_panel.dialog_text = "Nome já existe!"
+			alert_panel.popup_centered()
 		_:
-			error_panel.dialog_text = "Erro de conexão com o servidor."
-			error_panel.popup_centered()
+			alert_panel.dialog_text = "Erro de conexão com o servidor."
+			alert_panel.popup_centered()
 
 func _on_exit_pressed() -> void:
 	get_tree().change_scene_to_file("res://character_selection/CharacterSelectionScreen.tscn")

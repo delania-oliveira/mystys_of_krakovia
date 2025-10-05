@@ -48,10 +48,10 @@ text = "Entrar no Jogo"
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 0
-offset_left = 613.0
-offset_top = 253.0
-offset_right = 653.0
-offset_bottom = 276.0
+offset_left = 622.0
+offset_top = 214.0
+offset_right = 662.0
+offset_bottom = 237.0
 
 [node name="ExitButton" type="Button" parent="."]
 layout_mode = 0

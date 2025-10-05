@@ -53,14 +53,15 @@ func _on_create_pressed():
 	http_request.request(SERVER_URL, headers, HTTPClient.METHOD_POST, body)
 	
 func _on_class_selected(index: int) -> void:
+	var class_selected = class_select.get_item_text(index)
 	clear_preview()
-	prepare_preview()
+	prepare_preview(class_selected)
 
 func _on_config_menu_pressed() -> void:
 	var options_scene = load("res://ui/OptionsMenu.tscn").instantiate()
 	add_child(options_scene)
 	
-func prepare_preview() -> void:
+func prepare_preview(class_selected) -> void:
 	var camera = preview.get_node("Camera3D")
 	camera.position = Vector3(0, 2, 5)
 	camera.look_at(Vector3.ZERO, Vector3.UP)
@@ -68,7 +69,7 @@ func prepare_preview() -> void:
 	var light = preview.get_node("DirectionalLight3D")
 	light.rotation_degrees = Vector3(-45, 45, 0)
 	
-	var char_scene = preload("res://assets/character/cac-1758665492797.gltf").instantiate()
+	var char_scene = load("res://assets/character/" + class_selected + ".glb").instantiate()
 	char_scene.position = Vector3(0, 0, 0)   # moves model to origin
 	char_scene.rotation_degrees = Vector3.ZERO
 	char_scene.scale = Vector3.ONE

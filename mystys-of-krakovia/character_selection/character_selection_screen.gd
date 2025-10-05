@@ -56,7 +56,7 @@ func prepare_preview() -> void:
 	var light = preview.get_node("DirectionalLight3D")
 	light.rotation_degrees = Vector3(-45, 45, 0)
 	
-	var char_scene = preload("res://assets/character/cac-1758665492797.gltf").instantiate()
+	var char_scene = load("res://assets/character/" + character_selected.class + ".glb").instantiate()
 	char_scene.position = Vector3(0, 0, 0)   # moves model to origin
 	char_scene.rotation_degrees = Vector3.ZERO
 	char_scene.scale = Vector3.ONE
@@ -121,7 +121,7 @@ func _on_exit_pressed():
 
 func _on_join_game_pressed():
 	Character.character_id = character_selected.id
-	get_tree().change_scene_to_file("res://tests/TestMap.tscn")
+	get_tree().change_scene_to_file("res://tests/map/TestMap.tscn")
 	
 func _on_success_dialog_confirmed() -> void:
 	get_tree().reload_current_scene()

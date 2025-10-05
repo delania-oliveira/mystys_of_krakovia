@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://dem7bdkdwsf36"]
+
+[ext_resource type="Script" uid="uid://bf8ghx67sjoix" path="res://tests/npcs/monsters/monster.gd" id="1_17sl7"]
+[ext_resource type="Script" uid="uid://bqu316xxkwfjg" path="res://tests/npcs/monsters/name.gd" id="3_n38wx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_p11y5"]
+size = Vector3(2, 1, 2)
+
+[node name="Monster" type="CharacterBody3D"]
+collision_mask = 4
+script = ExtResource("1_17sl7")
+
+[node name="Pivot" type="Node3D" parent="."]
+
+[node name="Name" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1632147, 0)
+billboard = 1
+font_size = 52
+script = ExtResource("3_n38wx")
+
+[node name="AttackArea" type="Area3D" parent="."]
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.008472323, 0)
+shape = SubResource("BoxShape3D_p11y5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.008472323, 0)
+shape = SubResource("BoxShape3D_p11y5")
+
+[connection signal="area_entered" from="AttackArea" to="." method="_on_attack_area_area_entered"]

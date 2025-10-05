@@ -8,8 +8,21 @@ class RoomState extends colyseus.Schema:
 	static func define_fields():
 		return [
 			colyseus.Field.new("players", colyseus.MAP, Player),
+			colyseus.Field.new("monsters", colyseus.MAP, Monster),
 		]
-		
+class Monster extends colyseus.Schema:
+	static func define_fields():
+		return [
+			colyseus.Field.new("monster_id", colyseus.STRING),
+			colyseus.Field.new("name", colyseus.STRING),
+			colyseus.Field.new("x", colyseus.NUMBER),
+			colyseus.Field.new("y", colyseus.NUMBER),
+			colyseus.Field.new("z", colyseus.NUMBER),
+			colyseus.Field.new("type", colyseus.STRING),
+			colyseus.Field.new("inputX", colyseus.NUMBER),
+			colyseus.Field.new("inputZ", colyseus.NUMBER),
+			colyseus.Field.new("speed", colyseus.NUMBER),
+		]
 class Player extends colyseus.Schema:
 	static func define_fields():
 		return [
@@ -44,3 +57,20 @@ var client
 func _ready():
 	client = colyseus.Client.new("ws://localhost:2567")
 	connection_ready.emit()
+
+func join_room():
+	var join_options = { "character_id": Character.character_id }
+	var promise = Network.client.join_or_create(Network.RoomState, "Krakovia", join_options)
+	await promise.completed
+	if promise.get_state() == promise.State.Failed:
+		print("Failed")
+		return
+	var room = promise.get_data()
+	var state = room.get_state()
+	return {"state": state, "room": room}
+	
+func prepare_room_state(state, owner):
+	state.listen("monsters:add").on(Callable(owner, "_on_monster_add"))
+	state.listen("monsters:remove").on(Callable(owner, "_on_monster_remove"))
+	state.listen("players:add").on(Callable(owner, "_on_players_add"))
+	state.listen("players:remove").on(Callable(owner, "_on_players_remove"))

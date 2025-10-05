@@ -26,6 +26,9 @@ export class Krakovia extends Room<KrakoviaState> {
         x: monster.x,
         y: GROUND_LEVEL - 1,
         z: monster.z,
+        spawn_x: monster.x,
+        spawn_y: GROUND_LEVEL - 1,
+        spawn_z: monster.z,
         speed: monster.speed
       });
   
@@ -49,6 +52,7 @@ export class Krakovia extends Room<KrakoviaState> {
       const monster = this.state.monsters.get(data.monster_id);
       monster.inputX = data.x ?? 0;
       monster.inputZ = data.z ?? 0;
+      monster.isTargeting = data.isTargeting;
     });
 
     this.onMessage("lookPlayer", (client, data) => {
@@ -98,9 +102,23 @@ export class Krakovia extends Room<KrakoviaState> {
       const dx = monster.inputX;
       const dz = monster.inputZ;
       const len = Math.sqrt(dx * dx + dz * dz);
+
       if (len > 0) {
         monster.x += (dx / len) * monster.speed * dt;
         monster.z += (dz / len) * monster.speed * dt;
+      } else if (!monster.isTargeting) {
+        const dirX = monster.spawn_x - monster.x;
+        const dirZ = monster.spawn_z - monster.z;
+        const dist = Math.sqrt(dirX * dirX + dirZ * dirZ);
+
+        if (dist > 0.1) {
+          monster.x += (dirX / dist) * monster.speed * dt;
+          monster.z += (dirZ / dist) * monster.speed * dt;
+        } else {
+          monster.x = monster.spawn_x;
+          monster.y = monster.spawn_y;
+          monster.z = monster.spawn_z;
+        }
       }
     });
   }

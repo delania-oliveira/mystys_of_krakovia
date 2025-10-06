@@ -1,10 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://drsrs7v3ykkwq"]
+[gd_scene load_steps=6 format=3 uid="uid://drsrs7v3ykkwq"]
 
 [ext_resource type="Script" uid="uid://cq0rk5lox1lkw" path="res://tests/players/player.gd" id="1_g5nvm"]
 [ext_resource type="Script" uid="uid://bqu316xxkwfjg" path="res://tests/npcs/monsters/name.gd" id="3_qg6v4"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_ibhvg"]
 radius = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mp81i"]
+bg_color = Color(0.5350202, 0.44240648, 0.9904612, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g5nvm"]
+bg_color = Color(0.35669395, 0.77421546, 0.40624177, 1)
 
 [node name="Player" type="CharacterBody3D" groups=["players"]]
 collision_mask = 4
@@ -17,6 +23,52 @@ shape = SubResource("SphereShape3D_ibhvg")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.70710677, -0.4055798, 0.579228, 0, 0.81915206, 0.57357645, -0.70710677, -0.4055798, 0.579228, 5, 5, 5)
+
+[node name="ManaBar" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ProgressManaBar" type="ProgressBar" parent="ManaBar"]
+layout_mode = 0
+offset_left = 662.0
+offset_top = 15.0
+offset_right = 1002.0
+offset_bottom = 42.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_mp81i")
+step = 1.0
+value = 100.0
+
+[node name="ManaLabel" type="Label" parent="ManaBar"]
+layout_mode = 0
+offset_left = 808.0
+offset_top = 17.0
+offset_right = 848.0
+offset_bottom = 40.0
+
+[node name="HealthBar" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ProgressHealthBar" type="ProgressBar" parent="HealthBar"]
+layout_mode = 0
+offset_left = 201.0
+offset_top = 15.0
+offset_right = 541.0
+offset_bottom = 42.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_g5nvm")
+step = 1.0
+value = 100.0
+
+[node name="HealthLabel" type="Label" parent="HealthBar"]
+layout_mode = 0
+offset_left = 352.0
+offset_top = 16.0
+offset_right = 392.0
+offset_bottom = 39.0
 
 [node name="Name" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1586132, 0)

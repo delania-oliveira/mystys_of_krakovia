@@ -120,7 +120,7 @@ func _on_exit_pressed():
 	get_tree().change_scene_to_file("res://login/LoginScreen.tscn")
 
 func _on_join_game_pressed():
-	Character.character_id = character_selected.id
+	CharacterHelper.character_id = character_selected.id
 	get_tree().change_scene_to_file("res://tests/map/TestMap.tscn")
 	
 func _on_success_dialog_confirmed() -> void:

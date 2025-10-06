@@ -1,9 +1,10 @@
 extends CharacterBody3D  # or Node3D if no physics needed
 var monster_id
-@export var speed = 5.0
+@export var speed = 0.0
 @export var detection_range = 10.0
 @export var attack_range = 2.0
-@export var attack_cooldown = 1.0
+@export var attack_cooldown = 2.0
+var attack_damage = 0.0
 var is_targeting = false
 var target_velocity = Vector3.ZERO
 const LERP_SPEED = 10.0
@@ -24,10 +25,18 @@ func _physics_process(delta):
 		if dist < closest_dist:
 			closest_dist = dist
 			target_player = player
-	if target_player:
+	if target_player && !target_player.dead:
 		move_toward_player(delta)
+		if global_position.distance_to(target_player.global_position) <= attack_range:
+			try_attack_player()
 	else:
 		return_to_spawn_point()
+
+func try_attack_player():
+	if attack_timer <= 0.0:
+		if "take_damage" in target_player:
+			target_player.take_damage(target_player.player_key, monster_id)
+		attack_timer = attack_cooldown
 		
 func return_to_spawn_point():
 	var dist_to_spawn = global_position.distance_to(spawn_position)
@@ -58,10 +67,10 @@ func _send_monster_state(move_direction: Vector3):
 
 	if is_idle != was_idle:
 		room.send("moveMonster", {
-		"x": move_direction.x,
-		"y": 0,
-		"z": move_direction.z,
-		"isTargeting": is_targeting,
-		"monster_id": monster_id
+			"x": move_direction.x,
+			"y": 0,
+			"z": move_direction.z,
+			"isTargeting": is_targeting,
+			"monster_id": monster_id
 		})
 		was_idle = is_idle

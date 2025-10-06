@@ -7,6 +7,8 @@ extends CharacterBody3D
 @export var jump_impulse = 20
 @export var bounce_impulse = 16
 @export var is_local: bool = false
+var current_health: int
+var max_health: int
 
 var target_velocity = Vector3.ZERO
 var network_position = Vector3.ZERO
@@ -15,10 +17,14 @@ var network_animation = "Idle"
 const LERP_SPEED = 10.0
 var was_idle
 var room
+@onready var health_label = $HealthBar/HealthLabel
+@onready var health_bar = $HealthBar/ProgressHealthBar
+var dead: bool = false
+var player_key
 
 func _physics_process(delta):
 	var direction = Vector3.ZERO
-	if is_local:
+	if is_local && !dead:
 		if Input.is_action_pressed("move_right"):
 			direction.x += 1
 		if Input.is_action_pressed("move_left"):
@@ -44,8 +50,8 @@ func _physics_process(delta):
 		velocity = target_velocity
 		move_and_slide()
 		if velocity.length() == 0:
-			anim_player.play("Idle")
 			if not was_idle:
+				anim_player.play("Idle")
 				room.send("movePlayer", { "x": 0, "y": 0, "z": 0 })
 				was_idle = true
 		else:
@@ -56,14 +62,20 @@ func _physics_process(delta):
 		if is_on_floor() and Input.is_action_just_pressed("jump"):
 			target_velocity.y = jump_impulse
 			room.send("jumpPlayer")
-		
 
 func on_network_data_received(data):
+	if data.health:
+		current_health = data.health
+		health_label.text = str(current_health) + " / " + str(max_health)
+		health_bar.value = current_health
+	if data.isDead and not dead:
+		die()
 	if is_local:
 		return
 	network_position = Vector3(data.x, data.y, data.z)
 	network_direction = Vector3(-data.dirX, 0, -data.dirZ)
-	$Pivot/AuxScene/AnimationPlayer.play(data.animation)
+	if not dead:
+		anim_player.play(data.animation)
 	
 func _process(delta):
 	if is_local:
@@ -71,3 +83,15 @@ func _process(delta):
 	position = position.lerp(network_position, LERP_SPEED * delta)
 	if network_direction.length() > 0.1:
 		look_at(global_position + network_direction.normalized(), Vector3.UP)
+
+func take_damage(target_key, monster_id):
+	room.send("playerTakeDamage", { "targetId": target_key, "monsterId": monster_id })
+
+func die():
+	if dead:
+		return
+	dead = true
+	anim_player.play("StandingReactDeathBackward")
+	velocity = Vector3.ZERO
+	set_physics_process(false)
+	

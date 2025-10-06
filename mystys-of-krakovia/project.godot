@@ -18,7 +18,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 Network="*res://network/network.gd"
-Character="*res://character_handler/character.gd"
+MonsterHelper="*res://helpers/monster.gd"
+CharacterHelper="*res://helpers/character.gd"
 
 [display]
 

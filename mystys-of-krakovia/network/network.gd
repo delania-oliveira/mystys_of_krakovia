@@ -25,7 +25,8 @@ class Monster extends colyseus.Schema:
 			colyseus.Field.new("inputX", colyseus.NUMBER),
 			colyseus.Field.new("inputZ", colyseus.NUMBER),
 			colyseus.Field.new("speed", colyseus.NUMBER),
-			colyseus.Field.new("isTargeting", colyseus.BOOLEAN)
+			colyseus.Field.new("isTargeting", colyseus.BOOLEAN),
+			colyseus.Field.new("attack", colyseus.NUMBER)
 		]
 class Player extends colyseus.Schema:
 	static func define_fields():
@@ -45,10 +46,13 @@ class Player extends colyseus.Schema:
 			colyseus.Field.new("name", colyseus.STRING),
 			colyseus.Field.new("character_class", colyseus.STRING),
 			colyseus.Field.new("health", colyseus.NUMBER),
+			colyseus.Field.new("max_health", colyseus.NUMBER),
 			colyseus.Field.new("mana", colyseus.NUMBER),
+			colyseus.Field.new("max_mana", colyseus.NUMBER),
 			colyseus.Field.new("level", colyseus.NUMBER),
 			colyseus.Field.new("experience", colyseus.NUMBER),
-			colyseus.Field.new("animation", colyseus.STRING)
+			colyseus.Field.new("animation", colyseus.STRING),
+			colyseus.Field.new("isDead", colyseus.BOOLEAN),
 		]
 	
 	var node
@@ -63,7 +67,7 @@ func _ready():
 	connection_ready.emit()
 
 func join_room():
-	var join_options = { "character_id": Character.character_id }
+	var join_options = { "character_id": CharacterHelper.character_id }
 	var promise = Network.client.join_or_create(Network.RoomState, "Krakovia", join_options)
 	await promise.completed
 	if promise.get_state() == promise.State.Failed:

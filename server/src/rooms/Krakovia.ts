@@ -30,7 +30,10 @@ export class Krakovia extends Room<KrakoviaState> {
         spawn_y: GROUND_LEVEL - 1,
         spawn_z: monster.z,
         speed: monster.speed,
-        attack: monster.attack
+        attack: monster.attack,
+        health: monster.health,
+        detectionRange: monster.detectionRange,
+
       });
   
       this.state.monsters.set(loadedMonster.monster_id, loadedMonster);
@@ -50,7 +53,6 @@ export class Krakovia extends Room<KrakoviaState> {
       const monster = this.state.monsters.get(data.monster_id);
       monster.inputX = data.x ?? 0;
       monster.inputZ = data.z ?? 0;
-      monster.isTargeting = data.isTargeting;
     });
 
     this.onMessage("lookPlayer", (client, data) => {
@@ -65,12 +67,13 @@ export class Krakovia extends Room<KrakoviaState> {
     this.onMessage("playerTakeDamage", (client, data) => {
       const target = this.state.players.get(data.targetId);
       const attacker = this.state.monsters.get(data.monsterId)
+      attacker.targetId = data.targetId
       if (target && attacker) {
         target.health -= attacker.attack;
-
         if (target.health <= 0 && !target.isDead) {
           target.isDead = true
           target.health = 0
+          attacker.targetId = ""
         }
       }
     })
@@ -113,7 +116,19 @@ export class Krakovia extends Room<KrakoviaState> {
       const dx = monster.inputX;
       const dz = monster.inputZ;
       const len = Math.sqrt(dx * dx + dz * dz);
-
+      if (monster.isTargeting) {
+        const target = this.state.players.get(monster.targetId);
+        const dx = monster.x - target.x;
+        const dz = monster.z - target.z;
+        const distance = Math.sqrt(dx * dx + dz * dz);
+        monster.isTargeting = distance <= monster.detectionRange;
+        if (!target) {
+          monster.isTargeting = false;
+          monster.inputX = 0;
+          monster.inputZ = 0;
+          monster.targetId = null;
+        }
+      }
       if (len > 0) {
         monster.x += (dx / len) * monster.speed * dt;
         monster.z += (dz / len) * monster.speed * dt;
@@ -155,10 +170,10 @@ export class Krakovia extends Room<KrakoviaState> {
           })
           .where(eq(schema.characters.id, character.id))
           this.state.monsters.forEach((monster) => {
-          if (!monster.isTargeting) {
-            monster.x = monster.spawn_x;
-            monster.z = monster.spawn_z;
-          }
+            if (!monster.isTargeting) {
+              monster.x = monster.spawn_x;
+              monster.z = monster.spawn_z;
+            }
           });
         }
       } catch (error) {

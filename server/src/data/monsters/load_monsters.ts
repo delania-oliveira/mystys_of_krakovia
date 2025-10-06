@@ -14,12 +14,13 @@ export function loadMonsters() {
     id: m.id,
     name: m.name,
     type: m.type,
-    hp: Number(m.hp),
+    health: Number(m.health),
     attack: Number(m.attack),
     defense: Number(m.defense),
     speed: Number(m.speed),
     x: Number(m.x),
     y: Number(m.y),
     z: Number(m.z),
+    detectionRange: Number(m.detection_range),
   }));
 }

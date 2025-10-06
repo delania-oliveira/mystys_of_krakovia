@@ -19,4 +19,7 @@ export class Monster extends Schema {
   @type("number") health = 0
   @type("number") detectionRange = 10
   @type("string") targetId = ""
+  @type("number") attackTimer = 0
+  @type("number") attackCooldown = 0
+  @type("number") attackRange = 0
 }

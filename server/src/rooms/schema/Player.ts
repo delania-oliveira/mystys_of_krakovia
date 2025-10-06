@@ -23,4 +23,7 @@ export class Player extends Schema {
     @type("number") experience = 1;
     @type("string") animation = "Idle"
     @type("boolean") isDead = false
+    @type("string") targetId = ""
+    @type("number") targetHealth = 0
+    @type("string") targetName = ""
 }

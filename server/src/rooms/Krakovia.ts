@@ -6,6 +6,7 @@ import { schema } from "../db/schema";
 import { eq, sql } from "drizzle-orm";
 import { Monster } from "./schema/Monster";
 import { loadMonsters } from "../data/monsters/load_monsters";
+import { calculateDamage } from "../mechanics/calculateDamage";
 
 const GRAVITY = 75
 const JUMP_STRENGTH = 20
@@ -14,7 +15,7 @@ const PLAYER_SPEED = 14
 
 export class Krakovia extends Room<KrakoviaState> {
   maxClients = 4;
-   
+  hasProcessedAttack = false
   onCreate(options: any) {
     this.state = new KrakoviaState();
     const monsters = loadMonsters()
@@ -33,7 +34,9 @@ export class Krakovia extends Room<KrakoviaState> {
         attack: monster.attack,
         health: monster.health,
         detectionRange: monster.detectionRange,
-
+        attackCooldown: 2.0,
+        attackTimer: 0.0,
+        attackRange: 2.0
       });
   
       this.state.monsters.set(loadedMonster.monster_id, loadedMonster);
@@ -50,9 +53,18 @@ export class Krakovia extends Room<KrakoviaState> {
     });
 
     this.onMessage("moveMonster", (client, data) => {
-      const monster = this.state.monsters.get(data.monster_id);
-      monster.inputX = data.x ?? 0;
-      monster.inputZ = data.z ?? 0;
+      const monster = this.state.monsters.get(data.monsterId);
+      if (!monster) return;
+      
+      monster.targetId = data.targetId;
+      monster.isTargeting = data.isTargeting;
+    });
+
+    this.onMessage("setTarget", (client, data) => {
+      const player = this.state.players.get(client.sessionId);
+      if (player) {
+        player.targetName = data.targetName
+      }
     });
 
     this.onMessage("lookPlayer", (client, data) => {
@@ -63,20 +75,6 @@ export class Krakovia extends Room<KrakoviaState> {
         player.dirZ = data.dirZ;
       }
     });
-
-    this.onMessage("playerTakeDamage", (client, data) => {
-      const target = this.state.players.get(data.targetId);
-      const attacker = this.state.monsters.get(data.monsterId)
-      attacker.targetId = data.targetId
-      if (target && attacker) {
-        target.health -= attacker.attack;
-        if (target.health <= 0 && !target.isDead) {
-          target.isDead = true
-          target.health = 0
-          attacker.targetId = ""
-        }
-      }
-    })
 
     this.onMessage("jumpPlayer", (client) => {
       const player = this.state.players.get(client.sessionId);
@@ -113,36 +111,69 @@ export class Krakovia extends Room<KrakoviaState> {
     });
 
     this.state.monsters.forEach((monster) => {
-      const dx = monster.inputX;
-      const dz = monster.inputZ;
-      const len = Math.sqrt(dx * dx + dz * dz);
-      if (monster.isTargeting) {
-        const target = this.state.players.get(monster.targetId);
-        const dx = monster.x - target.x;
-        const dz = monster.z - target.z;
+      monster.attackTimer -= dt;
+      if (monster.attackTimer < 0) monster.attackTimer = 0;
+
+      const target = this.state.players.get(monster.targetId);
+
+      if (target) {
+        // direction FROM monster TO target (was the bug)
+        const dx = target.x - monster.x;
+        const dz = target.z - monster.z;
         const distance = Math.sqrt(dx * dx + dz * dz);
-        monster.isTargeting = distance <= monster.detectionRange;
-        if (!target) {
-          monster.isTargeting = false;
-          monster.inputX = 0;
-          monster.inputZ = 0;
-          monster.targetId = null;
+
+        if (distance > 0.1) {
+          const nx = dx / distance;
+          const nz = dz / distance;
+          const step = monster.speed * dt;
+
+          // avoid overshooting: if step >= distance, move exactly to target vector
+          const moveX = step >= distance ? dx : nx * step;
+          const moveZ = step >= distance ? dz : nz * step;
+
+          monster.x += moveX;
+          monster.z += moveZ;
         }
-      }
-      if (len > 0) {
-        monster.x += (dx / len) * monster.speed * dt;
-        monster.z += (dz / len) * monster.speed * dt;
-      } else if (!monster.isTargeting) {
+
+        const attackRange = monster.attackRange;
+        if (monster.attackTimer <= 0 && distance <= attackRange) {
+          if (!target.isDead) {
+            const finalDamage = calculateDamage(monster.attack);
+            target.health -= finalDamage;
+            this.broadcast("playerHealthUpdate", {
+              name: target.name,
+              health: target.health,
+              targetId: monster.targetId,
+              targetHealth: target.health,
+              isDead: target.health <= 0,
+            });
+            if (target.health <= 0) {
+              target.isDead = true;
+              target.health = 0;
+              monster.targetId = "";
+              monster.isTargeting = false;
+            }
+          }
+          monster.attackTimer = monster.attackCooldown;
+        }
+      } else {
         const dirX = monster.spawn_x - monster.x;
         const dirZ = monster.spawn_z - monster.z;
         const dist = Math.sqrt(dirX * dirX + dirZ * dirZ);
 
-        if (dist > 0) {
-          monster.x += (dirX / dist) * monster.speed * dt;
-          monster.z += (dirZ / dist) * monster.speed * dt;
+        if (dist > 0.1) {
+          const nx = dirX / dist;
+          const nz = dirZ / dist;
+          const step = monster.speed * dt;
+          const moveX = step >= dist ? dirX : nx * step;
+          const moveZ = step >= dist ? dirZ : nz * step;
+
+          monster.x += moveX;
+          monster.z += moveZ;
         }
       }
     });
+
   }
   
   async onJoin(client: Client, options: { character_id: string }) {
@@ -169,12 +200,6 @@ export class Krakovia extends Room<KrakoviaState> {
             lastLogin: sql`NOW()`
           })
           .where(eq(schema.characters.id, character.id))
-          this.state.monsters.forEach((monster) => {
-            if (!monster.isTargeting) {
-              monster.x = monster.spawn_x;
-              monster.z = monster.spawn_z;
-            }
-          });
         }
       } catch (error) {
         console.log(error);

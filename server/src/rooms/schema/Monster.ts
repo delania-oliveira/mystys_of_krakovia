@@ -14,4 +14,5 @@ export class Monster extends Schema {
   @type("number") inputZ = 0
   @type("number") speed = 0
   @type("boolean") isTargeting = false
+  @type("number") attack = 0
 }

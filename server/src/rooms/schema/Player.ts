@@ -16,8 +16,11 @@ export class Player extends Schema {
     @type("string") name = "";
     @type("string") character_class = "";
     @type("number") health = 1;
+    @type("number") max_health = 1;
     @type("number") mana = 1;
+    @type("number") max_mana = 1;
     @type("number") level = 1;
     @type("number") experience = 1;
     @type("string") animation = "Idle"
+    @type("boolean") isDead = false
 }

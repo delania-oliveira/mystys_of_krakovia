@@ -27,7 +27,9 @@ router.post("/characters", authenticateToken, async (req: Request<{}, {}, Charac
         class: character_class,
         account_id: account_id,
         health: defaults.health,
+        max_health: defaults.health,
         mana: defaults.mana,
+        max_mana: defaults.mana,
       }).returning()
       const newCharacter = result[0]
       if (!newCharacter) {

@@ -26,7 +26,10 @@ class Monster extends colyseus.Schema:
 			colyseus.Field.new("inputZ", colyseus.NUMBER),
 			colyseus.Field.new("speed", colyseus.NUMBER),
 			colyseus.Field.new("isTargeting", colyseus.BOOLEAN),
-			colyseus.Field.new("attack", colyseus.NUMBER)
+			colyseus.Field.new("attack", colyseus.NUMBER),
+			colyseus.Field.new("health", colyseus.NUMBER),
+			colyseus.Field.new("detectionRange", colyseus.NUMBER),
+			colyseus.Field.new("targetId", colyseus.STRING)
 		]
 class Player extends colyseus.Schema:
 	static func define_fields():

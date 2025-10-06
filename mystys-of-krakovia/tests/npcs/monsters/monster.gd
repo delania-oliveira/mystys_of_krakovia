@@ -13,6 +13,10 @@ var target_player: Node3D = null
 var attack_timer = 0.0
 var room
 var was_idle
+var max_health = 0.0
+var current_health = 0.0
+var character_name = ""
+var model
 
 func _physics_process(delta):
 	attack_timer -= delta
@@ -20,13 +24,14 @@ func _physics_process(delta):
 	# Find the closest player
 	var closest_dist = detection_range
 	target_player = null
-	for player in get_tree().get_nodes_in_group("players"): # make players part of "players" group
-		var dist = global_position.distance_to(player.global_position)
-		if dist < closest_dist:
-			closest_dist = dist
-			target_player = player
+	for player in get_tree().get_nodes_in_group("players"):
+		if player is CharacterBody3D:
+			var dist = global_position.distance_to(player.global_position)
+			if dist < closest_dist:
+				closest_dist = dist
+				target_player = player
 	if target_player && !target_player.dead:
-		move_toward_player(delta)
+		move_toward_player(delta, target_player)
 		if global_position.distance_to(target_player.global_position) <= attack_range:
 			try_attack_player()
 	else:
@@ -43,14 +48,14 @@ func return_to_spawn_point():
 	var direction = (spawn_position - global_position).normalized()
 	if dist_to_spawn > 0.1:
 		velocity = direction * speed
+		move_and_slide()
 	else:
 		velocity = Vector3.ZERO
 		global_position = spawn_position
-	move_and_slide()
-	_send_monster_state(direction)
+	_send_monster_state(direction, null)
 	
 	
-func move_toward_player(delta):
+func move_toward_player(delta, target_player):
 	var dir = (target_player.global_position - global_position).normalized()
 	var distance_to_player = global_position.distance_to(target_player.global_position)
 	var move_direction = Vector3.ZERO
@@ -60,17 +65,18 @@ func move_toward_player(delta):
 		
 	velocity = move_direction * speed
 	move_and_slide()
-	_send_monster_state(move_direction)
+	_send_monster_state(move_direction, target_player)
 
-func _send_monster_state(move_direction: Vector3):
+func _send_monster_state(move_direction: Vector3, target_player):
 	var is_idle = move_direction == Vector3.ZERO
-
-	if is_idle != was_idle:
-		room.send("moveMonster", {
+	var payload = {
 			"x": move_direction.x,
 			"y": 0,
 			"z": move_direction.z,
-			"isTargeting": is_targeting,
 			"monster_id": monster_id
-		})
+	}
+	if target_player:
+		payload["targetId"] = target_player.player_key
+	if is_idle != was_idle:
+		room.send("moveMonster", payload)
 		was_idle = is_idle

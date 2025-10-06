@@ -6,7 +6,7 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_p11y5"]
 size = Vector3(2, 1, 2)
 
-[node name="Monster" type="CharacterBody3D"]
+[node name="Monster" type="CharacterBody3D" groups=["targetable"]]
 collision_mask = 4
 script = ExtResource("1_17sl7")
 

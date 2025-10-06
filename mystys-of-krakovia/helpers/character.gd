@@ -15,7 +15,7 @@ func prepare_health_bar(character, current_health, max_health):
 	character.current_health = current_health
 	character.max_health = max_health
 	var health_bar = character.get_node("HealthBar/ProgressHealthBar")
-	var health_label = character.get_node("HealthBar/HealthLabel")
+	var health_label = character.get_node("HealthBar/ProgressHealthBar/HealthLabel")
 	health_bar.max_value = max_health
 	health_bar.value = current_health
 	health_label.text = str(current_health) + " / " + str(max_health)
@@ -23,7 +23,7 @@ func prepare_health_bar(character, current_health, max_health):
 	
 func prepare_mana_bar(character, current_mana, max_mana):
 	var mana_bar = character.get_node("ManaBar/ProgressManaBar")
-	var mana_label = character.get_node("ManaBar/ManaLabel")
+	var mana_label = character.get_node("ManaBar/ProgressManaBar/ManaLabel")
 	mana_bar.max_value = max_mana
 	mana_bar.value = current_mana
 	mana_label.text = str(current_mana) + " / " + str(max_mana)

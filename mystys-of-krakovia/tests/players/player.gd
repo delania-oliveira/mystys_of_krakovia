@@ -9,7 +9,7 @@ extends CharacterBody3D
 @export var is_local: bool = false
 var current_health: int
 var max_health: int
-
+var current_target: Node3D = null
 var target_velocity = Vector3.ZERO
 var network_position = Vector3.ZERO
 var network_direction = Vector3.ZERO
@@ -17,10 +17,19 @@ var network_animation = "Idle"
 const LERP_SPEED = 10.0
 var was_idle
 var room
-@onready var health_label = $HealthBar/HealthLabel
+var model: Node3D
+var target_model: Node3D
+@onready var health_label = $HealthBar/ProgressHealthBar/HealthLabel
 @onready var health_bar = $HealthBar/ProgressHealthBar
+@onready var target_picture = $Target/HBoxContainer/TextureRect
+@onready var target_health_bar = $Target/HBoxContainer/VBoxContainer/HealthBar
+@onready var target_health_label = $Target/HBoxContainer/VBoxContainer/HealthBar/HealthLabel
+@onready var target_name_label = $Target/HBoxContainer/VBoxContainer/NameLabel
+@onready var target_frame = $Target
+
 var dead: bool = false
 var player_key
+var character_name = ""
 
 func _physics_process(delta):
 	var direction = Vector3.ZERO
@@ -68,6 +77,9 @@ func on_network_data_received(data):
 		current_health = data.health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = current_health
+		if current_target && current_target.character_name == data.name:
+			target_health_bar.value = data.health
+			target_health_label.text = str(data.health) + " / " + str(current_target.max_health)
 	if data.isDead and not dead:
 		die()
 	if is_local:
@@ -95,3 +107,27 @@ func die():
 	velocity = Vector3.ZERO
 	set_physics_process(false)
 	
+func _unhandled_input(event):
+	if !is_local:
+		return
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var from = get_viewport().get_camera_3d().project_ray_origin(event.position)
+		var to = from + get_viewport().get_camera_3d().project_ray_normal(event.position) * 1000
+		var space_state = get_world_3d().direct_space_state
+		var result = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(from, to))
+		if result and result.collider.is_in_group("targetable"):
+			set_target(result.collider)
+
+func set_target(new_target: Node3D):
+	current_target = new_target
+	if new_target:
+		target_health_bar.show_percentage = false
+		target_name_label.text = new_target.character_name
+		target_health_bar.max_value = new_target.max_health
+		target_health_bar.value = new_target.current_health
+		target_health_label.text = str(new_target.current_health) + " / " + str(new_target.max_health)
+		target_picture.texture = load("res://icon.svg") as Texture2D
+		target_frame.show()
+	else:
+		target_picture.texture = null
+		target_frame.hide()

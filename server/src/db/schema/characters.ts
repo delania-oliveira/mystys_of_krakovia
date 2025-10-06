@@ -11,7 +11,9 @@ export const characters = pgTable("characters", {
   class: text().notNull(),
   level: integer().notNull().default(1),
   health: integer().notNull(),
+  max_health: integer().notNull(),
   mana: integer().notNull(),
+  max_mana: integer().notNull(),
   experience: integer().notNull().default(0),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   lastLogin: timestamp('last_login')

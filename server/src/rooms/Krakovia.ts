@@ -29,7 +29,8 @@ export class Krakovia extends Room<KrakoviaState> {
         spawn_x: monster.x,
         spawn_y: GROUND_LEVEL - 1,
         spawn_z: monster.z,
-        speed: monster.speed
+        speed: monster.speed,
+        attack: monster.attack
       });
   
       this.state.monsters.set(loadedMonster.monster_id, loadedMonster);
@@ -40,11 +41,8 @@ export class Krakovia extends Room<KrakoviaState> {
       if (player) {
         player.inputX = data.x ?? 0;
         player.inputZ = data.z ?? 0;
-        if (data.x !== 0 || data.z !== 0 && player.animation === "Idle") {
-          player.animation = "Running";
-        } else {
-          player.animation = "Idle"
-        }
+        const isMoving = Math.abs(data.x) >= 0.1 || Math.abs(data.z) >= 0.1;
+        player.animation = isMoving ? "Running" : "Idle";
       } 
     });
 
@@ -63,6 +61,19 @@ export class Krakovia extends Room<KrakoviaState> {
         player.dirZ = data.dirZ;
       }
     });
+
+    this.onMessage("playerTakeDamage", (client, data) => {
+      const target = this.state.players.get(data.targetId);
+      const attacker = this.state.monsters.get(data.monsterId)
+      if (target && attacker) {
+        target.health -= attacker.attack;
+
+        if (target.health <= 0 && !target.isDead) {
+          target.isDead = true
+          target.health = 0
+        }
+      }
+    })
 
     this.onMessage("jumpPlayer", (client) => {
       const player = this.state.players.get(client.sessionId);
@@ -111,13 +122,9 @@ export class Krakovia extends Room<KrakoviaState> {
         const dirZ = monster.spawn_z - monster.z;
         const dist = Math.sqrt(dirX * dirX + dirZ * dirZ);
 
-        if (dist > 0.1) {
+        if (dist > 0) {
           monster.x += (dirX / dist) * monster.speed * dt;
           monster.z += (dirZ / dist) * monster.speed * dt;
-        } else {
-          monster.x = monster.spawn_x;
-          monster.y = monster.spawn_y;
-          monster.z = monster.spawn_z;
         }
       }
     });
@@ -135,7 +142,9 @@ export class Krakovia extends Room<KrakoviaState> {
           player.name = character.name;
           player.character_class = character.class;
           player.health = character.health;
+          player.max_health = character.max_health;
           player.mana = character.mana;
+          player.max_mana = character.max_mana;
           player.experience = character.experience;
           player.level = character.level;
           player.x = character.x_position;
@@ -145,6 +154,12 @@ export class Krakovia extends Room<KrakoviaState> {
             lastLogin: sql`NOW()`
           })
           .where(eq(schema.characters.id, character.id))
+          this.state.monsters.forEach((monster) => {
+          if (!monster.isTargeting) {
+            monster.x = monster.spawn_x;
+            monster.z = monster.spawn_z;
+          }
+          });
         }
       } catch (error) {
         console.log(error);

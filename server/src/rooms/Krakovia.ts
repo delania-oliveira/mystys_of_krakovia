@@ -138,6 +138,7 @@ export class Krakovia extends Room<KrakoviaState> {
         const attackRange = monster.attackRange;
         if (monster.attackTimer <= 0 && distance <= attackRange) {
           if (!target.isDead) {
+            monster.isTargeting = true
             const finalDamage = calculateDamage(monster.attack);
             target.health -= finalDamage;
             this.broadcast("playerHealthUpdate", {
@@ -157,6 +158,7 @@ export class Krakovia extends Room<KrakoviaState> {
           monster.attackTimer = monster.attackCooldown;
         }
       } else {
+        monster.isTargeting = false
         const dirX = monster.spawn_x - monster.x;
         const dirZ = monster.spawn_z - monster.z;
         const dist = Math.sqrt(dirX * dirX + dirZ * dirZ);

@@ -1,5 +1,4 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -8,6 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { api } from "../../api/axios";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -23,28 +24,20 @@ const passwordSchema = z.object({
 
 type PasswordSchemaType = z.infer<typeof passwordSchema>
 
-const characters = [
-  {
-    id: 'char1',
-    avatarUrl: '',
-    name: 'Aelar',
-    class: 'Guerreiro',
-    level: 20,
-    creationDate: '25/08/2025'
-  },
-  {
-    id: 'char2',
-    avatarUrl: '',
-    name: 'Lirael',
-    class: 'Arqueira',
-    level: 15,
-    creationDate: '15/09/2025'
+const formatDate = (dateString: string | undefined | null) => {
+  if (!dateString) {
+    return 'Nunca logou'
   }
-]
 
+  const date = new Date(dateString);
+  if (isNaN(date.getTime()) || date.getUTCFullYear() <= 1970) {
+    return 'Nunca logou'
+  }
+  return date.toLocaleDateString('pt-BR', { timeZone: 'UTC' })
+}
 
 export function Profile() {
-  // const { user, logout } = useAuth()
+  const { user, logout } = useAuth()
 
   const form = useForm<PasswordSchemaType>({
     resolver: zodResolver(passwordSchema),
@@ -52,11 +45,48 @@ export function Profile() {
   })
 
   async function onChangePassword(data: PasswordSchemaType) {
-    toast.info("Funcionalidade de mudar senha ainda não implementada")
+    try {
+      await api.post('/change_password', {
+        currentPassword: data.oldPassword,
+        newPassword: data.newPassword
+      })
+      toast.success("Senha alterada com sucesso!")
+      form.reset()
+    } catch (error) {
+      console.error("Erro ao alterar senha: ", error)
+
+      if (axios.isAxiosError(error) && error.response) {
+        const errorMessage = error.response.data.message || "Ocorreu um erro desconhecido"
+
+        toast.error("Falha ao alterar a senha", {
+          description: errorMessage
+        })
+
+        if (errorMessage.includes("Current Password incorrect")) {
+          form.setError('oldPassword', {
+            type: 'manual',
+            message: 'Senha antiga incorreta'
+          })
+        }
+      } else {
+        toast.error("Falha na comunicação com o servidor")
+      }
+    }
   }
 
-  function onDeleteAccount() {
-    toast.info("Funcionalidade de deletar conta ain não implementada")
+  async function onDeleteAccount() {
+    try {
+      await api.delete('/accounts')
+      toast.success("Conta deletada com sucesso!", {
+        description: "Sentiremos sua falta!"
+      })
+      logout()
+    } catch (error) {
+      console.error("Erro ao deletar conta: ", error)
+      toast.error("Falha ao deletar a conta", {
+        description: "Não foi possível completar a ação no momento. Tente Novamente"
+      })
+    }
   }
 
   return (
@@ -73,8 +103,9 @@ export function Profile() {
               <CardTitle>Informações da Conta</CardTitle>
             </CardHeader>
             <CardContent className="text-sm space-y-2 text-gray-300">
-              <p><strong>Membro desde:</strong> 03/09/2025</p>
-              <p><strong>Último Login:</strong> 04/10/20025</p>
+              <p><strong>Membro desde:</strong> {formatDate(user?.createdAt)}</p>
+              <p><strong>Último Login:</strong> {formatDate(user?.lastLogin)}</p>
+              <p><strong>Personagens Criados:</strong> {user?.characters?.length ?? 0}</p>
             </CardContent>
             <CardHeader>
               <CardTitle>Meus Personagens</CardTitle>
@@ -83,7 +114,6 @@ export function Profile() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px]">Avatar</TableHead>
                     <TableHead>Nome</TableHead>
                     <TableHead>Classe</TableHead>
                     <TableHead>Level</TableHead>
@@ -91,18 +121,12 @@ export function Profile() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {characters.map((char) => (
+                  {user?.characters.map((char) => (
                     <TableRow key={char.id}>
-                      <TableCell>
-                        <Avatar>
-                          <AvatarImage src={char.avatarUrl} alt={char.name} />
-                          <AvatarFallback>{char.name.substring(0, 2)}</AvatarFallback>
-                        </Avatar>
-                      </TableCell>
                       <TableCell className="font-medium">{char.name}</TableCell>
                       <TableCell>{char.class}</TableCell>
                       <TableCell>{char.level}</TableCell>
-                      <TableCell>{char.creationDate}</TableCell>
+                      <TableCell>{formatDate(char.createdAt)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

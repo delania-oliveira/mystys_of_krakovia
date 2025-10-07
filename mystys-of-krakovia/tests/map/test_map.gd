@@ -28,14 +28,20 @@ func _spawn_monster(value, key):
 	var monster_model_scene = load("res://tests/npcs/monsters/monster.glb")
 	var monster_model_instance = monster_model_scene.instantiate()
 	monster.get_node("Pivot").add_child(monster_model_instance)
-	monster.monster_id = key
+	
+	monster.id = key
 	MonsterHelper.set_monster_stats(monster, value)
 	monster.room = room
+	monster.get_node("AggroArea/CollisionShape3D").shape.radius = value.detectionRange
+	monster.position = Vector3(value.spawn_x, value.spawn_y, value.spawn_z)
+	monster.network_position = Vector3(value.spawn_x, value.spawn_y, value.spawn_z)
 	add_child(monster)
 	monster.model = monster_model_instance
-	value.listen(":change").on(func():
-		monster.position = Vector3(value.x, value.y, value.z)
-	)
+	# Smoothly update monster position from server
+	value.listen(":change").on(Callable(self, "_on_monster").bind(monster))
+	
+func _on_monster(changes, monster_instance):
+	monster_instance.network_position = Vector3(changes.x, changes.y, changes.z)
 	
 func _on_players_add(target, value, key):
 	var characterSceneLocation = "res://tests/players/player.tscn"
@@ -45,30 +51,34 @@ func _on_players_add(target, value, key):
 	var model_instance = model_scene.instantiate()
 	model_instance.transform = Transform3D.IDENTITY
 	ch.get_node("Pivot").add_child(model_instance)
-	ch.get_node("Target").hide()
 	ch.position = Vector3(value.x, value.y, value.z)
 	ch.get_node("Name").set_text(value.name)
 	ch.model = model_instance
 	add_child(ch)
 	value.node = ch
 	ch.room = room
-	ch.player_key = key
+	ch.id = key
 	ch.character_name = value.name
+	ch.current_health = value.health
+	ch.max_health = value.max_health
+	ch.get_node("Target").hide()
 	value.listen(":change").on(Callable(self, "_on_player"))
 	if key == room.session_id:
 		CharacterHelper.prepare_health_bar(ch, value.health, value.max_health)
 		CharacterHelper.prepare_mana_bar(ch, value.mana, value.max_mana)
 		ch.is_local = true
 		ch.get_node("Camera3D").current = true
+		room.on_message("playerHealthUpdate").on(Callable(ch, "_on_target_health_update"))
 	else:
 		ch.get_node("ManaBar").hide()
 		ch.get_node("HealthBar").hide()
 		ch.is_local = false
 		ch.get_node("Camera3D").current = false
-
+	
 func _on_player(target):
 	var ch = target.node
 	ch.on_network_data_received(target) 
+	
 func _on_players_remove(target, value, key):
 	if value.node:
 		value.node.queue_free()

@@ -29,7 +29,10 @@ class Monster extends colyseus.Schema:
 			colyseus.Field.new("attack", colyseus.NUMBER),
 			colyseus.Field.new("health", colyseus.NUMBER),
 			colyseus.Field.new("detectionRange", colyseus.NUMBER),
-			colyseus.Field.new("targetId", colyseus.STRING)
+			colyseus.Field.new("targetId", colyseus.STRING),
+			colyseus.Field.new("attackTimer", colyseus.NUMBER),
+			colyseus.Field.new("attackCooldown", colyseus.NUMBER),
+			colyseus.Field.new("attackRange", colyseus.NUMBER)
 		]
 class Player extends colyseus.Schema:
 	static func define_fields():
@@ -56,6 +59,9 @@ class Player extends colyseus.Schema:
 			colyseus.Field.new("experience", colyseus.NUMBER),
 			colyseus.Field.new("animation", colyseus.STRING),
 			colyseus.Field.new("isDead", colyseus.BOOLEAN),
+			colyseus.Field.new("targetId", colyseus.STRING),
+			colyseus.Field.new("targetHealth", colyseus.NUMBER),
+			colyseus.Field.new("targetName", colyseus.STRING),
 		]
 	
 	var node
@@ -78,6 +84,7 @@ func join_room():
 		return
 	var room = promise.get_data()
 	var state = room.get_state()
+
 	return {"state": state, "room": room}
 	
 func prepare_room_state(state, owner):

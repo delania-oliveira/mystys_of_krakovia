@@ -1,7 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://dem7bdkdwsf36"]
+[gd_scene load_steps=5 format=3 uid="uid://dem7bdkdwsf36"]
 
 [ext_resource type="Script" uid="uid://bf8ghx67sjoix" path="res://tests/npcs/monsters/monster.gd" id="1_17sl7"]
 [ext_resource type="Script" uid="uid://bqu316xxkwfjg" path="res://tests/npcs/monsters/name.gd" id="3_n38wx"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_45l3j"]
+radius = 2.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_p11y5"]
 size = Vector3(2, 1, 2)
@@ -18,15 +21,15 @@ billboard = 1
 font_size = 52
 script = ExtResource("3_n38wx")
 
-[node name="AttackArea" type="Area3D" parent="."]
-collision_mask = 4
+[node name="AggroArea" type="Area3D" parent="."]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AggroArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.008472323, 0)
-shape = SubResource("BoxShape3D_p11y5")
+shape = SubResource("SphereShape3D_45l3j")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.008472323, 0)
 shape = SubResource("BoxShape3D_p11y5")
 
-[connection signal="area_entered" from="AttackArea" to="." method="_on_attack_area_area_entered"]
+[connection signal="body_entered" from="AggroArea" to="." method="_on_attack_area_body_entered"]
+[connection signal="body_exited" from="AggroArea" to="." method="_on_aggro_area_body_exited"]

@@ -28,8 +28,9 @@ var target_model: Node3D
 @onready var target_frame = $Target
 
 var dead: bool = false
-var player_key
+var id
 var character_name = ""
+var current_target_name = ""
 
 func _physics_process(delta):
 	var direction = Vector3.ZERO
@@ -72,23 +73,44 @@ func _physics_process(delta):
 			target_velocity.y = jump_impulse
 			room.send("jumpPlayer")
 
-func on_network_data_received(data):
+func _on_target_health_update(data):
+	# First, check if we even have a target
+	if not current_target:
+		return
+
+	# Now, check if the player who took damage (data.targetId) is our current target
+	if data.targetId == current_target.id:
+		# If it is, update OUR target frame UI
+		target_health_bar.value = data.health
+		target_health_label.text = str(data.health) + " / " + str(current_target.max_health)
+		
+		# Optional: If the target is dead, clear the target
+		if data.isDead:
+			set_target(null)
+			
+func update_player_health(data):
+	# This part updates this player's own health bar
 	if data.health:
 		current_health = data.health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = current_health
-		if current_target && current_target.character_name == data.name:
-			target_health_bar.value = data.health
-			target_health_label.text = str(data.health) + " / " + str(current_target.max_health)
-	if data.isDead and not dead:
+
+	# This part handles this player's own death
+	if data.isDead:
 		die()
-	if is_local:
-		return
+
+		
+func on_network_data_received(data):
+	if data.targetName:
+		current_target_name = data.targetName
 	network_position = Vector3(data.x, data.y, data.z)
 	network_direction = Vector3(-data.dirX, 0, -data.dirZ)
-	if not dead:
+	update_player_health(data)
+	if not dead and data.animation:
 		anim_player.play(data.animation)
-	
+	if data.isDead:
+		die()
+		
 func _process(delta):
 	if is_local:
 		return
@@ -96,20 +118,14 @@ func _process(delta):
 	if network_direction.length() > 0.1:
 		look_at(global_position + network_direction.normalized(), Vector3.UP)
 
-func take_damage(target_key, monster_id):
-	room.send("playerTakeDamage", { "targetId": target_key, "monsterId": monster_id })
-
 func die():
 	if dead:
 		return
 	dead = true
 	anim_player.play("StandingReactDeathBackward")
 	velocity = Vector3.ZERO
-	set_physics_process(false)
 	
 func _unhandled_input(event):
-	if !is_local:
-		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var from = get_viewport().get_camera_3d().project_ray_origin(event.position)
 		var to = from + get_viewport().get_camera_3d().project_ray_normal(event.position) * 1000
@@ -119,6 +135,8 @@ func _unhandled_input(event):
 			set_target(result.collider)
 
 func set_target(new_target: Node3D):
+	if not is_local:
+		return
 	current_target = new_target
 	if new_target:
 		target_health_bar.show_percentage = false
@@ -127,7 +145,9 @@ func set_target(new_target: Node3D):
 		target_health_bar.value = new_target.current_health
 		target_health_label.text = str(new_target.current_health) + " / " + str(new_target.max_health)
 		target_picture.texture = load("res://icon.svg") as Texture2D
+		current_target_name = new_target.character_name
 		target_frame.show()
+		room.send("setTarget", {"targetName": new_target.character_name})
 	else:
 		target_picture.texture = null
 		target_frame.hide()

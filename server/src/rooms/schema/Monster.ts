@@ -1,5 +1,4 @@
 import { Schema, type } from '@colyseus/schema'
-import { Player } from "./Player";
 
 export class Monster extends Schema {
   @type("string") monster_id = ""
@@ -17,9 +16,12 @@ export class Monster extends Schema {
   @type("boolean") isTargeting = false
   @type("number") attack = 0
   @type("number") health = 0
+  @type("number") max_health = 0
   @type("number") detectionRange = 10
   @type("string") targetId = ""
   @type("number") attackTimer = 0
   @type("number") attackCooldown = 0
   @type("number") attackRange = 0
+  @type("number") difficulty = 1
+  @type("number") defense = 0
 }

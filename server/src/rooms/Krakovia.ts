@@ -6,7 +6,8 @@ import { schema } from "../db/schema";
 import { eq, sql } from "drizzle-orm";
 import { Monster } from "./schema/Monster";
 import { loadMonsters } from "../data/monsters/load_monsters";
-import { calculateDamage } from "../mechanics/calculateDamage";
+import { calculateMonsterDamage, calculatePlayerDamage } from "../mechanics/calculateDamage";
+import { skills } from "../data/skills/skills_registry";
 
 const GRAVITY = 75
 const JUMP_STRENGTH = 20
@@ -33,10 +34,12 @@ export class Krakovia extends Room<KrakoviaState> {
         speed: monster.speed,
         attack: monster.attack,
         health: monster.health,
+        max_health: monster.health,
         detectionRange: monster.detectionRange,
         attackCooldown: 2.0,
         attackTimer: 0.0,
-        attackRange: 2.0
+        attackRange: 2.0,
+        difficulty: 1.0
       });
   
       this.state.monsters.set(loadedMonster.monster_id, loadedMonster);
@@ -51,6 +54,50 @@ export class Krakovia extends Room<KrakoviaState> {
         player.animation = isMoving ? "Running" : "Idle";
       } 
     });
+
+    this.onMessage("playerAttack", (client, data) => {
+      const player = this.state.players.get(client.sessionId);
+      if (player && !player.isAttacking) {
+        player.isAttacking = true
+        const skill = skills.get(data.skillId)
+        player.animation = skill.animation;
+        player.skillEffect = skill.effect
+        player.targetId = data.targetId;
+        this.broadcast("playerAttack", {
+          id: client.sessionId,
+          skillEffect: skill.effect,
+          animation: skill.animation,
+          targetId: data.targetId,
+          isAttacking: true,
+        });
+      } 
+    });
+
+    this.onMessage("attackDealDamage", (client, data) => {
+      const player = this.state.players.get(client.sessionId);
+      if (player) {
+        const target = this.state.monsters.get(data.targetId)
+        const skill = skills.get(data.skillId)
+        const finalDamage = calculatePlayerDamage(player, target, skill)
+        target.health -= finalDamage
+        this.broadcast("playerTargetHealthUpdate", {
+          id: client.sessionId,
+          name: target.name,
+          health: target.health,
+          targetId: target.monster_id,
+          targetHealth: target.health,
+          isDead: target.health <= 0,
+          damage: finalDamage,
+        });
+        player.isAttacking = false
+        player.animation = "Idle"
+        this.broadcast("playerAttack", {
+          id: client.sessionId,
+          animation: "Idle",
+          isAttacking: false,
+        });
+      } 
+    })
 
     this.onMessage("moveMonster", (client, data) => {
       const monster = this.state.monsters.get(data.monsterId);
@@ -139,14 +186,15 @@ export class Krakovia extends Room<KrakoviaState> {
         if (monster.attackTimer <= 0 && distance <= attackRange) {
           if (!target.isDead) {
             monster.isTargeting = true
-            const finalDamage = calculateDamage(monster.attack);
+            const finalDamage = calculateMonsterDamage(monster, target);
             target.health -= finalDamage;
-            this.broadcast("playerHealthUpdate", {
+            this.broadcast("playerTargetHealthUpdate", {
               name: target.name,
               health: target.health,
               targetId: monster.targetId,
               targetHealth: target.health,
               isDead: target.health <= 0,
+              damage: finalDamage
             });
             if (target.health <= 0) {
               target.isDead = true;

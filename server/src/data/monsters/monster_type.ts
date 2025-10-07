@@ -10,6 +10,7 @@ export interface MonsterType {
   y: number;
   z: number;
   detection_range: number;
+  difficulty: number;
 }
 
 export interface MonstersXML {

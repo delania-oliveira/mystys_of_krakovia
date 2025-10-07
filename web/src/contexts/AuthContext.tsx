@@ -1,8 +1,20 @@
 import { createContext, useEffect, useState, type ReactNode } from "react"
 import { api } from "../../api/axios"
 
+interface Character {
+  id: string
+  name: string
+  class: string
+  level: number
+  createdAt: string
+  lastLogin: string
+}
+
 interface User {
-  username: string
+  account_name: string
+  createdAt: string
+  characters: Character[]
+  lastLogin?: string | null
 }
 
 export interface AuthContextType {
@@ -26,9 +38,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (token) {
         try {
           api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-          const { data } = await api.get(`/user`)
-          setUser(data.user)
+          const response = await api.get(`/user`)
+
+          const accountData = response.data.user
+          const charactersData = response.data.characters
+
+          let lastLogin: string | null = null
+
+          if (charactersData && charactersData.length > 0) {
+            const loginDates = charactersData
+              .map((char: Character) => new Date(char.lastLogin))
+              .filter((date: Date) => !isNaN(date.getTime()));
+
+            if (loginDates.length > 0) {
+              const lastestDate = new Date(Math.max.apply(null, loginDates as any))
+              lastLogin = lastestDate.toISOString()
+            }
+          }
+          setUser({
+            ...accountData,
+            characters: charactersData,
+            lastLogin: lastLogin
+          })
         } catch (error) {
+          console.error("Falha ao buscar dados do usuário com o token: ", error)
           logout()
         }
       }
@@ -39,7 +72,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = (newToken: string) => {
     localStorage.setItem('authToken', newToken)
     setToken(newToken)
-
     api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`
   }
 

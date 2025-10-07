@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
 
 export function Home() {
+  const { isAuthenticated } = useAuth()
+
   return (
     <div className="text-center">
       <h1
@@ -11,9 +14,15 @@ export function Home() {
         Quando os obeliscos se erguem e as névoas caírem, <br /> apenas os escolhidos poderão impedir que <br />
         os deuses antigos retomem o mundo.
       </h1>
-      <Button asChild size="lg" className="mt-6 text-lg font-bold">
-        <Link to="/register">Jogue Agora!</Link>
-      </Button>
+      {isAuthenticated ? (
+        <Button asChild size="lg" className="mt-6 text-lg font-bold">
+          <Link to="/download">Baixar Jogo!</Link>
+        </Button>
+      ) : (
+        <Button asChild size="lg" className="mt-6 text-lg font-bold">
+          <Link to="/register">Jogue Agora!</Link>
+        </Button>
+      )}
     </div>
   );
 }

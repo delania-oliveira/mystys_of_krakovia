@@ -51,16 +51,12 @@ text = "Criar Personagem"
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="CharacterPreview3D"]
 
-[node name="BlankNameError" type="AcceptDialog" parent="."]
-oversampling_override = 1.0
-title = "Ops, algo deu errado!"
-visible = true
-
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 
-[node name="CharacterCreatedSuccess" type="AcceptDialog" parent="."]
+[node name="AlertPanel" type="AcceptDialog" parent="."]
 oversampling_override = 1.0
 title = "Sucesso!"
+position = Vector2i(0, 36)
 visible = true
 
 [node name="Exit" type="Button" parent="."]
@@ -70,3 +66,11 @@ offset_top = 580.0
 offset_right = 250.0
 offset_bottom = 632.0
 text = "Sair"
+
+[node name="ConfigMenuButton" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Configurações"
+
+[connection signal="confirmed" from="AlertPanel" to="." method="_on_character_created_success_confirmed"]

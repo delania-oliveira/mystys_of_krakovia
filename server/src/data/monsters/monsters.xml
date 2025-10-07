@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<monsters>
+    <monster id="mob1" name="Rat" type="beast" health="20" attack="5" defense="2" speed="5" x="0" y="2" z="0" detection_range="10"/>
+    <monster id="mob2" name="Orc" type="humanoid" health="50" attack="12" defense="6" speed="5" x="10" y="2" z="0" detection_range="10"/>
+    <monster id="mob3" name="Goblin" type="humanoid" health="35" attack="8" defense="4" speed="5" x="20" y="2" z="0" detection_range="10"/>
+    <monster id="mob4" name="Skeleton" type="undead" health="45" attack="10" defense="5" speed="5" x="30" y="2" z="0" detection_range="10"/>
+    <monster id="mob5" name="Troll" type="giant" health="80" attack="15" defense="8" speed="5" x="40" y="2" z="0" detection_range="10"/>
+    <monster id="mob6" name="Slime" type="ooze" health="25" attack="6" defense="3" speed="6" x="50" y="2" z="0" detection_range="10"/>
+    <monster id="mob7" name="Wolf" type="beast" health="40" attack="9" defense="4" speed="6" x="60" y="2" z="0" detection_range="10"/>
+    <monster id="mob8" name="Bandit" type="humanoid" health="55" attack="11" defense="5" speed="6" x="70" y="2" z="0" detection_range="10"/>
+    <monster id="mob9" name="Ogre" type="giant" health="120" attack="20" defense="10" speed="6" x="80" y="2" z="0" detection_range="10"/>
+    <monster id="mob10" name="Dragon Whelp" type="dragon" health="200" attack="30" defense="5" speed="6" x="100" y="2" z="0" detection_range="10"/>
+</monsters>

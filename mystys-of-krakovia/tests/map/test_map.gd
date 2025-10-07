@@ -42,6 +42,8 @@ func _spawn_monster(value, key):
 	
 func _on_monster(changes, monster_instance):
 	monster_instance.network_position = Vector3(changes.x, changes.y, changes.z)
+	monster_instance.is_targeting = changes.isTargeting
+	monster_instance.target_id = changes.targetId
 	
 func _on_players_add(target, value, key):
 	var characterSceneLocation = "res://tests/players/player.tscn"

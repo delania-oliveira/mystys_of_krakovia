@@ -13,6 +13,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
+        <Route path="download" element={<Download />} />
 
         <Route element={<GuestRoute />}>
           <Route path="register" element={<Register />} />
@@ -21,7 +22,6 @@ export default function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="profile" element={<Profile />} />
-          <Route path="download" element={<Download />} />
         </Route>
 
         <Route path="*" element={<Home />} />

@@ -35,11 +35,16 @@ export function Navbar() {
               Logout
             </button>
           ) : (
-            <Link to="/login" className="hover:text-primary transition-colors">
-              Login
-            </Link>
+            <>
+              <Link to="/login" className="hover:text-primary transition-colors">
+                Login
+              </Link>/
+              <Link to="/register" className="hover:text-primary transition-colors">
+                Criar Conta
+              </Link>
+            </>
           )}
-          <Button asChild size="lg" className="mt-6 text-lg font-bold">
+          <Button asChild size="lg" className="mt-6 text-lg font-bold animate-bounce">
             <Link to="/download">
               <Download color='white' size={24} strokeWidth={3} />
               Download

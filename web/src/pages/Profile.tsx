@@ -33,7 +33,7 @@ const formatDate = (dateString: string | undefined | null) => {
   if (isNaN(date.getTime()) || date.getUTCFullYear() <= 1970) {
     return 'Nunca logou'
   }
-  return date.toLocaleDateString('pt-BR', { timeZone: 'UTC' })
+  return date.toLocaleDateString('pt-BR')
 }
 
 export function Profile() {

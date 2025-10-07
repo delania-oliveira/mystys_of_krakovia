@@ -11,8 +11,11 @@ var character_name = ""
 var target_position = Vector3.ZERO
 var LERP_SPEED = 10.0
 var network_position = Vector3.ZERO
+var defense
+var difficulty
 @onready var is_targeting = false
 @onready var target_id = ""
+
 func _process(delta):
 	position = position.lerp(network_position, LERP_SPEED * delta)
 	

@@ -28,11 +28,14 @@ class Monster extends colyseus.Schema:
 			colyseus.Field.new("isTargeting", colyseus.BOOLEAN),
 			colyseus.Field.new("attack", colyseus.NUMBER),
 			colyseus.Field.new("health", colyseus.NUMBER),
+			colyseus.Field.new("max_health", colyseus.NUMBER),
 			colyseus.Field.new("detectionRange", colyseus.NUMBER),
 			colyseus.Field.new("targetId", colyseus.STRING),
 			colyseus.Field.new("attackTimer", colyseus.NUMBER),
 			colyseus.Field.new("attackCooldown", colyseus.NUMBER),
-			colyseus.Field.new("attackRange", colyseus.NUMBER)
+			colyseus.Field.new("attackRange", colyseus.NUMBER),
+			colyseus.Field.new("difficulty", colyseus.NUMBER),
+			colyseus.Field.new("defense", colyseus.NUMBER)
 		]
 class Player extends colyseus.Schema:
 	static func define_fields():
@@ -62,6 +65,9 @@ class Player extends colyseus.Schema:
 			colyseus.Field.new("targetId", colyseus.STRING),
 			colyseus.Field.new("targetHealth", colyseus.NUMBER),
 			colyseus.Field.new("targetName", colyseus.STRING),
+			colyseus.Field.new("defense", colyseus.NUMBER),
+			colyseus.Field.new("skillEffect", colyseus.STRING),
+			colyseus.Field.new("isAttacking", colyseus.BOOLEAN),
 		]
 	
 	var node

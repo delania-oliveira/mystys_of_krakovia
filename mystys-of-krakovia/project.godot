@@ -33,7 +33,7 @@ project/assembly_name="Mystys Of Krakovia"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_colyseus/plugin.cfg", "res://addons/terrain_3d/plugin.cfg", "res://addons/zylann.hterrain/plugin.cfg")
+enabled=PackedStringArray("res://addons/GPUTrail/plugin.cfg", "res://addons/godot_colyseus/plugin.cfg", "res://addons/terrain_3d/plugin.cfg", "res://addons/zylann.hterrain/plugin.cfg")
 
 [file_customization]
 

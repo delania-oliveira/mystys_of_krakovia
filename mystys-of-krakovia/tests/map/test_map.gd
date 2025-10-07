@@ -44,6 +44,7 @@ func _on_monster(changes, monster_instance):
 	monster_instance.network_position = Vector3(changes.x, changes.y, changes.z)
 	monster_instance.is_targeting = changes.isTargeting
 	monster_instance.target_id = changes.targetId
+	monster_instance.current_health = changes.health
 	
 func _on_players_add(target, value, key):
 	var characterSceneLocation = "res://tests/players/player.tscn"
@@ -63,6 +64,8 @@ func _on_players_add(target, value, key):
 	ch.character_name = value.name
 	ch.current_health = value.health
 	ch.max_health = value.max_health
+	ch.character_class = value.character_class
+	ch.defense = value.defense
 	ch.get_node("Target").hide()
 	value.listen(":change").on(Callable(self, "_on_player"))
 	if key == room.session_id:
@@ -70,7 +73,8 @@ func _on_players_add(target, value, key):
 		CharacterHelper.prepare_mana_bar(ch, value.mana, value.max_mana)
 		ch.is_local = true
 		ch.get_node("Camera3D").current = true
-		room.on_message("playerHealthUpdate").on(Callable(ch, "_on_target_health_update"))
+		room.on_message("playerTargetHealthUpdate").on(Callable(ch, "_on_target_health_update"))
+		room.on_message("playerAttack").on(Callable(ch, "_on_player_attack"))
 	else:
 		ch.get_node("ManaBar").hide()
 		ch.get_node("HealthBar").hide()

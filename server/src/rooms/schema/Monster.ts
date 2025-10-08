@@ -24,4 +24,6 @@ export class Monster extends Schema {
   @type("number") attackRange = 0
   @type("number") difficulty = 1
   @type("number") defense = 0
+  @type("number") experience = 0
+  @type("boolean") isDead = false
 }

@@ -1,6 +1,7 @@
 import { Schema, type } from "@colyseus/schema";
 
 export class Player extends Schema {
+    @type("string") id = "";
     @type("number") x = 0;
     @type("number") y = 0;
     @type("number") z = 0;
@@ -20,7 +21,7 @@ export class Player extends Schema {
     @type("number") mana = 1;
     @type("number") max_mana = 1;
     @type("number") level = 1;
-    @type("number") experience = 1;
+    @type("number") experience = 0;
     @type("string") animation = "Idle"
     @type("boolean") isDead = false
     @type("string") targetId = ""
@@ -29,4 +30,5 @@ export class Player extends Schema {
     @type("number") defense = 0
     @type("string") skillEffect = ""
     @type("boolean") isAttacking = false
+    @type("number") max_exp = 0
 }

@@ -11,6 +11,7 @@ export interface MonsterType {
   z: number;
   detection_range: number;
   difficulty: number;
+  experience: number;
 }
 
 export interface MonstersXML {

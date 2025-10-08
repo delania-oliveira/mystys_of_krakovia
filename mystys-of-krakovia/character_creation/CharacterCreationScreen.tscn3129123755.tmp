@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=3 uid="uid://dqws0gwxk1adc"]
+
+[ext_resource type="Script" uid="uid://cae4cp1qclctt" path="res://character_creation/character_creation_screen.gd" id="1_tgqlm"]
+
+[node name="CharacterCreationScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_tgqlm")
+
+[node name="ClassOptionButton" type="ItemList" parent="."]
+layout_mode = 0
+offset_left = 38.0
+offset_top = 75.0
+offset_right = 285.0
+offset_bottom = 163.0
+allow_search = false
+auto_width = true
+auto_height = true
+
+[node name="CharacterPreview" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 472.0
+offset_top = 147.0
+offset_right = 907.0
+offset_bottom = 341.0
+
+[node name="NameLineEdit" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 468.0
+offset_top = 506.0
+offset_right = 689.0
+offset_bottom = 537.0
+placeholder_text = "Nome do personagem"
+max_length = 14
+
+[node name="CreateButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 706.0
+offset_top = 506.0
+offset_right = 853.0
+offset_bottom = 537.0
+text = "Criar Personagem"
+
+[node name="CharacterPreview3D" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CharacterPreview3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="CharacterPreview3D"]
+
+[node name="BlankName" type="AcceptDialog" parent="."]
+oversampling_override = 1.0
+visible = true

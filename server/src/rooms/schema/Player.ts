@@ -10,7 +10,23 @@ export class Player extends Schema {
     @type("number") dirX = 0;
     @type("number") dirY = 0;
     @type("number") dirZ = -1;
+    @type("number") inputX = 0;
+    @type("number") inputZ = 0;
     @type("boolean") isGrounded = true;
     @type("string") name = "";
-    @type("string") password = "";
+    @type("string") character_class = "";
+    @type("number") health = 1;
+    @type("number") max_health = 1;
+    @type("number") mana = 1;
+    @type("number") max_mana = 1;
+    @type("number") level = 1;
+    @type("number") experience = 1;
+    @type("string") animation = "Idle"
+    @type("boolean") isDead = false
+    @type("string") targetId = ""
+    @type("number") targetHealth = 0
+    @type("string") targetName = ""
+    @type("number") defense = 0
+    @type("string") skillEffect = ""
+    @type("boolean") isAttacking = false
 }

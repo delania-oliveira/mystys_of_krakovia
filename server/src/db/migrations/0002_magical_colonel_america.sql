@@ -1,0 +1,1 @@
+ALTER TABLE "characters" ALTER COLUMN "experience" SET DEFAULT 0;

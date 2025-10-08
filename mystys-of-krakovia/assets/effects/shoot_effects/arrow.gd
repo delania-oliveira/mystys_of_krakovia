@@ -4,6 +4,8 @@ extends Node3D
 var target
 var speed = 25.0
 var room
+var playerId
+var userId
 func _ready() -> void:
 	var hunter_scene = load("res://assets/character/Hunter.glb")
 	var hunter_instance = hunter_scene.instantiate()
@@ -31,5 +33,6 @@ func _process(delta):
 	if global_position.distance_to(Vector3(target.x, target.y, target.z)) < 0.5:
 		# You can add impact effects here (e.g., play an explosion)
 		# and notify the server/target that damage was dealt.
-		room.send("attackDealDamage", {"targetId": target.monster_id, "skillId": "auto_attack_hunter"})
+		if playerId == userId:
+			room.send("attackDealDamage", {"targetId": target.monster_id, "skillId": "auto_attack_hunter", "playerId": playerId})
 		queue_free() # Destroy the arrow

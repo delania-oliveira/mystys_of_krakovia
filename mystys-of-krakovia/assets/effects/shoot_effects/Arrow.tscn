@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b80fhqhmqdmch"]
+
+[ext_resource type="Script" uid="uid://dix2i4nanpbvf" path="res://assets/effects/shoot_effects/arrow.gd" id="1_7r2mq"]
+
+[node name="DistanceAttackEffect" type="Node3D"]
+script = ExtResource("1_7r2mq")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]

@@ -1,0 +1,220 @@
+[gd_scene load_steps=3 format=3 uid="uid://qbwuw6sdw6dr"]
+
+[ext_resource type="Script" uid="uid://dx213itrdvbch" path="res://ui/options_menu.gd" id="1_876tf"]
+[ext_resource type="ButtonGroup" uid="uid://ck8s4rsbth75s" path="res://ui/ScreenModeButtons.tres" id="1_q2aw3"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 375.0
+offset_top = 84.0
+offset_right = -333.0
+offset_bottom = -31.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+script = ExtResource("1_876tf")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.41918218, 0.41709635, 0.3989993, 1)
+
+[node name="ConfigLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -69.0
+offset_right = 69.0
+offset_bottom = 28.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 20
+text = "Configurações"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -125.5
+offset_right = 125.5
+offset_bottom = 474.0
+grow_horizontal = 2
+theme_override_constants/margin_top = 46
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+theme_override_constants/separation = 13
+
+[node name="VolumeSection" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="VolumeSectionLabel" type="Label" parent="MarginContainer/VBoxContainer/VolumeSection"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 18
+text = "Volume"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VolumeSection"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VolumeSection/VBoxContainer"]
+layout_mode = 2
+text = "Global"
+
+[node name="MasterVolumeSlider" type="HSlider" parent="MarginContainer/VBoxContainer/VolumeSection/VBoxContainer"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+max_value = 1.0
+step = 0.01
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VolumeSection"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VolumeSection/VBoxContainer2"]
+layout_mode = 2
+text = "Efeitos Sonoros"
+
+[node name="SoundEffectsVolumeSlider" type="HSlider" parent="MarginContainer/VBoxContainer/VolumeSection/VBoxContainer2"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+max_value = 1.0
+step = 0.01
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VolumeSection"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VolumeSection/VBoxContainer3"]
+layout_mode = 2
+text = "Ambiente"
+
+[node name="AmbientVolumeSlider" type="HSlider" parent="MarginContainer/VBoxContainer/VolumeSection/VBoxContainer3"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+max_value = 1.0
+step = 0.01
+
+[node name="GraphicsSection" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 26
+
+[node name="GraphicsSectionLabel" type="Label" parent="MarginContainer/VBoxContainer/GraphicsSection"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 18
+text = "Gráficos"
+
+[node name="ResolutionSection" type="VBoxContainer" parent="MarginContainer/VBoxContainer/GraphicsSection"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="ResolutionLabel" type="Label" parent="MarginContainer/VBoxContainer/GraphicsSection/ResolutionSection"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Resolução"
+
+[node name="SelectResolution" type="OptionButton" parent="MarginContainer/VBoxContainer/GraphicsSection/ResolutionSection"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+selected = 2
+item_count = 3
+popup/item_0/text = "1920x1080"
+popup/item_0/id = 0
+popup/item_1/text = "1600x900"
+popup/item_1/id = 1
+popup/item_2/text = "1280x720"
+popup/item_2/id = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/GraphicsSection"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 24
+
+[node name="ModeSectionLabel" type="Label" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Modo da janela"
+
+[node name="ModeSection" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 80
+
+[node name="WindowedFullscreen" type="CheckBox" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection"]
+layout_mode = 2
+button_group = ExtResource("1_q2aw3")
+
+[node name="WindowedFullscreenLabel" type="Label" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection/WindowedFullscreen"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -34.0
+offset_top = -18.0
+offset_right = 34.0
+offset_bottom = 5.0
+grow_horizontal = 2
+text = "Sem bordas"
+
+[node name="Fullscreen" type="CheckBox" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection"]
+layout_mode = 2
+button_group = ExtResource("1_q2aw3")
+
+[node name="FullscreenLabel" type="Label" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection/Fullscreen"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -27.0
+offset_top = -18.0
+offset_right = 27.0
+offset_bottom = 5.0
+grow_horizontal = 2
+text = "Tela cheia"
+
+[node name="Windowed" type="CheckBox" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection"]
+layout_mode = 2
+button_group = ExtResource("1_q2aw3")
+
+[node name="WindowedLabel" type="Label" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection/Windowed"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -12.0
+offset_top = -18.0
+offset_right = 12.0
+offset_bottom = 5.0
+grow_horizontal = 2
+text = "Janela"
+horizontal_alignment = 1
+
+[node name="ButtonsSection" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 39
+
+[node name="SaveButton" type="Button" parent="MarginContainer/VBoxContainer/ButtonsSection"]
+layout_mode = 2
+text = "Salvar"
+
+[node name="ReturnButton" type="Button" parent="MarginContainer/VBoxContainer/ButtonsSection"]
+layout_mode = 2
+size_flags_vertical = 8
+text = "Voltar"
+
+[connection signal="toggled" from="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection/WindowedFullscreen" to="." method="_on_windowed_fullscreen_toggled"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection/Fullscreen" to="." method="_on_fullscreen_toggled"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection/Windowed" to="." method="_on_windowed_toggled"]

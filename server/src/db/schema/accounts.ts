@@ -1,7 +1,8 @@
-import { pgTable, text, serial } from 'drizzle-orm/pg-core'
+import { pgTable, text, uuid, timestamp } from 'drizzle-orm/pg-core'
 
 export const accounts = pgTable('accounts', {
-  id: serial('id').primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   account_name: text().notNull(),
-  password: text().notNull()
+  password: text().notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 })

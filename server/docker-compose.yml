@@ -5,18 +5,23 @@ services:
       - db
     ports:
       - "2567:2567"
-    env_file:
-      - .env.production
-    command: node build/index.js
+    environment:
+      - DATABASE_URL=postgres://test:123456@db:5432/colyseus
+    volumes:
+      - .:/app   
+    command: npm start
   db:
-    image: postgres:18
+    image: bitnami/postgresql
     ports: 
       - '5432:5432'
-    env_file:
-      - .env.docker
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=colyseus
+      - DATABASE_URL=postgres://test:123456@db:5432/colyseus
     volumes:
-      - db_data:/var/lib/postgresql/data
-      
+      - db_data:/bitnami/postgresql
+
 volumes:
   db_data:
     

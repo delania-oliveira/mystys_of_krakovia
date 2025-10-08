@@ -2,7 +2,3 @@ node_modules
 build
 .colyseus-cloud.json
 .devmode.json
-.env
-.env.production
-.env.development
-.env.docker

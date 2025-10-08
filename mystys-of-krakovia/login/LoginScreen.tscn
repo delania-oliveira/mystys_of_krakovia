@@ -7177,3 +7177,172 @@ content_margin_top = 20.0
 content_margin_right = 10.0
 content_margin_bottom = 20.0
 bg_color = Color(0.094720505, 4.737871e-08, 1.35367735e-08, 1)
+
+[node name="LoginScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_k8stw")
+script = ExtResource("1_5fley")
+
+[node name="BackgroundLogin" type="VideoStreamPlayer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.036000002
+anchor_top = -0.201
+anchor_right = 0.036000002
+anchor_bottom = -0.201
+offset_left = -68.12
+offset_top = 214.08
+offset_right = 1851.88
+offset_bottom = 1294.08
+stream = ExtResource("2_4nbh0")
+autoplay = true
+loop = true
+
+[node name="ExitButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1620.0
+offset_top = 960.0
+offset_right = 1860.0
+offset_bottom = 1030.0
+size_flags_horizontal = 4
+theme_override_styles/focus = SubResource("StyleBoxTexture_1bhlj")
+icon = ExtResource("3_twl6u")
+flat = true
+
+[node name="LayoutLogin" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -578.0
+offset_right = 250.0
+offset_bottom = 578.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = -30
+
+[node name="Logo" type="TextureRect" parent="LayoutLogin"]
+layout_mode = 2
+texture = ExtResource("3_ipax5")
+expand_mode = 4
+stretch_mode = 6
+
+[node name="LoginCard" type="TextureRect" parent="LayoutLogin"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("3_4nbh0")
+stretch_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LayoutLogin/LoginCard"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 9.0
+offset_right = 491.0
+offset_bottom = 608.0
+theme_override_constants/separation = 38
+
+[node name="MarginContainer" type="MarginContainer" parent="LayoutLogin/LoginCard/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 20
+
+[node name="TitleGroup" type="VBoxContainer" parent="LayoutLogin/LoginCard/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = -20
+
+[node name="TitleLabel" type="Label" parent="LayoutLogin/LoginCard/VBoxContainer/MarginContainer/TitleGroup"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme = SubResource("Theme_2ui6t")
+theme_type_variation = &"HeaderLarge"
+text = "Acessar Conta"
+uppercase = true
+
+[node name="Separator" type="TextureRect" parent="LayoutLogin/LoginCard/VBoxContainer/MarginContainer/TitleGroup"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("6_jbl6y")
+stretch_mode = 2
+
+[node name="UserGroup" type="VBoxContainer" parent="LayoutLogin/LoginCard/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="UserLabel" type="Label" parent="LayoutLogin/LoginCard/VBoxContainer/UserGroup"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme = SubResource("Theme_3msxh")
+text = "Usuário"
+uppercase = true
+
+[node name="UsernameEdit" type="LineEdit" parent="LayoutLogin/LoginCard/VBoxContainer/UserGroup"]
+custom_minimum_size = Vector2(300, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+placeholder_text = "Digite seu usuário"
+
+[node name="PassGroup" type="VBoxContainer" parent="LayoutLogin/LoginCard/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="PassLabel" type="Label" parent="LayoutLogin/LoginCard/VBoxContainer/PassGroup"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = SubResource("Theme_mbp1g")
+text = "Senha"
+uppercase = true
+
+[node name="PasswordEdit" type="LineEdit" parent="LayoutLogin/LoginCard/VBoxContainer/PassGroup"]
+custom_minimum_size = Vector2(300, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/caret_width = 4
+theme_override_constants/minimum_character_width = 3
+placeholder_text = "Digite sua senha"
+secret = true
+
+[node name="ButtonsGroup" type="VBoxContainer" parent="LayoutLogin/LoginCard/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="LoginButton" type="Button" parent="LayoutLogin/LoginCard/VBoxContainer/ButtonsGroup"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/focus = SubResource("StyleBoxTexture_t372y")
+icon = ExtResource("11_gubj4")
+flat = true
+
+[node name="NewAccountButton" type="Button" parent="LayoutLogin/LoginCard/VBoxContainer/ButtonsGroup"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/focus = SubResource("StyleBoxTexture_dve38")
+icon = ExtResource("12_mbp1g")
+flat = true
+
+[node name="WarningDialog" type="AcceptDialog" parent="."]
+oversampling_override = 1.0
+title = ""
+initial_position = 1
+size = Vector2i(600, 200)
+unresizable = true
+borderless = true
+min_size = Vector2i(600, 200)
+max_size = Vector2i(600, 600)
+keep_title_visible = false
+theme = SubResource("Theme_1bhlj")
+theme_override_styles/panel = SubResource("StyleBoxFlat_3msxh")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]

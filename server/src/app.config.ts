@@ -1,10 +1,11 @@
 import config from "@colyseus/tools";
 import { monitor } from "@colyseus/monitor";
 import { playground } from "@colyseus/playground";
+import { matchMaker } from "colyseus"
 /**
  * Import your Room files
  */
-import { Krakovia } from "./rooms/Krakovia";
+import { MyRoom } from "./rooms/MyRoom";
 import routes from "./http/routes";
 
 export default config({
@@ -13,7 +14,7 @@ export default config({
         /**
          * Define your room handlers:
          */
-        gameServer.define('Krakovia', Krakovia);
+        gameServer.define('my_room', MyRoom);
 
     },
 

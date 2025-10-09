@@ -33,6 +33,8 @@ func _spawn_monster(value, key):
 	MonsterHelper.set_monster_stats(monster, value)
 	monster.room = room
 	monster.get_node("AggroArea/CollisionShape3D").shape.radius = value.detectionRange
+	if value.detectionRange != 0:
+		monster.is_aggressive = true
 	monster.position = Vector3(value.spawn_x, value.spawn_y, value.spawn_z)
 	monster.network_position = Vector3(value.spawn_x, value.spawn_y, value.spawn_z)
 	add_child(monster)
@@ -41,11 +43,16 @@ func _spawn_monster(value, key):
 	value.listen(":change").on(Callable(self, "_on_monster").bind(monster))
 	
 func _on_monster(changes, monster_instance):
+	if not is_instance_valid(monster_instance):
+		return
 	monster_instance.network_position = Vector3(changes.x, changes.y, changes.z)
 	monster_instance.is_targeting = changes.isTargeting
 	monster_instance.target_id = changes.targetId
 	monster_instance.current_health = changes.health
-	
+	if changes.isDead:
+		monster_instance.spawn_loot()
+		monster_instance.call_deferred("queue_free")
+		
 func _on_players_add(target, value, key):
 	var characterSceneLocation = "res://tests/players/player.tscn"
 	var Char = load(characterSceneLocation)
@@ -71,13 +78,17 @@ func _on_players_add(target, value, key):
 	if key == room.session_id:
 		CharacterHelper.prepare_health_bar(ch, value.health, value.max_health)
 		CharacterHelper.prepare_mana_bar(ch, value.mana, value.max_mana)
+		CharacterHelper.prepare_experience_bar(ch, value.experience, value.level, value.max_exp)
 		ch.is_local = true
 		ch.get_node("Camera3D").current = true
 		room.on_message("playerTargetHealthUpdate").on(Callable(ch, "_on_target_health_update"))
 		room.on_message("playerAttack").on(Callable(ch, "_on_player_attack"))
+		room.on_message("damageDealt").on(Callable(ch, "_on_damage_dealt"))
+		room.on_message("experienceGained").on(Callable(ch, "_on_experience_gained"))
 	else:
 		ch.get_node("ManaBar").hide()
 		ch.get_node("HealthBar").hide()
+		ch.get_node("ExperienceBar").hide()
 		ch.is_local = false
 		ch.get_node("Camera3D").current = false
 	

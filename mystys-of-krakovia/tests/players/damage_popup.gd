@@ -28,3 +28,9 @@ func _process(delta):
 	# Remove after lifetime
 	if time_passed >= lifetime:
 		queue_free()
+		
+func set_color(c: Color) -> void:
+	# For Label3D you can use modulate:
+	label.modulate = c
+	# If you used a 2D Label instead, you'd do:
+	# label3d.set("theme_override_colors/font_color", c)

@@ -8,6 +8,7 @@ extends CharacterBody3D
 @export var bounce_impulse = 16
 @export var is_local: bool = false
 var current_health: int
+var max_exp: int
 var max_health: int
 var current_target: Node3D = null
 var target_velocity = Vector3.ZERO
@@ -19,8 +20,13 @@ var was_idle
 var room
 var model: Node3D
 var target_model: Node3D
+@onready var current_experience
+@onready var current_level
 @onready var health_label = $HealthBar/ProgressHealthBar/HealthLabel
 @onready var health_bar = $HealthBar/ProgressHealthBar
+@onready var experience_label = $ExperienceBar/ProgressExperienceBar/ExperienceLabel
+@onready var experience_bar = $ExperienceBar/ProgressExperienceBar
+@onready var level_label = $ExperienceBar/ProgressExperienceBar/LevelLabel
 @onready var target_picture = $Target/HBoxContainer/TextureRect
 @onready var target_health_bar = $Target/HBoxContainer/VBoxContainer/HealthBar
 @onready var target_health_label = $Target/HBoxContainer/VBoxContainer/HealthBar/HealthLabel
@@ -92,11 +98,13 @@ func _physics_process(delta):
 				was_idle = true
 				if !is_attacking and target_velocity.y == 0:
 					anim_player.play("Idle")
+					is_attacking = false
 		else:
 			was_idle = false
 			room.send("movePlayer", { "x": direction.x, "y": 0, "z": direction.z })
 			if !is_attacking and target_velocity.y == 0:
 				anim_player.play("Running")
+				is_attacking = false
 		# Jumping.
 		if is_on_floor() and Input.is_action_just_pressed("jump"):
 			target_velocity.y = jump_impulse
@@ -107,50 +115,81 @@ func get_target_by_id(target_id):
 	
 func get_user_by_id(user_id):
 	return room.state.players.at(user_id)
-	
-func _on_player_attack(data):
-	if "skillEffect" in data:
-		if data.skillEffect == "Fireball":
-			spawn_fireball(get_target_by_id(data.targetId), get_user_by_id(data.id))
-		else:
-			spawn_arrow(get_target_by_id(data.targetId), get_user_by_id(data.id))
-		
+			
 func _on_target_health_update(data):
-	# First, check if we even have a target
-	if not current_target:
+	if not current_target or not is_instance_valid(current_target):
 		return
+		
+	if data.targetId != current_target.id:
+		return
+	
+	target_health_bar.value = data.health
+	target_health_label.text = str(data.health) + " / " + str(current_target.max_health)
 
-	# Now, check if the player who took damage (data.targetId) is our current target
-	if data.targetId == current_target.id and data.health and data.health != 0 and data.id == id:
-		# If it is, update OUR target frame UI
-		target_health_bar.value = data.health
-		target_health_label.text = str(data.health) + " / " + str(current_target.max_health)
-		if data.damage and data.damage != 0:
-			show_floating_damage(data.damage, false)
-		# Optional: If the target is dead, clear the target
-		if data.isDead:
-			set_target(null)
+	if "isDead" in data && data.isDead:
+		set_target(null)
+		
+func _on_damage_dealt(data):
+	var target = get_target_by_id(data.targetId)
+	if data.id == id:
+		show_floating_damage(data.damage, false, target, "Damage")
 	
 func update_player_health(data):
-	# This part updates this player's own health bar
+	# UPDATE OWN PLAYER HEALTH
 	if data.health and data.health != current_health:
-		show_floating_damage(current_health - data.health, true)
+		show_floating_damage(current_health - data.health, true, null, "Damage")
 		current_health = data.health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = current_health
+			
+func _on_experience_gained(data):
+	if data.taggedPlayerId == id:
+		update_player_experience(data)
+	
+func update_player_experience(data):
+	# UPDATE OWN PLAYER EXPERIENCE
+	if data.experience:
+		current_experience = data.currentExperience
+		experience_label.text = str(current_experience) + " / " + str(max_exp)
+		experience_bar.value = current_experience
+		show_floating_damage(data.experience, true, null, "Experience")
+	if data.levelsGained != 0:
+		max_exp = data.maxExp
+		current_level += data.levelsGained
+		current_experience =  data.currentExperience
+		level_label.text = "Level: " + str(current_level)
+		experience_label.text = str(current_experience) + " / " + str(data.maxExp)
+		experience_bar.max_value = data.maxExp
 		
+func _on_player_attack(data):
+	if "skillEffect" in data:
+		if data.skillEffect == "Fireball":
+			spawn_fireball(get_target_by_id(data.targetId), get_user_by_id(data.id), data.id)
+		else:
+			spawn_arrow(get_target_by_id(data.targetId), get_user_by_id(data.id), data.id)
+
 func on_network_data_received(data):
 	if data.targetName:
 		current_target_name = data.targetName
 	network_position = Vector3(data.x, data.y, data.z)
 	network_direction = Vector3(-data.dirX, 0, -data.dirZ)
 	update_player_health(data)
-	if "isAttacking" in data:
-		is_attacking = data.isAttacking
-	if not dead and data.animation:
+	is_attacking = data.isAttacking
+	if not dead and data.animation and not data.animation.contains("Attack"):
 		anim_player.play(data.animation)
+	if data.animation.contains("Attack") and is_attacking:
+		anim_player.play(data.animation, -1.0, attack_speed)
+	if is_local and data.isAttacking and not anim_player.is_connected("animation_finished", Callable(self, "_on_attack_animation_finished")):
+		anim_player.connect("animation_finished", Callable(self, "_on_attack_animation_finished"), CONNECT_ONE_SHOT)
 	if data.isDead || data.health <= 0 || current_health <= 0:
 		die()
+		
+func _on_attack_animation_finished(anim_name):
+	if anim_name.contains("Attack") and is_attacking:
+		room.send("playerAttack", {
+			"skillId": "auto_attack_" + character_class.to_lower(),
+			"targetId": target_id
+		})
 		
 func _process(delta):
 	if is_local:
@@ -166,13 +205,18 @@ func die():
 	anim_player.play("Death")
 	velocity = Vector3.ZERO
 	
-func show_floating_damage(amount: int, tookDamage: bool):
+func show_floating_damage(amount: int, tookDamage: bool, target, type: String):
 	var damage_instance = floating_damage_scene.instantiate()
 	get_tree().root.add_child(damage_instance)
+	match type:
+		"Experience":
+			damage_instance.set_color(Color(0.6, 0.2, 1.0))
+		"Damage":
+			damage_instance.set_color(Color(1, 0, 0)) # red
 	if tookDamage:
 		damage_instance.global_position = global_position + Vector3(0, 2.0, 0)
-	else:
-		damage_instance.global_position = current_target.global_position + Vector3(0, 2.0, 0)
+	if target:
+		damage_instance.global_position = Vector3(target.x, target.y, target.z) + Vector3(0, 2.0, 0)
 	damage_instance.set_damage(amount)
 	
 func _unhandled_input(event):
@@ -197,22 +241,25 @@ func play_auto_attack(target):
 	if is_attacking or !is_local:
 		return
 	target_id = target.id
-	room.send("playerAttack", {"skillId": "auto_attack_" + character_class.to_lower(), "targetId": target_id})
+	is_attacking = true
+	room.send("playerStartedAttack", {"skillId": "auto_attack_" + character_class.to_lower(), "targetId": target_id})
 	
-func spawn_fireball(target_node, user):
+func spawn_fireball(target_node, user, userId):
 	var fireball = FIREBALL_SCENE.instantiate()
 	fireball.target = target_node
-	var spawn_position = Vector3(user.x, user.y, user.z) + Vector3(0.5, 0.5, 0.5)
+	fireball.userId = userId
+	fireball.playerId = id
+	var spawn_position = Vector3(user.x, user.y, user.z)
 	get_tree().root.add_child(fireball)
 	fireball.global_position = spawn_position
 	fireball.room = room
-	var target_position = Vector3(target_node.x, target_node.y, target_node.z)
-	fireball.look_at(target_position)
-	
-func spawn_arrow(target_node, user):
+
+func spawn_arrow(target_node, user, userId):
 	var arrow = ARROW_SCENE.instantiate()
 	arrow.target = target_node
 	arrow.room = room
+	arrow.userId = userId
+	arrow.playerId = id
 	get_tree().root.add_child(arrow)
 	var spawn_position = Vector3(user.x, user.y, user.z) + Vector3.UP
 	arrow.global_transform = global_transform

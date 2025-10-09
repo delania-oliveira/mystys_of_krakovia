@@ -1,31 +1,32 @@
 extends Control
 
-@onready var username_edit = $VBoxContainer/UsernameEdit
-@onready var password_edit = $VBoxContainer/PasswordEdit
-@onready var login = $VBoxContainer/HBoxContainer/LoginButton
-@onready var exit = $VBoxContainer/HBoxContainer/ExitButton
+@onready var username_edit = $LayoutLogin/LoginCard/VBoxContainer/UserGroup/UsernameEdit
+@onready var password_edit = $LayoutLogin/LoginCard/VBoxContainer/PassGroup/PasswordEdit
+@onready var login = $LayoutLogin/LoginCard/VBoxContainer/ButtonsGroup/LoginButton
+@onready var new_account = $LayoutLogin/LoginCard/VBoxContainer/ButtonsGroup/NewAccountButton
+@onready var exit = $ExitButton
 
-@onready var wrong_password_dialog = $WrongPassword
-@onready var user_not_found_dialog = $UserNotFound
+@onready var warning_dialog = $WarningDialog
 @onready var http_request = $HTTPRequest
 
-const SERVER_URL = "#"
-const REGISTER_URL = "#"
+const SERVER_URL = "http://localhost:2567/api/login"
+const REGISTER_URL = "https://www.playmystysofkrakovia.com.br/register"
 
 func _ready():
 	login.pressed.connect(_on_login_button_pressed)
+	new_account.pressed.connect(_on_create_account_button_pressed)
 	exit.pressed.connect(_on_exit_button_pressed)
 	
 	http_request.request_completed.connect(_on_http_request_completed)
 	
-	user_not_found_dialog.confirmed.connect(_on_create_account_button_pressed)
+	_setup_dialog_layout(warning_dialog)
 	
 func _on_login_button_pressed():
 	var username = username_edit.text
 	var password = password_edit.text
 	if username.is_empty() or password.is_empty():
-		wrong_password_dialog.dialog_text = "Usuário e/ou senha não podem estar vazios"
-		wrong_password_dialog.popup_centered()
+		warning_dialog.dialog_text = "Usuário e/ou senha não podem estar vazios"
+		warning_dialog.popup_centered()
 		return
 	
 	login.disabled = true
@@ -41,6 +42,28 @@ func _on_login_button_pressed():
 func _on_exit_button_pressed():
 	get_tree().quit()
 
+func _on_create_account_button_pressed():
+	OS.shell_open(REGISTER_URL)
+
+func _setup_dialog_layout(dialog_node):
+	var label = dialog_node.get_label()
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	
+	var vbox = label.get_parent()
+	
+	var top_spacer = Control.new()
+	top_spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	
+	var bottom_spacer = Control.new()
+	bottom_spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	
+	vbox.add_child(top_spacer)
+	vbox.move_child(top_spacer, 0)
+	
+	vbox.add_child(bottom_spacer)
+	
 func _on_http_request_completed(result, response_code, headers, body):
 	login.disabled = false
 
@@ -51,17 +74,16 @@ func _on_http_request_completed(result, response_code, headers, body):
 	
 	match response_code:
 		200: 
-			print("Login bem sucedido!")
+			Globals.token = response.token
+			get_tree().change_scene_to_file("res://character_selection/CharacterSelectionScreen.tscn")
 		401:
-			wrong_password_dialog.dialog_text = "Senha incorreta. Tente novamente."
-			wrong_password_dialog.popup_centered()
+			warning_dialog.dialog_text = "Senha incorreta. Tente novamente."
+			warning_dialog.popup_centered()
 			password_edit.text = ""
 			password_edit.grab_focus()
 		404:
-			user_not_found_dialog.popup_centered()
+			warning_dialog.dialog_text = "Usuário não encontrado. Digite um nome de usuário válido ou crie uma nova conta."
+			warning_dialog.popup_centered()
 		_:
-			wrong_password_dialog.dialog_text = "Erro de conexão com o servidor."
-			wrong_password_dialog.popup_centered()
-func _on_create_account_button_pressed():
-	OS.shell_open(REGISTER_URL)
-	
+			warning_dialog.dialog_text = "Erro de conexão com o servidor."
+			warning_dialog.popup_centered()

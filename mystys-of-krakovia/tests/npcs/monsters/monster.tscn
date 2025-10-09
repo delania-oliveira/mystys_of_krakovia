@@ -10,7 +10,7 @@ radius = 2.0
 size = Vector3(2, 1, 2)
 
 [node name="Monster" type="CharacterBody3D" groups=["monsters", "targetable"]]
-collision_mask = 4
+collision_mask = 5
 script = ExtResource("1_17sl7")
 
 [node name="Pivot" type="Node3D" parent="."]

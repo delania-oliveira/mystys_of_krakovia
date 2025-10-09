@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://drsrs7v3ykkwq"]
+[gd_scene load_steps=8 format=3 uid="uid://drsrs7v3ykkwq"]
 
 [ext_resource type="Script" uid="uid://cq0rk5lox1lkw" path="res://tests/players/player.gd" id="1_g5nvm"]
 [ext_resource type="Script" uid="uid://bqu316xxkwfjg" path="res://tests/npcs/monsters/name.gd" id="3_qg6v4"]
@@ -14,6 +14,9 @@ bg_color = Color(0.35669395, 0.77421546, 0.40624177, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_whe6v"]
 bg_color = Color(0.8129326, 0.16886139, 0.19228163, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qg6v4"]
+bg_color = Color(0.5764706, 0.2627451, 1, 1)
 
 [node name="Player" type="CharacterBody3D" groups=["players", "targetable"]]
 collision_mask = 4
@@ -35,9 +38,9 @@ offset_bottom = 40.0
 
 [node name="ProgressManaBar" type="ProgressBar" parent="ManaBar"]
 layout_mode = 0
-offset_left = 662.0
+offset_left = 725.0
 offset_top = 15.0
-offset_right = 1002.0
+offset_right = 1065.0
 offset_bottom = 42.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_mp81i")
 step = 1.0
@@ -65,9 +68,9 @@ offset_bottom = 40.0
 
 [node name="ProgressHealthBar" type="ProgressBar" parent="HealthBar"]
 layout_mode = 0
-offset_left = 201.0
+offset_left = 155.0
 offset_top = 15.0
-offset_right = 541.0
+offset_right = 495.0
 offset_bottom = 42.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_g5nvm")
 step = 1.0
@@ -135,4 +138,42 @@ offset_top = -11.5
 offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ExperienceBar" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ProgressExperienceBar" type="ProgressBar" parent="ExperienceBar"]
+layout_mode = 0
+offset_left = 450.0
+offset_top = 689.0
+offset_right = 810.0
+offset_bottom = 716.0
+theme_override_styles/background = SubResource("StyleBoxFlat_qg6v4")
+
+[node name="ExperienceLabel" type="Label" parent="ExperienceBar/ProgressExperienceBar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LevelLabel" type="Label" parent="ExperienceBar/ProgressExperienceBar"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -11.5
+offset_right = 40.0
+offset_bottom = 11.5
 grow_vertical = 2

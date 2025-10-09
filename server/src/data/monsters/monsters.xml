@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <monsters>
-    <monster id="mob1" name="Rat" type="beast" health="20" attack="5" defense="2" speed="5" x="0" y="2" z="0" detection_range="10" difficulty="1" experience="15"/>
+    <monster id="mob1" name="Rat" type="beast" health="20" attack="5" defense="2" speed="5" x="0" y="2" z="0" detection_range="0" difficulty="1" experience="15"/>
     <monster id="mob2" name="Orc" type="humanoid" health="50" attack="12" defense="6" speed="5" x="10" y="2" z="0" detection_range="10" difficulty="1" experience="25"/>
     <monster id="mob3" name="Goblin" type="humanoid" health="35" attack="8" defense="4" speed="5" x="20" y="2" z="0" detection_range="10" difficulty="1" experience="35"/>
     <monster id="mob4" name="Skeleton" type="undead" health="45" attack="10" defense="5" speed="5" x="30" y="2" z="0" detection_range="10" difficulty="3" experience="50"/>

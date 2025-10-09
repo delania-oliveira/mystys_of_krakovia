@@ -90,18 +90,38 @@ export class Krakovia extends Room<KrakoviaState> {
       if (player) {
         const target = this.state.monsters.get(data.targetId)
         if (target.isDead) return
+        if (target.health === target.max_health) {
+          target.taggedPlayerId = player.id
+        }
+        if (!target._threatTable) {
+          target._threatTable = {};
+        }
         const skill = skills.get(data.skillId)
         const finalDamage = calculatePlayerDamage(player, target, skill)
+        target._threatTable[player.id] = (target._threatTable[player.id] || 0) + finalDamage;
         target.health -= finalDamage
         target.isDead = target.health <= 0
         player.isAttacking = false
         player.animation = "Idle"
+        let topThreatPlayerId = target.targetId;
+        let topThreatValue = -1;
+        for (const [pid, threat] of Object.entries(target._threatTable)) {
+          if (threat > topThreatValue) {
+            topThreatValue = threat;
+            topThreatPlayerId = pid;
+          }
+        }
+        if (topThreatPlayerId !== target.targetId) {
+          target.targetId = topThreatPlayerId;
+          target.isAggroed = true;
+        }
         this.broadcast("playerTargetHealthUpdate", {
           id: client.sessionId,
           targetId: target.monster_id,
           health: target.health,
           isDead: target.isDead,
           damage: finalDamage,
+          taggedPlayer: target.taggedPlayerId
         });
         this.broadcast("damageDealt", {
           id: player.id,
@@ -109,22 +129,25 @@ export class Krakovia extends Room<KrakoviaState> {
           damage: finalDamage,
         });
         if (target.isDead) {
-          player.experience += target.experience
           let levelsGained = 0
-          while (player.experience >= ExperienceTable[player.level]) {
-              const requiredExp = ExperienceTable[player.level];
-              player.experience -= requiredExp;
-              player.level += 1;
-              player.max_exp = ExperienceTable[player.level];
-              levelsGained += 1;
+          const killer = this.state.players.get(target.taggedPlayerId)
+          killer.experience += target.experience
+          while (killer.experience >= ExperienceTable[killer.level]) {
+            const requiredExp = ExperienceTable[killer.level];
+            killer.experience -= requiredExp;
+            killer.level += 1;
+            killer.max_exp = ExperienceTable[killer.level];
+            levelsGained += 1;
           }
           this.broadcast("experienceGained", {
-            id: player.id,
+            id: killer.id,
+            taggedPlayerId: target.taggedPlayerId,
             experience: target.experience,
-            maxExp: player.max_exp,
+            maxExp: killer.max_exp,
             levelsGained: levelsGained,
-            currentExperience: player.experience
+            currentExperience: killer.experience
           });
+          this.state.monsters.delete(target.monster_id);
         }
       } 
     })
@@ -135,6 +158,7 @@ export class Krakovia extends Room<KrakoviaState> {
       
       monster.targetId = data.targetId;
       monster.isTargeting = data.isTargeting;
+      monster.isAggroed = data.isAggroed;
     });
 
     this.onMessage("setTarget", (client, data) => {
@@ -193,27 +217,41 @@ export class Krakovia extends Room<KrakoviaState> {
 
       const target = this.state.players.get(monster.targetId);
 
-      if (target) {
-        // direction FROM monster TO target (was the bug)
+      if (target && !target.isDead) {
         const dx = target.x - monster.x;
         const dz = target.z - monster.z;
         const distance = Math.sqrt(dx * dx + dz * dz);
+        const dxSpawn = monster.x - monster.spawn_x;
+        const dzSpawn = monster.z - monster.spawn_z;
+        const distanceToSpawn = Math.sqrt(dxSpawn * dxSpawn + dzSpawn * dzSpawn);        
+        if (distanceToSpawn > 40) {
+          monster.isAggroed = false;
+          monster.targetId = "";
+          monster.isTargeting = false;
+          monster.taggedPlayerId = "";
+          monster.health = monster.max_health
+          this.broadcast("playerTargetHealthUpdate", {
+            id: target.id,
+            targetId: monster.monster_id,
+            health: monster.health,
+          });
+          return;
+        }
 
-        if (distance > 0.1) {
+        if (distance >= monster.attackRange) {
           const nx = dx / distance;
           const nz = dz / distance;
           const step = monster.speed * dt;
 
-          // avoid overshooting: if step >= distance, move exactly to target vector
           const moveX = step >= distance ? dx : nx * step;
           const moveZ = step >= distance ? dz : nz * step;
 
           monster.x += moveX;
           monster.z += moveZ;
         }
-
+        
         const attackRange = monster.attackRange;
-        if (monster.attackTimer <= 0 && distance <= attackRange) {
+        if (monster.attackTimer <= 0 && distance <= attackRange && monster.isAggroed) {
           if (!target.isDead) {
             monster.isTargeting = true
             const finalDamage = calculateMonsterDamage(monster, target);
@@ -236,7 +274,6 @@ export class Krakovia extends Room<KrakoviaState> {
           monster.attackTimer = monster.attackCooldown;
         }
       } else {
-        monster.isTargeting = false
         const dirX = monster.spawn_x - monster.x;
         const dirZ = monster.spawn_z - monster.z;
         const dist = Math.sqrt(dirX * dirX + dirZ * dirZ);

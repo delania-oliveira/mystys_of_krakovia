@@ -19,7 +19,7 @@ extends Control
 var characters = []
 var character_selected = {}
 const SERVER_URL = "http://localhost:2567/api/user"
-var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiMzEzOGVkYWItYzViMC00OGYzLWExZjgtZWIzZjM4MWZiZjFkIiwiaWF0IjoxNzU5NjgxNzk5LCJleHAiOjE3NjIyNzM3OTl9.VOXIGd28FSBkJtx4s1av0NiwIu1idElgBYzFj9xT1WY"
+var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiMzEzOGVkYWItYzViMC00OGYzLWExZjgtZWIzZjM4MWZiZjFkIiwiaWF0IjoxNzU5OTU5NTg5LCJleHAiOjE3NjI1NTE1ODl9.Gt1xnZtYg5trzCA2Jee9z1U5eGRWqEbasUf3RcjXfRs"
 var headers = ["Content-Type: application/json", "Authorization: Bearer " + token]
 
 func _ready():

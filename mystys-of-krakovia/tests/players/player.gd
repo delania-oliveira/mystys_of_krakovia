@@ -126,7 +126,7 @@ func _on_target_health_update(data):
 	target_health_bar.value = data.health
 	target_health_label.text = str(data.health) + " / " + str(current_target.max_health)
 
-	if data.isDead:
+	if "isDead" in data && data.isDead:
 		set_target(null)
 		
 func _on_damage_dealt(data):
@@ -143,7 +143,8 @@ func update_player_health(data):
 		health_bar.value = current_health
 			
 func _on_experience_gained(data):
-	update_player_experience(data)
+	if data.taggedPlayerId == id:
+		update_player_experience(data)
 	
 func update_player_experience(data):
 	# UPDATE OWN PLAYER EXPERIENCE
@@ -158,9 +159,9 @@ func update_player_experience(data):
 		current_experience =  data.currentExperience
 		level_label.text = "Level: " + str(current_level)
 		experience_label.text = str(current_experience) + " / " + str(data.maxExp)
+		experience_bar.max_value = data.maxExp
 		
 func _on_player_attack(data):
-	anim_player.play("Idle")
 	if "skillEffect" in data:
 		if data.skillEffect == "Fireball":
 			spawn_fireball(get_target_by_id(data.targetId), get_user_by_id(data.id), data.id)
@@ -177,7 +178,7 @@ func on_network_data_received(data):
 	if not dead and data.animation and not data.animation.contains("Attack"):
 		anim_player.play(data.animation)
 	if data.animation.contains("Attack") and is_attacking:
-		anim_player.play(data.animation, -1.0, 2.0)
+		anim_player.play(data.animation, -1.0, attack_speed)
 	if is_local and data.isAttacking and not anim_player.is_connected("animation_finished", Callable(self, "_on_attack_animation_finished")):
 		anim_player.connect("animation_finished", Callable(self, "_on_attack_animation_finished"), CONNECT_ONE_SHOT)
 	if data.isDead || data.health <= 0 || current_health <= 0:
@@ -240,6 +241,7 @@ func play_auto_attack(target):
 	if is_attacking or !is_local:
 		return
 	target_id = target.id
+	is_attacking = true
 	room.send("playerStartedAttack", {"skillId": "auto_attack_" + character_class.to_lower(), "targetId": target_id})
 	
 func spawn_fireball(target_node, user, userId):
@@ -251,9 +253,7 @@ func spawn_fireball(target_node, user, userId):
 	get_tree().root.add_child(fireball)
 	fireball.global_position = spawn_position
 	fireball.room = room
-	var target_position = Vector3(target_node.x, target_node.y, target_node.z) + Vector3.UP
-	fireball.look_at(target_position)
-	
+
 func spawn_arrow(target_node, user, userId):
 	var arrow = ARROW_SCENE.instantiate()
 	arrow.target = target_node

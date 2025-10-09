@@ -33,6 +33,8 @@ func _spawn_monster(value, key):
 	MonsterHelper.set_monster_stats(monster, value)
 	monster.room = room
 	monster.get_node("AggroArea/CollisionShape3D").shape.radius = value.detectionRange
+	if value.detectionRange != 0:
+		monster.is_aggressive = true
 	monster.position = Vector3(value.spawn_x, value.spawn_y, value.spawn_z)
 	monster.network_position = Vector3(value.spawn_x, value.spawn_y, value.spawn_z)
 	add_child(monster)

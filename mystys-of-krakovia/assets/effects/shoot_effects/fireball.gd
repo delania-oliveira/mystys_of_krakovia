@@ -9,6 +9,8 @@ var userId
 @onready var explosion_scene = preload("res://assets/effects/shoot_effects/Explosion.tscn")
 
 func _physics_process(delta):
+	if not is_inside_tree():
+		return
 	# If the target is gone for any reason, destroy the arrow
 	if not is_instance_valid(target):
 		queue_free()

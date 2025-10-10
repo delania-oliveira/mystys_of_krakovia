@@ -28,7 +28,16 @@ func prepare_mana_bar(character, current_mana, max_mana):
 	mana_bar.value = current_mana
 	mana_label.text = str(current_mana) + " / " + str(max_mana)
 	mana_bar.show_percentage = false
-	
+
+func setup_remote_player(player):
+	player.get_node("ActionBar").hide()
+	player.get_node("SpellBook").hide()
+	player.get_node("ManaBar").hide()
+	player.get_node("HealthBar").hide()
+	player.get_node("ExperienceBar").hide()
+	player.is_local = false
+	player.get_node("Camera3D").current = false
+	player.get_node("CastBar").hide()
 func prepare_experience_bar(character, current_exp, current_level, max_exp):
 	var exp_bar = character.get_node("ExperienceBar/ProgressExperienceBar")
 	var exp_label = character.get_node("ExperienceBar/ProgressExperienceBar/ExperienceLabel")

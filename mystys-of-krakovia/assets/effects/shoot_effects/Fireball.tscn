@@ -11,7 +11,7 @@
 render_priority = 0
 shader = ExtResource("2_td1fs")
 shader_parameter/time = 0.0
-shader_parameter/frame_scope = 1.6500000751151205
+shader_parameter/frame_scope = 1.5000000679901202
 shader_parameter/use_system_time = true
 shader_parameter/time_accel = 5.0
 
@@ -22,8 +22,8 @@ albedo_texture_force_srgb = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_25vlv"]
 material = SubResource("StandardMaterial3D_dkquj")
-radius = 0.4
-height = 0.8
+radius = 0.25
+height = 0.5
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pulen"]
 shader = ExtResource("4_pulen")

@@ -76,21 +76,23 @@ func _on_players_add(target, value, key):
 	ch.get_node("Target").hide()
 	value.listen(":change").on(Callable(self, "_on_player"))
 	if key == room.session_id:
+		room.on_message("set_skills").on(Callable(ch, "_on_set_skills"))
+		room.on_message("playerTargetHealthUpdate").on(Callable(ch, "_on_target_health_update"))
+		room.on_message("playerAttack").on(Callable(ch, "_on_player_attack"))
+		room.on_message("damageDealt").on(Callable(ch, "_on_damage_dealt"))
+		room.on_message("experienceGained").on(Callable(ch, "_on_experience_gained"))
 		CharacterHelper.prepare_health_bar(ch, value.health, value.max_health)
 		CharacterHelper.prepare_mana_bar(ch, value.mana, value.max_mana)
 		CharacterHelper.prepare_experience_bar(ch, value.experience, value.level, value.max_exp)
 		ch.is_local = true
 		ch.get_node("Camera3D").current = true
-		room.on_message("playerTargetHealthUpdate").on(Callable(ch, "_on_target_health_update"))
-		room.on_message("playerAttack").on(Callable(ch, "_on_player_attack"))
-		room.on_message("damageDealt").on(Callable(ch, "_on_damage_dealt"))
-		room.on_message("experienceGained").on(Callable(ch, "_on_experience_gained"))
+		var spellbook = ch.get_node("SpellBook")
+		var action_bar = ch.get_node("ActionBar")
+		action_bar.player = ch
+		ch.skills_updated.connect(spellbook.display_player_skills)
+		spellbook.hide()
 	else:
-		ch.get_node("ManaBar").hide()
-		ch.get_node("HealthBar").hide()
-		ch.get_node("ExperienceBar").hide()
-		ch.is_local = false
-		ch.get_node("Camera3D").current = false
+		CharacterHelper.setup_remote_player(ch)
 	
 func _on_player(target):
 	var ch = target.node
@@ -99,21 +101,3 @@ func _on_player(target):
 func _on_players_remove(target, value, key):
 	if value.node:
 		value.node.queue_free()
-
-func prepare_health_bar(character, current_health, max_health):
-	character.current_health = current_health
-	character.max_health = max_health
-	var health_bar = character.get_node("HealthBar/ProgressHealthBar")
-	var health_label = character.get_node("HealthBar/HealthLabel")
-	health_bar.max_value = max_health
-	health_bar.value = current_health
-	health_label.text = str(current_health) + " / " + str(max_health)
-	health_bar.show_percentage = false
-	
-func prepare_mana_bar(character, current_mana, max_mana):
-	var mana_bar = character.get_node("ManaBar/ProgressManaBar")
-	var mana_label = character.get_node("ManaBar/ManaLabel")
-	mana_bar.max_value = max_mana
-	mana_bar.value = current_mana
-	mana_label.text = str(current_mana) + " / " + str(max_mana)
-	mana_bar.show_percentage = false

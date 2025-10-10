@@ -13,7 +13,7 @@ func _ready():
 	global_position.x += randf_range(-0.2, 0.2)
 	global_position.z += randf_range(-0.2, 0.2)
 
-func set_damage(amount: int):
+func set_value(amount: int):
 	label.text = str(amount)
 
 func _process(delta):

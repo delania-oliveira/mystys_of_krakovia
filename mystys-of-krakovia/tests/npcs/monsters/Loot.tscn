@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dv0b6b2buon1e"]
+[gd_scene load_steps=12 format=3 uid="uid://dv0b6b2buon1e"]
 
 [ext_resource type="PackedScene" uid="uid://bvlxk1edwcrh" path="res://assets/loot/loot.glb" id="1_n4q25"]
 
@@ -28,8 +28,15 @@ gravity = Vector3(0, 0.2, 0)
 scale_curve = SubResource("CurveTexture_3berf")
 color_ramp = SubResource("GradientTexture1D_3berf")
 
+[sub_resource type="Gradient" id="Gradient_3berf"]
+offsets = PackedFloat32Array(0, 0.54545456, 1)
+colors = PackedColorArray(0.8833333, 1, 0, 0.5176471, 0.8656667, 0.98, 0, 1, 0.89966667, 1, 0.13999999, 0.015686275)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_vkkrm"]
+gradient = SubResource("Gradient_3berf")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vkkrm"]
-albedo_color = Color(1.2676736, 0.5861787, 1.4700979, 1)
+albedo_texture = SubResource("GradientTexture1D_vkkrm")
 
 [sub_resource type="QuadMesh" id="QuadMesh_v3bp1"]
 material = SubResource("StandardMaterial3D_vkkrm")
@@ -45,5 +52,8 @@ collision_mask = 4
 shape = SubResource("SphereShape3D_n4q25")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0714488, 0)
+amount = 16
+fixed_fps = 75
 process_material = SubResource("ParticleProcessMaterial_vkkrm")
 draw_pass_1 = SubResource("QuadMesh_v3bp1")

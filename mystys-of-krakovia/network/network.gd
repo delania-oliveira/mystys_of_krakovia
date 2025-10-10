@@ -74,6 +74,7 @@ class Player extends colyseus.Schema:
 			colyseus.Field.new("skillEffect", colyseus.STRING),
 			colyseus.Field.new("isAttacking", colyseus.BOOLEAN),
 			colyseus.Field.new("max_exp", colyseus.NUMBER),
+			colyseus.Field.new("skillId", colyseus.STRING),
 		]
 	
 	var node

@@ -31,4 +31,5 @@ export class Player extends Schema {
     @type("string") skillEffect = ""
     @type("boolean") isAttacking = false
     @type("number") max_exp = 0
+    @type("string") skillId =""
 }

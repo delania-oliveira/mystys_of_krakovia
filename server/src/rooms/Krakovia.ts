@@ -9,6 +9,7 @@ import { loadMonsters } from "../data/monsters/load_monsters";
 import { calculateMonsterDamage, calculatePlayerDamage } from "../mechanics/calculateDamage";
 import { skills } from "../data/skills/skills_registry";
 import { ExperienceTable } from "../data/exp_table/experience_table";
+import { getSkillsByClass } from "../data/skills/skills";
 
 const GRAVITY = 75
 const JUMP_STRENGTH = 20
@@ -46,7 +47,7 @@ export class Krakovia extends Room<KrakoviaState> {
   
       this.state.monsters.set(loadedMonster.monster_id, loadedMonster);
     })
-
+  
     this.onMessage("movePlayer", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
@@ -66,6 +67,7 @@ export class Krakovia extends Room<KrakoviaState> {
         player.animation = skill.animation;
         player.skillEffect = skill.effect
         player.targetId = data.targetId;
+        player.skillId = data.skillId
         this.broadcast("playerAttack", {
           id: client.sessionId,
           skillEffect: skill.effect,
@@ -89,7 +91,7 @@ export class Krakovia extends Room<KrakoviaState> {
       const player = this.state.players.get(client.sessionId);
       if (player) {
         const target = this.state.monsters.get(data.targetId)
-        if (target.isDead) return
+        if (!target || target.isDead) return
         if (target.health === target.max_health) {
           target.taggedPlayerId = player.id
         }
@@ -103,6 +105,7 @@ export class Krakovia extends Room<KrakoviaState> {
         target.isDead = target.health <= 0
         player.isAttacking = false
         player.animation = "Idle"
+        player.skillId = ""
         let topThreatPlayerId = target.targetId;
         let topThreatValue = -1;
         for (const [pid, threat] of Object.entries(target._threatTable)) {
@@ -147,7 +150,9 @@ export class Krakovia extends Room<KrakoviaState> {
             levelsGained: levelsGained,
             currentExperience: killer.experience
           });
-          this.state.monsters.delete(target.monster_id);
+          this.clock.setTimeout(() => {
+            this.state.monsters.delete(target.monster_id);
+          }, 1000)
         }
       } 
     })
@@ -217,7 +222,7 @@ export class Krakovia extends Room<KrakoviaState> {
 
       const target = this.state.players.get(monster.targetId);
 
-      if (target && !target.isDead) {
+      if (target && !target.isDead && !monster.isDead) {
         const dx = target.x - monster.x;
         const dz = target.z - monster.z;
         const distance = Math.sqrt(dx * dx + dz * dz);
@@ -251,7 +256,7 @@ export class Krakovia extends Room<KrakoviaState> {
         }
         
         const attackRange = monster.attackRange;
-        if (monster.attackTimer <= 0 && distance <= attackRange && monster.isAggroed) {
+        if (monster.attackTimer <= 0 && distance <= attackRange && monster.isAggroed && !monster.isDead) {
           if (!target.isDead) {
             monster.isTargeting = true
             const finalDamage = calculateMonsterDamage(monster, target);
@@ -320,6 +325,8 @@ export class Krakovia extends Room<KrakoviaState> {
           })
           .where(eq(schema.characters.id, character.id))
         }
+        const skills = getSkillsByClass(player.character_class)
+        client.send("set_skills", skills);
       } catch (error) {
         console.log(error);
       }

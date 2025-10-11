@@ -46,7 +46,7 @@ var current_target_name = ""
 var attack_speed = 1.0
 var defense = 0
 var ARROW_SCENE = preload("res://assets/effects/shoot_effects/Arrow.tscn")
-var FIREBALL_SCENE = preload("res://assets/effects/shoot_effects/Fireball.tscn")
+var ARCANEBALL_SCENE = preload("res://assets/effects/shoot_effects/Arcaneball.tscn")
 signal skills_updated(new_skills)
 @onready var spellbook = $SpellBook
 var skills: Array = []
@@ -183,8 +183,8 @@ func update_player_experience(data):
 	
 func _on_player_attack(data):
 	if "skillEffect" in data and current_target:
-		if data.skillEffect == "Fireball":
-			spawn_ranged_skill(get_target_by_id(data.targetId), get_user_by_id(data.id), data.id, FIREBALL_SCENE)
+		if data.skillEffect == "ArcaneBall":
+			spawn_ranged_skill(get_target_by_id(data.targetId), get_user_by_id(data.id), data.id, ARCANEBALL_SCENE)
 		else:
 			spawn_ranged_skill(get_target_by_id(data.targetId), get_user_by_id(data.id), data.id, ARROW_SCENE)
 

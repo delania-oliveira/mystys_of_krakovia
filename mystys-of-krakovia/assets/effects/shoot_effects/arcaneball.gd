@@ -32,7 +32,6 @@ func _physics_process(delta):
 		explosion.look_at(explosion.global_position + forward, Vector3.UP)
 		get_tree().current_scene.add_child(explosion)
 		explosion.emitting = true
-
 		# Send damage signal and destroy the fireball
 		if playerId == userId:
 			room.send("attackDealDamage", {"targetId": target.monster_id, "skillId": "default_skill_mage", "playerId": playerId})

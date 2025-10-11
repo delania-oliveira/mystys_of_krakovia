@@ -17,6 +17,7 @@ var network_direction = Vector3.ZERO
 var network_animation = "Idle"
 const LERP_SPEED = 10.0
 var was_idle
+var current_gold
 var room
 var model: Node3D
 var target_model: Node3D
@@ -47,9 +48,9 @@ var defense = 0
 var ARROW_SCENE = preload("res://assets/effects/shoot_effects/Arrow.tscn")
 var FIREBALL_SCENE = preload("res://assets/effects/shoot_effects/Fireball.tscn")
 signal skills_updated(new_skills)
-
 @onready var spellbook = $SpellBook
 var skills: Array = []
+var attack_locked = false
 
 func _ready() -> void:
 	var deathAnim = null
@@ -70,8 +71,8 @@ func _ready() -> void:
 		library.remove_animation("StandingDrawArrow")
 	if deathAnim:
 		library.add_animation("Death", deathAnim)
-		library.add_animation("AutoAttack", attackAnim)
-		library.add_animation("CastAutoAttack", castAnim)
+		library.add_animation("DefaultAttack", attackAnim)
+		library.add_animation("DefaultCast", castAnim)
 	else:
 		push_warning("No death animation found to rename.")
 		
@@ -116,13 +117,11 @@ func _physics_process(delta):
 				was_idle = true
 				if !is_attacking and target_velocity.y == 0:
 					anim_player.play("Idle")
-					is_attacking = false
 		else:
 			was_idle = false
 			room.send("movePlayer", { "x": direction.x, "y": 0, "z": direction.z })
 			if !is_attacking and target_velocity.y == 0:
 				anim_player.play("Running")
-				is_attacking = false
 		# Jumping.
 		if is_on_floor() and Input.is_action_just_pressed("jump"):
 			is_standing = false
@@ -130,10 +129,12 @@ func _physics_process(delta):
 			room.send("jumpPlayer")
 
 func get_target_by_id(target_id):
-	return room.state.monsters.at(target_id)
+	if target_id:
+		return room.state.monsters.at(target_id)
 	
 func get_user_by_id(user_id):
-	return room.state.players.at(user_id)
+	if user_id:
+		return room.state.players.at(user_id)
 			
 func _on_target_health_update(data):
 	if not current_target or not is_instance_valid(current_target):
@@ -181,11 +182,11 @@ func update_player_experience(data):
 		experience_bar.max_value = data.maxExp
 	
 func _on_player_attack(data):
-	if "skillEffect" in data:
+	if "skillEffect" in data and current_target:
 		if data.skillEffect == "Fireball":
-			spawn_fireball(get_target_by_id(data.targetId), get_user_by_id(data.id), data.id)
+			spawn_ranged_skill(get_target_by_id(data.targetId), get_user_by_id(data.id), data.id, FIREBALL_SCENE)
 		else:
-			spawn_arrow(get_target_by_id(data.targetId), get_user_by_id(data.id), data.id)
+			spawn_ranged_skill(get_target_by_id(data.targetId), get_user_by_id(data.id), data.id, ARROW_SCENE)
 
 func on_network_data_received(data):
 	if data.targetName:
@@ -194,27 +195,36 @@ func on_network_data_received(data):
 	network_direction = Vector3(-data.dirX, 0, -data.dirZ)
 	update_player_health(data)
 	is_attacking = data.isAttacking
-	if not dead and data.animation and not data.animation.contains("Attack"):
-		anim_player.play(data.animation)
-	if data.animation.contains("Attack") and !data.animation.contains("Cast") and is_attacking:
-		anim_player.play(data.animation, -1.0, attack_speed)
-	if is_local and data.animation.contains("Cast") and data.isAttacking and is_standing:
-		cast_bar.player = self
-		cast_bar.room = room
-		cast_bar.cast_position = global_position
-		cast_bar.cast_skill(data.skillId)
-		anim_player.play(data.animation, -1.0, attack_speed)
-	if is_local and !data.animation.contains("Cast") and data.isAttacking and not anim_player.is_connected("animation_finished", Callable(self, "_on_attack_animation_finished")):
-		anim_player.connect("animation_finished", Callable(self, "_on_attack_animation_finished"), CONNECT_ONE_SHOT)
+	if data.gold != null:
+		var gold_diff = data.gold - current_gold
+		if gold_diff > 0:
+			show_floating_text(gold_diff, true, null, "Gold")
+		current_gold = data.gold
+	if not dead:
+		if data.animation:
+			if data.animation.contains("Attack") and data.isAttacking:
+				anim_player.connect("animation_finished", Callable(self, "_on_attack_animation_finished"), CONNECT_ONE_SHOT)
+				anim_player.play(data.animation, -1.0, attack_speed)
+				attack_locked = true
+			elif not attack_locked:
+				anim_player.play(data.animation)
+			if is_local and data.animation.contains("Cast") and data.isAttacking == true and is_standing:
+				cast_bar.player = self
+				cast_bar.room = room
+				cast_bar.visible = true
+				cast_bar.cast_position = global_position
+				cast_bar.cast_skill(data.skillId)
+				anim_player.play(data.animation, -1.0, attack_speed)
 	if data.isDead || data.health <= 0 || current_health <= 0:
 		die()
 		
 func _on_attack_animation_finished(anim_name):
-	if anim_name.contains("Attack") and is_attacking:
+	if anim_name.contains("Attack"):
 		room.send("playerAttack", {
-			"skillId": "auto_attack_" + character_class.to_lower(),
+			"skillId": "default_skill_" + character_class.to_lower(),
 			"targetId": target_id
 		})
+		attack_locked = false
 		
 func _process(delta):
 	if is_local:
@@ -237,13 +247,17 @@ func show_floating_text(amount: int, tookDamage: bool, target, type: String):
 	match type:
 		"Experience":
 			popup_instance.set_color(Color(0.6, 0.2, 1.0))
+			popup_instance.set_value(amount, "Experience")
 		"Damage":
-			popup_instance.set_color(Color(1, 0, 0)) # red
+			popup_instance.set_color(Color(1, 0, 0))
+			popup_instance.set_value(amount, "Damage")
+		"Gold":
+			popup_instance.set_color(Color(0.95, 1.0, 0.0, 1.0))
+			popup_instance.set_value(amount, "Gold")
 	if tookDamage:
 		popup_instance.global_position = global_position + Vector3(0, 2.0, 0)
 	if target:
 		popup_instance.global_position = Vector3(target.x, target.y, target.z) + Vector3(0, 2.0, 0)
-	popup_instance.set_value(amount)
 	
 func _unhandled_input(event):
 	if !is_local:
@@ -263,37 +277,30 @@ func _unhandled_input(event):
 			if result and result.collider.is_in_group("monsters"):
 				if current_target != result.collider:
 					set_target(result.collider)
-				play_auto_attack(result.collider)
-	if Input.is_action_pressed("open_skill_book"):
+				play_default_skill(result.collider)
+			if result and result.collider.has_method("toggle_loot_ui"):
+				result.collider.toggle_loot_ui(id)
+				get_viewport().set_input_as_handled()
+				
+	if event.is_action_pressed("open_skill_book"):
 		spellbook.visible = not spellbook.visible
 		
-func play_auto_attack(target):
+func play_default_skill(target):
 	if is_attacking or !is_local or !target:
 		return
 	target_id = target.id
 	is_attacking = true
-	room.send("playerStartedAttack", {"skillId": "auto_attack_" + character_class.to_lower(), "targetId": target_id})
+	room.send("playerStartedAttack", {"skillId": "default_skill_" + character_class.to_lower(), "targetId": target_id})
 	
-func spawn_fireball(target_node, user, userId):
-	var fireball = FIREBALL_SCENE.instantiate()
-	fireball.target = target_node
-	fireball.userId = userId
-	fireball.playerId = id
+func spawn_ranged_skill(target_node, user, userId, scene):
+	var skill = scene.instantiate()
+	skill.target = target_node
+	skill.userId = userId
+	skill.playerId = id
 	var spawn_position = Vector3(user.x, user.y, user.z)
-	get_tree().root.add_child(fireball)
-	fireball.global_position = spawn_position
-	fireball.room = room
-
-func spawn_arrow(target_node, user, userId):
-	var arrow = ARROW_SCENE.instantiate()
-	arrow.target = target_node
-	arrow.room = room
-	arrow.userId = userId
-	arrow.playerId = id
-	get_tree().root.add_child(arrow)
-	var spawn_position = Vector3(user.x, user.y, user.z) + Vector3.UP
-	arrow.global_transform = global_transform
-	arrow.global_position = spawn_position
+	get_tree().root.add_child(skill)
+	skill.global_position = spawn_position
+	skill.room = room
 	
 func set_target(new_target: Node3D):
 	if not is_local:

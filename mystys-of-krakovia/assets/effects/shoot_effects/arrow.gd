@@ -34,5 +34,5 @@ func _process(delta):
 		# You can add impact effects here (e.g., play an explosion)
 		# and notify the server/target that damage was dealt.
 		if playerId == userId:
-			room.send("attackDealDamage", {"targetId": target.monster_id, "skillId": "auto_attack_hunter", "playerId": playerId})
+			room.send("attackDealDamage", {"targetId": target.monster_id, "skillId": "default_skill_hunter", "playerId": playerId})
 		queue_free() # Destroy the arrow

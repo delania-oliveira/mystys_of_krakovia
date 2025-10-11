@@ -22,7 +22,7 @@ func _drop_data(at_position: Vector2, data):
 	
 func activate_skill(player):
 	if not current_skill_data.is_empty():
-		if current_skill_id.contains("auto_attack"):
-			player.play_auto_attack(player.current_target)
+		if current_skill_id.contains("default_skill"):
+			player.play_default_skill(player.current_target)
 	else:
 		print("This action slot is empty.")

@@ -28,7 +28,6 @@ func _spawn_monster(value, key):
 	var monster_model_scene = load("res://tests/npcs/monsters/monster.glb")
 	var monster_model_instance = monster_model_scene.instantiate()
 	monster.get_node("Pivot").add_child(monster_model_instance)
-	
 	monster.id = key
 	MonsterHelper.set_monster_stats(monster, value)
 	monster.room = room
@@ -39,8 +38,8 @@ func _spawn_monster(value, key):
 	monster.network_position = Vector3(value.spawn_x, value.spawn_y, value.spawn_z)
 	add_child(monster)
 	monster.model = monster_model_instance
-	# Smoothly update monster position from server
 	value.listen(":change").on(Callable(self, "_on_monster").bind(monster))
+	room.on_message("set_monster_loot").on(Callable(monster, "_on_set_monster_loot"))
 	
 func _on_monster(changes, monster_instance):
 	if not is_instance_valid(monster_instance):
@@ -50,9 +49,13 @@ func _on_monster(changes, monster_instance):
 	monster_instance.target_id = changes.targetId
 	monster_instance.current_health = changes.health
 	if changes.isDead:
-		monster_instance.spawn_loot()
-		monster_instance.call_deferred("queue_free")
-		
+		var timer = Timer.new()
+		timer.wait_time = 0.25
+		timer.one_shot = true
+		timer.timeout.connect(monster_instance.queue_free)
+		add_child(timer)
+		timer.start()
+
 func _on_players_add(target, value, key):
 	var characterSceneLocation = "res://tests/players/player.tscn"
 	var Char = load(characterSceneLocation)
@@ -70,6 +73,7 @@ func _on_players_add(target, value, key):
 	ch.id = key
 	ch.character_name = value.name
 	ch.current_health = value.health
+	ch.current_gold = 0
 	ch.max_health = value.max_health
 	ch.character_class = value.character_class
 	ch.defense = value.defense
@@ -91,6 +95,7 @@ func _on_players_add(target, value, key):
 		action_bar.player = ch
 		ch.skills_updated.connect(spellbook.display_player_skills)
 		spellbook.hide()
+		ch.get_node("CastBar").visible = false
 	else:
 		CharacterHelper.setup_remote_player(ch)
 	

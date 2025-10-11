@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ckx1t6iay2bht"
-path="res://.godot/imported/auto_attack_mage_icon.png-33aea315382814b6c70c0f07753e26c2.ctex"
+path="res://.godot/imported/default_skill_mage_icon.png-86f129f575589251af9ee49e98c46d93.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/auto_attack_mage_icon.png"
-dest_files=["res://.godot/imported/auto_attack_mage_icon.png-33aea315382814b6c70c0f07753e26c2.ctex"]
+source_file="res://assets/icons/skills/default_skill_mage_icon.png"
+dest_files=["res://.godot/imported/default_skill_mage_icon.png-86f129f575589251af9ee49e98c46d93.ctex"]
 
 [params]
 

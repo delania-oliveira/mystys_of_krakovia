@@ -38,6 +38,7 @@ func setup_remote_player(player):
 	player.is_local = false
 	player.get_node("Camera3D").current = false
 	player.get_node("CastBar").hide()
+	
 func prepare_experience_bar(character, current_exp, current_level, max_exp):
 	var exp_bar = character.get_node("ExperienceBar/ProgressExperienceBar")
 	var exp_label = character.get_node("ExperienceBar/ProgressExperienceBar/ExperienceLabel")

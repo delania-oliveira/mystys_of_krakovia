@@ -25,19 +25,15 @@ func _physics_process(delta):
 
 	# Check for impact
 	if global_position.distance_to(Vector3(target.x, target.y, target.z)) < 0.5:
-		# Instantiate the explosion effect
-		var explosion = explosion_scene.instantiate()
-		
-		# Position the explosion exactly where the fireball is
-		explosion.global_position = self.global_position 
-		
-		# Orient the explosion to face away from the target
 		var forward = -global_transform.basis.z.normalized()
+		var explosion = load("res://assets/effects/shoot_effects/Explosion.tscn").instantiate()
+		get_parent().add_child(explosion)
+		explosion.global_position = global_position
 		explosion.look_at(explosion.global_position + forward, Vector3.UP)
 		get_tree().current_scene.add_child(explosion)
 		explosion.emitting = true
 
 		# Send damage signal and destroy the fireball
 		if playerId == userId:
-			room.send("attackDealDamage", {"targetId": target.monster_id, "skillId": "auto_attack_mage", "playerId": playerId})
+			room.send("attackDealDamage", {"targetId": target.monster_id, "skillId": "default_skill_mage", "playerId": playerId})
 		queue_free()

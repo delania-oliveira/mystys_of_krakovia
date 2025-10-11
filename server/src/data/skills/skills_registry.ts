@@ -1,7 +1,7 @@
 import { skills, registerSkill } from "./skills";
-import { AutoAttackHunter, AutoAttackMage } from "./auto_attack";
+import { DefaultSkillArcher, DefaultSkillMage } from "./auto_attack";
 
-registerSkill(AutoAttackHunter);
-registerSkill(AutoAttackMage);
+registerSkill(DefaultSkillArcher);
+registerSkill(DefaultSkillMage);
 
 export { skills };

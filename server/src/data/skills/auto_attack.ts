@@ -14,12 +14,12 @@ export const DefaultSkillArcher: Skill = {
 
 export const DefaultSkillMage: Skill = {
   id: "default_skill_mage",
-  name: "Bola de Fogo",
+  name: "Bola Arcana",
   level: 1,
   baseDamage: 4,
   area: 0,
   animation: "DefaultCast",
-  effect: "Fireball",
+  effect: "ArcaneBall",
   characterClass: "Mage",
-  description: "Lança uma bola de fogo explosiva no alvo.",
+  description: "Lança uma bola arcana explosiva no alvo.",
 }

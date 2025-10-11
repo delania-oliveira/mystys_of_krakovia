@@ -10,6 +10,7 @@ import { calculateMonsterDamage, calculatePlayerDamage } from "../mechanics/calc
 import { skills } from "../data/skills/skills_registry";
 import { ExperienceTable } from "../data/exp_table/experience_table";
 import { getSkillsByClass } from "../data/skills/skills";
+import { generateLoot } from "../mechanics/generateLoot";
 
 const GRAVITY = 75
 const JUMP_STRENGTH = 20
@@ -56,24 +57,23 @@ export class Krakovia extends Room<KrakoviaState> {
         const isMoving = Math.abs(data.x) >= 0.1 || Math.abs(data.z) >= 0.1;
         player.animation = isMoving ? "Running" : "Idle";
         player.isAttacking = false
-      } 
+      }
     });
 
     this.onMessage("playerAttack", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
-        player.isAttacking = true
+        player.isAttacking = false
         const skill = skills.get(data.skillId)
-        player.animation = skill.animation;
+        player.animation = "Idle";
         player.skillEffect = skill.effect
         player.targetId = data.targetId;
-        player.skillId = data.skillId
         this.broadcast("playerAttack", {
           id: client.sessionId,
           skillEffect: skill.effect,
           animation: skill.animation,
           targetId: data.targetId,
-          isAttacking: true,
+          isAttacking: false,
         });
       } 
     });
@@ -84,9 +84,16 @@ export class Krakovia extends Room<KrakoviaState> {
         player.isAttacking = true
         const skill = skills.get(data.skillId)
         player.animation = skill.animation;
+        player.skillId = skill.id
       } 
     });
-
+    this.onMessage("looted", (client, data) => {
+      const player = this.state.players.get(data.playerId);
+      // Loot Gold
+      if (data.itemId === 1) {
+        player.gold += data.itemQuantity
+      }
+    })
     this.onMessage("attackDealDamage", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
@@ -103,9 +110,6 @@ export class Krakovia extends Room<KrakoviaState> {
         target._threatTable[player.id] = (target._threatTable[player.id] || 0) + finalDamage;
         target.health -= finalDamage
         target.isDead = target.health <= 0
-        player.isAttacking = false
-        player.animation = "Idle"
-        player.skillId = ""
         let topThreatPlayerId = target.targetId;
         let topThreatValue = -1;
         for (const [pid, threat] of Object.entries(target._threatTable)) {
@@ -118,6 +122,7 @@ export class Krakovia extends Room<KrakoviaState> {
           target.targetId = topThreatPlayerId;
           target.isAggroed = true;
         }
+    
         this.broadcast("playerTargetHealthUpdate", {
           id: client.sessionId,
           targetId: target.monster_id,
@@ -132,8 +137,13 @@ export class Krakovia extends Room<KrakoviaState> {
           damage: finalDamage,
         });
         if (target.isDead) {
+          const loot = generateLoot(target)
           let levelsGained = 0
           const killer = this.state.players.get(target.taggedPlayerId)
+          const killerClient = this.clients.find(c => c.sessionId === killer.id);
+          if (killerClient) {
+            killerClient.send("set_monster_loot", {"loot": loot, "loot_pos_x": target.x, "loot_pos_y": target.y, "loot_pos_z": target.z})
+          }
           killer.experience += target.experience
           while (killer.experience >= ExperienceTable[killer.level]) {
             const requiredExp = ExperienceTable[killer.level];
@@ -272,8 +282,30 @@ export class Krakovia extends Room<KrakoviaState> {
             if (target.health <= 0) {
               target.isDead = true;
               target.health = 0;
-              monster.targetId = "";
-              monster.isTargeting = false;
+              // Remove player from threat table and retarget to new highest threat player
+              this.state.monsters.forEach(monster => {
+                delete monster._threatTable?.[target.id];
+                if (monster.targetId === target.id) {
+                  let topThreatValue = -Infinity;
+                  let topThreatPlayerId = null;
+
+                  for (const [pid, threat] of Object.entries(monster._threatTable || {})) {
+                    if (threat > topThreatValue) {
+                      topThreatValue = threat;
+                      topThreatPlayerId = pid;
+                    }
+                  }
+
+                  if (topThreatPlayerId) {
+                    monster.targetId = topThreatPlayerId;
+                    monster.isTargeting = true;
+                  } else {
+                    monster.targetId = "";
+                    monster.isTargeting = false;
+                  }
+                }
+              });
+
             }
           }
           monster.attackTimer = monster.attackCooldown;

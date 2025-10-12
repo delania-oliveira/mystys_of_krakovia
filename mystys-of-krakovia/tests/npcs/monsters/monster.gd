@@ -41,7 +41,7 @@ func _on_set_monster_loot(data):
 		
 		var icon = item_slot.get_node("ItemIcon")
 		var quantity_label = item_slot.get_node("ItemQuantity")
-		var tex = load("res://assets/icons/loot/" + str(item.id) + ".png")
+		var tex = load("res://assets/icons/items/" + str(item.id) + ".png")
 		
 		icon.texture = tex
 		icon.tooltip_text = item.name

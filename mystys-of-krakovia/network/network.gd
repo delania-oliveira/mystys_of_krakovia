@@ -76,6 +76,7 @@ class Player extends colyseus.Schema:
 			colyseus.Field.new("max_exp", colyseus.NUMBER),
 			colyseus.Field.new("skillId", colyseus.STRING),
 			colyseus.Field.new("gold", colyseus.NUMBER),
+			colyseus.Field.new("lootId", colyseus.NUMBER),
 		]
 	
 	var node

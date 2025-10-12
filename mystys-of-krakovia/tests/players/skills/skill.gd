@@ -30,5 +30,4 @@ func _get_drag_data(at_position: Vector2):
 	drag_preview.size = self.size
 	set_drag_preview(drag_preview)
 
-	print("Starting drag for:", skill_data.name)
 	return data_to_drag

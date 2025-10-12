@@ -57,7 +57,7 @@ func _on_monster(changes, monster_instance):
 		timer.start()
 
 func _on_players_add(target, value, key):
-	var characterSceneLocation = "res://tests/players/player.tscn"
+	var characterSceneLocation = "res://tests/players/Player.tscn"
 	var Char = load(characterSceneLocation)
 	var ch = Char.instantiate()
 	var model_scene = load("res://assets/character/" + value.character_class + ".glb")

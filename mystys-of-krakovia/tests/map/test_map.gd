@@ -81,6 +81,8 @@ func _on_players_add(target, value, key):
 	value.listen(":change").on(Callable(self, "_on_player"))
 	if key == room.session_id:
 		room.on_message("set_skills").on(Callable(ch, "_on_set_skills"))
+		room.on_message("looted_item").on(Callable(ch, "_on_looted_item"))
+		room.on_message("too_far_away").on(Callable(ch, "_on_too_far_away"))
 		room.on_message("playerTargetHealthUpdate").on(Callable(ch, "_on_target_health_update"))
 		room.on_message("playerAttack").on(Callable(ch, "_on_player_attack"))
 		room.on_message("damageDealt").on(Callable(ch, "_on_damage_dealt"))
@@ -92,7 +94,10 @@ func _on_players_add(target, value, key):
 		ch.get_node("Camera3D").current = true
 		var spellbook = ch.get_node("SpellBook")
 		var action_bar = ch.get_node("ActionBar")
+		var inventory = ch.get_node("Inventory")
+		inventory.hide()
 		action_bar.player = ch
+		inventory.player = ch
 		ch.skills_updated.connect(spellbook.display_player_skills)
 		spellbook.hide()
 		ch.get_node("CastBar").visible = false

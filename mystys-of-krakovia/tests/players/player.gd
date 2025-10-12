@@ -36,7 +36,9 @@ var is_standing = true
 @onready var target_frame = $Target
 @onready var target_id
 @onready var cast_bar = $CastBar
-var floating_popup_scene = preload("res://tests/players/Popup.tscn")
+@onready var gold_label = get_node("Inventory/VBoxContainer/Gold/TextureRect/GoldAmount")
+var floating_popup_scene = preload("res://tests/players/ui/Popup.tscn")
+var player_alert_scene = preload("res://tests/players/ui/PlayerAlert.tscn")
 var character_class
 var is_attacking = false
 var dead: bool = false
@@ -49,6 +51,7 @@ var ARROW_SCENE = preload("res://assets/effects/shoot_effects/Arrow.tscn")
 var ARCANEBALL_SCENE = preload("res://assets/effects/shoot_effects/Arcaneball.tscn")
 signal skills_updated(new_skills)
 @onready var spellbook = $SpellBook
+@onready var inventory = $Inventory
 var skills: Array = []
 var attack_locked = false
 
@@ -188,6 +191,16 @@ func _on_player_attack(data):
 		else:
 			spawn_ranged_skill(get_target_by_id(data.targetId), get_user_by_id(data.id), data.id, ARROW_SCENE)
 
+func update_gold(new_value):
+	var gold_diff = new_value - current_gold
+	if gold_diff > 0:
+		show_floating_text(gold_diff, true, null, "Gold")
+	current_gold = new_value
+	gold_label.text = "Gold: " + str(current_gold)
+	
+func _on_looted_item(data):
+	inventory.update_inventory(data.itemId, data.quantity, data.defense, data.attack, data.description, data.name)
+	
 func on_network_data_received(data):
 	if data.targetName:
 		current_target_name = data.targetName
@@ -196,10 +209,7 @@ func on_network_data_received(data):
 	update_player_health(data)
 	is_attacking = data.isAttacking
 	if data.gold != null:
-		var gold_diff = data.gold - current_gold
-		if gold_diff > 0:
-			show_floating_text(gold_diff, true, null, "Gold")
-		current_gold = data.gold
+		update_gold(data.gold)
 	if not dead:
 		if data.animation:
 			if data.animation.contains("Attack") and data.isAttacking:
@@ -258,7 +268,13 @@ func show_floating_text(amount: int, tookDamage: bool, target, type: String):
 		popup_instance.global_position = global_position + Vector3(0, 2.0, 0)
 	if target:
 		popup_instance.global_position = Vector3(target.x, target.y, target.z) + Vector3(0, 2.0, 0)
-	
+		
+func show_player_alert(text):
+	var alert_instance = player_alert_scene.instantiate()
+	get_tree().root.add_child(alert_instance)
+	alert_instance.set_value(text)
+func _on_too_far_away(data):
+	show_player_alert("Inimigo muito distante!")
 func _unhandled_input(event):
 	if !is_local:
 		return
@@ -279,11 +295,16 @@ func _unhandled_input(event):
 					set_target(result.collider)
 				play_default_skill(result.collider)
 			if result and result.collider.has_method("toggle_loot_ui"):
-				result.collider.toggle_loot_ui(id)
-				get_viewport().set_input_as_handled()
-				
-	if event.is_action_pressed("open_skill_book"):
+				var loot = result.collider
+				if global_position.distance_to(loot.global_position) <= 5:
+					loot.toggle_loot_ui(id)
+					get_viewport().set_input_as_handled()
+				else:
+					show_player_alert("Muito longe!")
+	if event.is_action_pressed("toggle_skill_book"):
 		spellbook.visible = not spellbook.visible
+	if event.is_action_pressed("toggle_inventory"):
+		inventory.visible = not inventory.visible
 		
 func play_default_skill(target):
 	if is_attacking or !is_local or !target:

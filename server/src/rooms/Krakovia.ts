@@ -95,6 +95,13 @@ export class Krakovia extends Room<KrakoviaState> {
         }
       } 
     });
+    this.onMessage("equipItem", (client, data) =>{
+      const player = this.state.players.get(client.sessionId)
+      if (player) {
+        const equippedItem = items[data.itemId]
+        player.defense += equippedItem.defense
+      }
+    })
     this.onMessage("looted", (client, data) => {
       const player = this.state.players.get(data.playerId);
       // Loot Gold
@@ -107,6 +114,7 @@ export class Krakovia extends Room<KrakoviaState> {
           name: lootedItem.name,
           quantity: data.itemQuantity,
           description: lootedItem.description,
+          type: lootedItem.type
         };
         if (lootedItem.type === "Armor") {
           payload.attack = 0

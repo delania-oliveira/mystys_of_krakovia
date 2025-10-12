@@ -15,20 +15,21 @@ func _on_slot_mouse_exited(slot: Button) -> void:
 	
 func _on_slot_gui_input(event: InputEvent, slot):
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_RIGHT:
-		var data = slot.get_meta("item_data")
-		if data.type == "Armor":
-			var armor_slot = get_node("HBoxContainer/PlayerEquipment/VBoxContainer/Body/TextureRect")
-			armor_slot.tooltip_text = "%s\nDefesa: %s\n%s" % [data.name, data.defense, data.description]
-			armor_slot.texture = load("res://assets/icons/items/" + str(data.id) + ".png")
-			player.room.send("equipItem", {"itemId": data.id})
-			if armor_slot.get_meta("item_data"):
-				var icon = slot.get_child(0)
-				slot.set_meta("item_data", data)
-				slot.texture = armor_slot.texture
-				icon.tooltip_text = "%s\nDefesa: %s\n%s" % [data.name, data.defense, data.description]
-			else:
-				empty_slot_data(slot)
-			armor_slot.set_meta("item_data", data)
+		if slot.get_meta("item_data"):
+			var data = slot.get_meta("item_data")
+			if data.type == "Armor":
+				var armor_slot = get_node("HBoxContainer/PlayerEquipment/VBoxContainer/Body/TextureRect")
+				armor_slot.tooltip_text = "%s\nDefesa: %s\n%s" % [data.name, data.defense, data.description]
+				armor_slot.texture = load("res://assets/icons/items/" + str(data.id) + ".png")
+				player.room.send("equipItem", {"itemId": data.id})
+				if armor_slot.get_meta("item_data"):
+					var icon = slot.get_child(0)
+					slot.set_meta("item_data", data)
+					slot.texture = armor_slot.texture
+					icon.tooltip_text = "%s\nDefesa: %s\n%s" % [data.name, data.defense, data.description]
+				else:
+					empty_slot_data(slot)
+				armor_slot.set_meta("item_data", data)
 		
 func empty_slot_data(slot):
 	slot.set_meta("item_data", null)

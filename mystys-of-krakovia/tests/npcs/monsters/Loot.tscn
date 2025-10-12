@@ -82,10 +82,11 @@ size_flags_horizontal = 4
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-theme_override_constants/h_separation = 32
+theme_override_constants/h_separation = 0
 columns = 4
 
 [node name="Item1" type="Button" parent="LootUI/LootContainer"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 script = ExtResource("3_8p36u")
 
@@ -102,6 +103,7 @@ offset_right = 40.0
 offset_bottom = 23.0
 
 [node name="Item2" type="Button" parent="LootUI/LootContainer"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 script = ExtResource("3_8p36u")
 
@@ -118,6 +120,7 @@ offset_right = 40.0
 offset_bottom = 23.0
 
 [node name="Item3" type="Button" parent="LootUI/LootContainer"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 script = ExtResource("3_8p36u")
 
@@ -134,6 +137,7 @@ offset_right = 40.0
 offset_bottom = 23.0
 
 [node name="Item4" type="Button" parent="LootUI/LootContainer"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 script = ExtResource("3_8p36u")
 

@@ -36,7 +36,7 @@ var is_standing = true
 @onready var target_frame = $Target
 @onready var target_id
 @onready var cast_bar = $CastBar
-@onready var gold_label = get_node("Inventory/VBoxContainer/Gold/TextureRect/GoldAmount")
+@onready var gold_label = get_node("Inventory/HBoxContainer/InventoryItems/Gold/TextureRect/GoldAmount")
 var floating_popup_scene = preload("res://tests/players/ui/Popup.tscn")
 var player_alert_scene = preload("res://tests/players/ui/PlayerAlert.tscn")
 var character_class
@@ -199,7 +199,7 @@ func update_gold(new_value):
 	gold_label.text = "Gold: " + str(current_gold)
 	
 func _on_looted_item(data):
-	inventory.update_inventory(data.itemId, data.quantity, data.defense, data.attack, data.description, data.name)
+	inventory.update_inventory(data.itemId, data.quantity, data.defense, data.attack, data.description, data.name, data.type)
 	
 func on_network_data_received(data):
 	if data.targetName:
@@ -340,3 +340,7 @@ func set_target(new_target: Node3D):
 	else:
 		target_picture.texture = null
 		target_frame.hide()
+
+
+func _on_v_box_container_gui_input(event: InputEvent) -> void:
+	pass # Replace with function body.

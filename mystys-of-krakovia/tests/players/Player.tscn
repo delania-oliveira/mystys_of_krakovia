@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://drsrs7v3ykkwq"]
+[gd_scene load_steps=20 format=3 uid="uid://drsrs7v3ykkwq"]
 
 [ext_resource type="Script" uid="uid://cq0rk5lox1lkw" path="res://tests/players/player.gd" id="1_g5nvm"]
 [ext_resource type="Script" uid="uid://cendqjf0d6vsl" path="res://tests/players/skills/action_bar.gd" id="3_g5nvm"]
@@ -9,6 +9,10 @@
 [ext_resource type="Script" uid="uid://b55hhr0lbrbw5" path="res://tests/players/ui/cast_bar.gd" id="7_hdun8"]
 [ext_resource type="Script" uid="uid://cpp43ln1c65t2" path="res://tests/players/ui/inventory.gd" id="8_4o6cj"]
 [ext_resource type="Texture2D" uid="uid://bji76j2dchu7u" path="res://assets/login/input.png" id="9_c388k"]
+[ext_resource type="Script" uid="uid://bptre7qwurywy" path="res://tests/players/ui/player_item_button.gd" id="9_j0ttc"]
+[ext_resource type="Texture2D" uid="uid://bcjmaebl82lwr" path="res://assets/icons/items/equipment/helmet_empty.png" id="10_r5luj"]
+[ext_resource type="Texture2D" uid="uid://d1xhfiejyqcxp" path="res://assets/icons/items/equipment/body_empty.png" id="11_ybssk"]
+[ext_resource type="Texture2D" uid="uid://d4k2f13e34e6o" path="res://assets/icons/items/equipment/weapon_empty.png" id="12_r5luj"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_ibhvg"]
 radius = 2.0
@@ -367,21 +371,121 @@ grow_vertical = 2
 size_flags_horizontal = 4
 script = ExtResource("8_4o6cj")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Inventory"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Inventory"]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+theme_override_constants/separation = 44
 
-[node name="InventoryContainer" type="GridContainer" parent="Inventory/VBoxContainer"]
+[node name="PlayerEquipment" type="HBoxContainer" parent="Inventory/HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+theme_override_constants/separation = 44
+
+[node name="Weapon" type="Button" parent="Inventory/HBoxContainer/PlayerEquipment"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("9_j0ttc")
+
+[node name="TextureRect" type="TextureRect" parent="Inventory/HBoxContainer/PlayerEquipment/Weapon"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = -20.0
+offset_right = 22.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("12_r5luj")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="Inventory/HBoxContainer/PlayerEquipment/Weapon"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Inventory/HBoxContainer/PlayerEquipment"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 44
+
+[node name="Helmet" type="Button" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer"]
+layout_mode = 2
+script = ExtResource("9_j0ttc")
+
+[node name="TextureRect" type="TextureRect" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer/Helmet"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = -20.0
+offset_right = 22.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("10_r5luj")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer/Helmet"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Body" type="Button" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer"]
+layout_mode = 2
+script = ExtResource("9_j0ttc")
+
+[node name="TextureRect" type="TextureRect" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer/Body"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = -20.0
+offset_right = 22.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11_ybssk")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer/Body"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="InventoryItems" type="VBoxContainer" parent="Inventory/HBoxContainer"]
+layout_mode = 2
+
+[node name="InventoryContainer" type="GridContainer" parent="Inventory/HBoxContainer/InventoryItems"]
 layout_mode = 2
 theme_override_constants/h_separation = 1
 theme_override_constants/v_separation = 1
 columns = 10
 
-[node name="Gold" type="Control" parent="Inventory/VBoxContainer"]
+[node name="Gold" type="Control" parent="Inventory/HBoxContainer/InventoryItems"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="Inventory/VBoxContainer/Gold"]
+[node name="TextureRect" type="TextureRect" parent="Inventory/HBoxContainer/InventoryItems/Gold"]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -392,7 +496,7 @@ grow_vertical = 2
 texture = ExtResource("9_c388k")
 expand_mode = 2
 
-[node name="GoldAmount" type="Label" parent="Inventory/VBoxContainer/Gold/TextureRect"]
+[node name="GoldAmount" type="Label" parent="Inventory/HBoxContainer/InventoryItems/Gold/TextureRect"]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -402,3 +506,5 @@ offset_top = -11.5
 offset_right = 43.0
 offset_bottom = 11.5
 grow_vertical = 2
+
+[connection signal="gui_input" from="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer" to="." method="_on_v_box_container_gui_input"]

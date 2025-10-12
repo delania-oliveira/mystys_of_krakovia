@@ -3,6 +3,7 @@ export interface Skill {
   name: string
   level: number
   baseDamage: number
+  range: number
   area: number
   animation: string
   effect: string

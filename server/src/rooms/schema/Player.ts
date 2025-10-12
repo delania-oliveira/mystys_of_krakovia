@@ -33,4 +33,5 @@ export class Player extends Schema {
     @type("number") max_exp = 0
     @type("string") skillId = ""
     @type("number") gold = 0
+    @type("number") lootId = 0
 }

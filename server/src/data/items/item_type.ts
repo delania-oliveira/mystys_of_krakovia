@@ -11,3 +11,12 @@ export interface DroppedItems {
   name: string,
   quantity: number
 }
+
+export interface Item {
+  id: number,
+  name: string,
+  description?: string
+  defense?: number,
+  attack?: number,
+  type: string
+}

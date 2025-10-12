@@ -11,7 +11,7 @@ import { skills } from "../data/skills/skills_registry";
 import { ExperienceTable } from "../data/exp_table/experience_table";
 import { getSkillsByClass } from "../data/skills/skills";
 import { generateLoot } from "../mechanics/generateLoot";
-
+import { items } from "../data/items/items";
 const GRAVITY = 75
 const JUMP_STRENGTH = 20
 const GROUND_LEVEL = 3
@@ -81,10 +81,18 @@ export class Krakovia extends Room<KrakoviaState> {
     this.onMessage("playerStartedAttack", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
-        player.isAttacking = true
         const skill = skills.get(data.skillId)
-        player.animation = skill.animation;
-        player.skillId = skill.id
+        const target = this.state.monsters.get(data.targetId)
+        const dx = target.x  - player.x
+        const dz = target.z - player.z
+        const distance = Math.sqrt(dx * dx + dz * dz)
+        if (distance > skill.range) {
+          client.send("too_far_away")
+        } else {
+          player.isAttacking = true
+          player.animation = skill.animation;
+          player.skillId = skill.id
+        }
       } 
     });
     this.onMessage("looted", (client, data) => {
@@ -92,6 +100,24 @@ export class Krakovia extends Room<KrakoviaState> {
       // Loot Gold
       if (data.itemId === 1) {
         player.gold += data.itemQuantity
+      } else {
+        const lootedItem = items[data.itemId]
+        const payload: any = {
+          itemId: data.itemId,
+          name: lootedItem.name,
+          quantity: data.itemQuantity,
+          description: lootedItem.description,
+        };
+        if (lootedItem.type === "Armor") {
+          payload.attack = 0
+          payload.defense = lootedItem.defense;
+        }
+        if (lootedItem.type === "Weapon") {
+          payload.attack = lootedItem.attack;
+          payload.defense = 0
+        }
+
+        client.send("looted_item", payload);
       }
     })
     this.onMessage("attackDealDamage", (client, data) => {

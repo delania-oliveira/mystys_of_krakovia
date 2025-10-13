@@ -1,6 +1,61 @@
-[gd_scene load_steps=2 format=3 uid="uid://dqws0gwxk1adc"]
+[gd_scene load_steps=28 format=3 uid="uid://dqws0gwxk1adc"]
 
 [ext_resource type="Script" uid="uid://cae4cp1qclctt" path="res://character_creation/character_creation_screen.gd" id="1_tgqlm"]
+[ext_resource type="Texture2D" uid="uid://bbgfcuxb6u6c2" path="res://assets/character_creation/bg.png" id="2_d62kf"]
+[ext_resource type="FontFile" uid="uid://celsc86a60tw6" path="res://assets/fonts/timesbd.ttf" id="3_d62kf"]
+[ext_resource type="Texture2D" uid="uid://cqln4tijtd2w7" path="res://assets/character_creation/warriorBadge.png" id="4_6lc12"]
+[ext_resource type="Texture2D" uid="uid://coh622eqgrd5w" path="res://assets/character_creation/assassinBadge.png" id="5_3poyr"]
+[ext_resource type="Texture2D" uid="uid://bo0e6bpdjm35o" path="res://assets/character_creation/archerBadge.png" id="6_7044q"]
+[ext_resource type="Texture2D" uid="uid://b0px5ekurtuc6" path="res://assets/character_creation/mageBadge.png" id="7_putt4"]
+[ext_resource type="Texture2D" uid="uid://d1gaxj8yy5o7" path="res://assets/character_creation/bloodmageBadge.png" id="8_r3q6x"]
+[ext_resource type="Texture2D" uid="uid://ykvnc3losahv" path="res://assets/character_creation/exitButton.png" id="9_xf11f"]
+[ext_resource type="Texture2D" uid="uid://dfdkk2r8wsn8s" path="res://assets/character_creation/backgroundCard.png" id="10_6lc12"]
+[ext_resource type="Texture2D" uid="uid://bmpukqtk3ql15" path="res://assets/character_creation/input.png" id="10_7044q"]
+[ext_resource type="Texture2D" uid="uid://f351sy2e1tcr" path="res://assets/character_creation/createCharButton.png" id="11_putt4"]
+[ext_resource type="PackedScene" uid="uid://cii3hn7evsqsu" path="res://assets/theme/AlertModal.tscn" id="13_r3q6x"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qap5e"]
+texture = ExtResource("9_xf11f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_002vu"]
+texture = ExtResource("9_xf11f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jkysd"]
+texture = ExtResource("9_xf11f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_felkb"]
+texture = ExtResource("9_xf11f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tbqmr"]
+texture = ExtResource("9_xf11f")
+
+[sub_resource type="Environment" id="Environment_r3q6x"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xf11f"]
+texture = ExtResource("10_7044q")
+texture_margin_left = 6.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fj2ff"]
+texture = ExtResource("10_7044q")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5iqvk"]
+texture = ExtResource("10_7044q")
+texture_margin_left = 6.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6re3v"]
+texture = ExtResource("11_putt4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7044q"]
+texture = ExtResource("11_putt4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_putt4"]
+texture = ExtResource("11_putt4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r3q6x"]
+texture = ExtResource("11_putt4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_elt4a"]
+texture = ExtResource("11_putt4")
 
 [node name="CharacterCreationScreen" type="Control"]
 layout_mode = 3
@@ -10,67 +65,217 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_tgqlm")
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
 
-[node name="ClassOptionButton" type="ItemList" parent="."]
+[node name="BackgroundCreation" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 38.0
-offset_top = 75.0
-offset_right = 285.0
-offset_bottom = 163.0
-allow_search = false
-auto_width = true
-auto_height = true
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_d62kf")
+metadata/_edit_lock_ = true
 
-[node name="CharacterPreview" type="TextureRect" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 0
-offset_left = 472.0
-offset_top = 147.0
-offset_right = 907.0
-offset_bottom = 341.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+theme_override_constants/margin_left = 110
+theme_override_constants/margin_top = 200
+theme_override_constants/margin_right = 110
+theme_override_constants/margin_bottom = 50
 
-[node name="NameLineEdit" type="LineEdit" parent="."]
-layout_mode = 0
-offset_left = 468.0
-offset_top = 506.0
-offset_right = 689.0
-offset_bottom = 537.0
-placeholder_text = "Nome do personagem"
+[node name="LayoutCreation" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Panels" type="HBoxContainer" parent="MarginContainer/LayoutCreation"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ClassContainer" type="VBoxContainer" parent="MarginContainer/LayoutCreation/Panels"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 70
+
+[node name="Text" type="VBoxContainer" parent="MarginContainer/LayoutCreation/Panels/ClassContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="TitleContainer" type="Label" parent="MarginContainer/LayoutCreation/Panels/ClassContainer/Text"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_d62kf")
+theme_override_font_sizes/font_size = 36
+text = "Classes"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="TextContainer" type="Label" parent="MarginContainer/LayoutCreation/Panels/ClassContainer/Text"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_d62kf")
+theme_override_font_sizes/font_size = 18
+text = "Escolha uma classe para jogar"
+horizontal_alignment = 1
+
+[node name="Classes" type="VBoxContainer" parent="MarginContainer/LayoutCreation/Panels/ClassContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/LayoutCreation/Panels/ClassContainer/Classes"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 30
+columns = 2
+
+[node name="WarriorButton" type="TextureButton" parent="MarginContainer/LayoutCreation/Panels/ClassContainer/Classes/GridContainer"]
+layout_mode = 2
+texture_normal = ExtResource("4_6lc12")
+texture_pressed = ExtResource("4_6lc12")
+texture_hover = ExtResource("4_6lc12")
+texture_disabled = ExtResource("4_6lc12")
+texture_focused = ExtResource("4_6lc12")
+
+[node name="AssassinButton" type="TextureButton" parent="MarginContainer/LayoutCreation/Panels/ClassContainer/Classes/GridContainer"]
+layout_mode = 2
+texture_normal = ExtResource("5_3poyr")
+texture_pressed = ExtResource("5_3poyr")
+texture_hover = ExtResource("5_3poyr")
+texture_disabled = ExtResource("5_3poyr")
+texture_focused = ExtResource("5_3poyr")
+
+[node name="ArcherButton" type="TextureButton" parent="MarginContainer/LayoutCreation/Panels/ClassContainer/Classes/GridContainer"]
+layout_mode = 2
+texture_normal = ExtResource("6_7044q")
+texture_pressed = ExtResource("6_7044q")
+texture_hover = ExtResource("6_7044q")
+texture_disabled = ExtResource("6_7044q")
+texture_focused = ExtResource("6_7044q")
+
+[node name="MageButton" type="TextureButton" parent="MarginContainer/LayoutCreation/Panels/ClassContainer/Classes/GridContainer"]
+layout_mode = 2
+texture_normal = ExtResource("7_putt4")
+texture_pressed = ExtResource("7_putt4")
+texture_hover = ExtResource("7_putt4")
+texture_disabled = ExtResource("7_putt4")
+texture_focused = ExtResource("7_putt4")
+
+[node name="BloodMageButton" type="TextureButton" parent="MarginContainer/LayoutCreation/Panels/ClassContainer/Classes"]
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("8_r3q6x")
+texture_pressed = ExtResource("8_r3q6x")
+texture_hover = ExtResource("8_r3q6x")
+texture_disabled = ExtResource("8_r3q6x")
+texture_focused = ExtResource("8_r3q6x")
+
+[node name="ExitButton" type="Button" parent="MarginContainer/LayoutCreation/Panels/ClassContainer"]
+custom_minimum_size = Vector2(240, 70)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = SubResource("StyleBoxTexture_qap5e")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_002vu")
+theme_override_styles/hover = SubResource("StyleBoxTexture_jkysd")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_felkb")
+theme_override_styles/focus = SubResource("StyleBoxTexture_tbqmr")
+
+[node name="CharacterContainer" type="VBoxContainer" parent="MarginContainer/LayoutCreation/Panels"]
+z_index = 10
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_stretch_ratio = 3.0
+theme_override_constants/separation = 50
+alignment = 2
+
+[node name="CharacterPreview" type="SubViewportContainer" parent="MarginContainer/LayoutCreation/Panels/CharacterContainer"]
+custom_minimum_size = Vector2(0, 512)
+layout_mode = 2
+size_flags_vertical = 10
+metadata/_edit_lock_ = true
+
+[node name="CharacterPreview3D" type="SubViewport" parent="MarginContainer/LayoutCreation/Panels/CharacterContainer/CharacterPreview"]
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="MarginContainer/LayoutCreation/Panels/CharacterContainer/CharacterPreview/CharacterPreview3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+fov = 32.8
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="MarginContainer/LayoutCreation/Panels/CharacterContainer/CharacterPreview/CharacterPreview3D"]
+environment = SubResource("Environment_r3q6x")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="MarginContainer/LayoutCreation/Panels/CharacterContainer/CharacterPreview/CharacterPreview3D"]
+light_energy = 3.0
+
+[node name="Namebox" type="VBoxContainer" parent="MarginContainer/LayoutCreation/Panels/CharacterContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 10
+
+[node name="NameLineEdit" type="LineEdit" parent="MarginContainer/LayoutCreation/Panels/CharacterContainer/Namebox"]
+custom_minimum_size = Vector2(300, 60)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_d62kf")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxTexture_xf11f")
+theme_override_styles/read_only = SubResource("StyleBoxTexture_fj2ff")
+theme_override_styles/focus = SubResource("StyleBoxTexture_5iqvk")
+placeholder_text = "Digite o nome do personagem"
 max_length = 14
+emoji_menu_enabled = false
 
-[node name="CreateButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 706.0
-offset_top = 506.0
-offset_right = 853.0
-offset_bottom = 537.0
-text = "Criar Personagem"
+[node name="CreateButton" type="Button" parent="MarginContainer/LayoutCreation/Panels/CharacterContainer/Namebox"]
+custom_minimum_size = Vector2(240, 70)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = SubResource("StyleBoxTexture_6re3v")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_7044q")
+theme_override_styles/hover = SubResource("StyleBoxTexture_putt4")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_r3q6x")
+theme_override_styles/focus = SubResource("StyleBoxTexture_elt4a")
 
-[node name="CharacterPreview3D" type="Node3D" parent="."]
+[node name="InfoContainer" type="VBoxContainer" parent="MarginContainer/LayoutCreation/Panels"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+metadata/_edit_lock_ = true
 
-[node name="Camera3D" type="Camera3D" parent="CharacterPreview3D"]
+[node name="bgPanel" type="TextureRect" parent="MarginContainer/LayoutCreation/Panels/InfoContainer"]
+custom_minimum_size = Vector2(350, 440)
+layout_mode = 2
+texture = ExtResource("10_6lc12")
+expand_mode = 5
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="CharacterPreview3D"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/LayoutCreation/Panels/InfoContainer/bgPanel"]
+clip_contents = true
+layout_mode = 1
+offset_right = 350.0
+offset_bottom = 420.0
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/LayoutCreation/Panels/InfoContainer/bgPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/LayoutCreation/Panels/InfoContainer/bgPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_d62kf")
+theme_override_font_sizes/font_size = 40
+text = "Warrior"
+horizontal_alignment = 1
+
+[node name="DescriptionLabel" type="RichTextLabel" parent="MarginContainer/LayoutCreation/Panels/InfoContainer/bgPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"
+fit_content = true
+scroll_following = true
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 
-[node name="AlertPanel" type="AcceptDialog" parent="."]
-oversampling_override = 1.0
-title = "Sucesso!"
-position = Vector2i(0, 36)
-visible = true
-
-[node name="Exit" type="Button" parent="."]
-layout_mode = 0
-offset_left = 111.0
-offset_top = 580.0
-offset_right = 250.0
-offset_bottom = 632.0
-text = "Sair"
-
-[node name="ConfigMenuButton" type="Button" parent="."]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
-text = "Configurações"
-
-[connection signal="confirmed" from="AlertPanel" to="." method="_on_character_created_success_confirmed"]
+[node name="WarningDialog" parent="." instance=ExtResource("13_r3q6x")]

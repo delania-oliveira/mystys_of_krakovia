@@ -38,6 +38,7 @@ var is_standing = true
 @onready var cast_bar = $CastBar
 @onready var gold_label = get_node("Inventory/HBoxContainer/InventoryItems/Gold/TextureRect/GoldAmount")
 var floating_popup_scene = preload("res://tests/players/ui/Popup.tscn")
+var menu_tab_scene = preload("res://ui/MenuTab.tscn")
 var player_alert_scene = preload("res://tests/players/ui/PlayerAlert.tscn")
 var character_class
 var is_attacking = false
@@ -50,6 +51,7 @@ var defense = 0
 var ARROW_SCENE = preload("res://assets/effects/shoot_effects/Arrow.tscn")
 var ARCANEBALL_SCENE = preload("res://assets/effects/shoot_effects/Arcaneball.tscn")
 signal skills_updated(new_skills)
+var menu_instance = null
 @onready var spellbook = $SpellBook
 @onready var inventory = $Inventory
 var skills: Array = []
@@ -279,6 +281,13 @@ func _on_too_far_away(data):
 func _unhandled_input(event):
 	if !is_local:
 		return
+	if event and event.is_action_pressed("ui_cancel"):
+		if not menu_instance:
+			menu_instance = menu_tab_scene.instantiate()
+			add_child(menu_instance)
+		else:
+			menu_instance.queue_free()
+			menu_instance = null
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var from = get_viewport().get_camera_3d().project_ray_origin(event.position)
 		var to = from + get_viewport().get_camera_3d().project_ray_normal(event.position) * 1000

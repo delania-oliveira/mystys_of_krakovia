@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://b3kp76oqmmict"
-path="res://.godot/imported/Hunter.glb-6a583e99f1d9fcd3ad0e491d2e22c21b.scn"
+path="res://.godot/imported/Archer.glb-4a8a777db23c4901baf901e2e0c229b3.scn"
 
 [deps]
 
-source_file="res://assets/character/Hunter.glb"
-dest_files=["res://.godot/imported/Hunter.glb-6a583e99f1d9fcd3ad0e491d2e22c21b.scn"]
+source_file="res://assets/character/Archer.glb"
+dest_files=["res://.godot/imported/Archer.glb-4a8a777db23c4901baf901e2e0c229b3.scn"]
 
 [params]
 

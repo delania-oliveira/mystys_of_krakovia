@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://blheq813nfnf6"
-path.s3tc="res://.godot/imported/Hunter_3.png-10eced8a35eec34cffe3874db1ee546a.s3tc.ctex"
+uid="uid://c3sc3ldd1sryv"
+path.s3tc="res://.godot/imported/Archer_2.png-762a24fdaafb78c8c6f9b6e059dfa760.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "f6c115431c7a450120b1a94fa1a73695"
+"md5": "08653eb53b62d0ee595a1ea428f7611f"
 }
 
 [deps]
 
-source_file="res://assets/character/Hunter_3.png"
-dest_files=["res://.godot/imported/Hunter_3.png-10eced8a35eec34cffe3874db1ee546a.s3tc.ctex"]
+source_file="res://assets/character/Archer_2.png"
+dest_files=["res://.godot/imported/Archer_2.png-762a24fdaafb78c8c6f9b6e059dfa760.s3tc.ctex"]
 
 [params]
 
@@ -30,7 +30,7 @@ compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=1
-roughness/src_normal="res://assets/Hunter_3.png"
+roughness/src_normal="res://assets/character/Archer_2.png"
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2

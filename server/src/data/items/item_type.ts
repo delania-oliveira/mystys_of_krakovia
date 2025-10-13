@@ -19,4 +19,5 @@ export interface Item {
   defense?: number,
   attack?: number,
   type: string
+  limitedClasses?: string[]
 }

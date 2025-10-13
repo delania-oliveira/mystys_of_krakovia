@@ -1,14 +1,14 @@
-[gd_scene load_steps=47 format=4 uid="uid://c0bjbv3u6kf8n"]
+[gd_scene load_steps=40 format=4 uid="uid://c0bjbv3u6kf8n"]
 
 [ext_resource type="Script" uid="uid://y361428p0gnf" path="res://login/LoginScreen.gd" id="1_5fley"]
 [ext_resource type="VideoStream" uid="uid://bjfe1dmns5smr" path="res://assets/login/background.ogv" id="2_4nbh0"]
-[ext_resource type="Texture2D" uid="uid://el5o7ay6cmwm" path="res://assets/login/button.png" id="3_3msxh"]
 [ext_resource type="Texture2D" uid="uid://denhtdv7yg3um" path="res://assets/login/backgroundCard.png" id="3_4nbh0"]
 [ext_resource type="Texture2D" uid="uid://bw6c0drcqbtpc" path="res://assets/login/MoKLogo.png" id="3_ipax5"]
 [ext_resource type="Texture2D" uid="uid://wigql41801rv" path="res://assets/login/exitButton.png" id="3_twl6u"]
 [ext_resource type="Texture2D" uid="uid://bji76j2dchu7u" path="res://assets/login/input.png" id="4_ipax5"]
 [ext_resource type="FontFile" uid="uid://celsc86a60tw6" path="res://assets/fonts/timesbd.ttf" id="5_ipax5"]
 [ext_resource type="Texture2D" uid="uid://detm05ilxu71f" path="res://assets/login/separator.png" id="6_jbl6y"]
+[ext_resource type="PackedScene" uid="uid://cii3hn7evsqsu" path="res://assets/theme/AlertModal.tscn" id="11_3msxh"]
 [ext_resource type="Texture2D" uid="uid://ck8r2uv7hxsvn" path="res://assets/login/loginButton.png" id="11_gubj4"]
 [ext_resource type="Texture2D" uid="uid://b6spytvs2ya21" path="res://assets/login/newAccountButton.png" id="12_mbp1g"]
 
@@ -7110,74 +7110,6 @@ default_font_size = 34
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dve38"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3msxh"]
-texture = ExtResource("3_3msxh")
-texture_margin_left = 85.0
-texture_margin_top = 22.0
-texture_margin_right = 85.0
-texture_margin_bottom = 22.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gubj4"]
-texture = ExtResource("3_3msxh")
-texture_margin_left = 85.0
-texture_margin_top = 22.0
-texture_margin_right = 85.0
-texture_margin_bottom = 22.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mbp1g"]
-texture = ExtResource("3_3msxh")
-texture_margin_left = 85.0
-texture_margin_top = 22.0
-texture_margin_right = 85.0
-texture_margin_bottom = 22.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_juu8r"]
-texture = ExtResource("3_3msxh")
-texture_margin_left = 85.0
-texture_margin_top = 22.0
-texture_margin_right = 85.0
-texture_margin_bottom = 22.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2o3qn"]
-texture = ExtResource("3_3msxh")
-texture_margin_left = 85.0
-texture_margin_top = 22.0
-texture_margin_right = 85.0
-texture_margin_bottom = 22.0
-
-[sub_resource type="Theme" id="Theme_1bhlj"]
-Button/colors/font_color = Color(0.875, 0.875, 0.875, 1)
-Button/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
-Button/colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
-Button/colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)
-Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
-Button/colors/font_outline_color = Color(0, 0, 0, 1)
-Button/colors/font_pressed_color = Color(1, 1, 1, 1)
-Button/colors/icon_disabled_color = Color(1, 1, 1, 0.4)
-Button/colors/icon_focus_color = Color(1, 1, 1, 1)
-Button/colors/icon_hover_color = Color(1, 1, 1, 1)
-Button/colors/icon_hover_pressed_color = Color(1, 1, 1, 1)
-Button/colors/icon_normal_color = Color(1, 1, 1, 1)
-Button/colors/icon_pressed_color = Color(1, 1, 1, 1)
-Button/constants/align_to_largest_stylebox = 0
-Button/constants/h_separation = 4
-Button/constants/icon_max_width = 0
-Button/constants/outline_size = 0
-Button/font_sizes/font_size = 20
-Button/fonts/font = ExtResource("5_ipax5")
-Button/styles/disabled = SubResource("StyleBoxTexture_3msxh")
-Button/styles/focus = SubResource("StyleBoxTexture_gubj4")
-Button/styles/hover = SubResource("StyleBoxTexture_mbp1g")
-Button/styles/normal = SubResource("StyleBoxTexture_juu8r")
-Button/styles/pressed = SubResource("StyleBoxTexture_2o3qn")
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3msxh"]
-content_margin_left = 10.0
-content_margin_top = 20.0
-content_margin_right = 10.0
-content_margin_bottom = 20.0
-bg_color = Color(0.094720505, 4.737871e-08, 1.35367735e-08, 1)
-
 [node name="LoginScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -7332,17 +7264,6 @@ theme_override_styles/focus = SubResource("StyleBoxTexture_dve38")
 icon = ExtResource("12_mbp1g")
 flat = true
 
-[node name="WarningDialog" type="AcceptDialog" parent="."]
-oversampling_override = 1.0
-title = ""
-initial_position = 1
-size = Vector2i(600, 200)
-unresizable = true
-borderless = true
-min_size = Vector2i(600, 200)
-max_size = Vector2i(600, 600)
-keep_title_visible = false
-theme = SubResource("Theme_1bhlj")
-theme_override_styles/panel = SubResource("StyleBoxFlat_3msxh")
+[node name="WarningDialog" parent="." instance=ExtResource("11_3msxh")]
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]

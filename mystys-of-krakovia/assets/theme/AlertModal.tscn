@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://cii3hn7evsqsu"]
+
+[ext_resource type="Theme" uid="uid://yw4xkgj5qet6" path="res://assets/theme/button.tres" id="1_75w05"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3msxh"]
+content_margin_left = 10.0
+content_margin_top = 20.0
+content_margin_right = 10.0
+content_margin_bottom = 20.0
+bg_color = Color(0.094720505, 4.737871e-08, 1.35367735e-08, 1)
+
+[node name="WarningDialog" type="AcceptDialog"]
+oversampling_override = 1.0
+title = ""
+initial_position = 1
+size = Vector2i(600, 200)
+unresizable = true
+borderless = true
+min_size = Vector2i(600, 200)
+max_size = Vector2i(600, 600)
+keep_title_visible = false
+theme = ExtResource("1_75w05")
+theme_override_styles/panel = SubResource("StyleBoxFlat_3msxh")

@@ -1,6 +1,7 @@
 extends Node
 var room
 var state
+@onready var party_ui = preload("res://tests/players/ui/PartyUI.tscn")
 
 func _ready():
 	if Network.client:
@@ -13,7 +14,7 @@ func _on_network_ready():
 	room = room_status.get("room")
 	state = room_status.get("state")
 	Network.prepare_room_state(state, self)
-
+	
 func _on_monster_add(target, value, key):
 	_spawn_monster(value, key)
 	
@@ -87,6 +88,10 @@ func _on_players_add(target, value, key):
 		room.on_message("playerAttack").on(Callable(ch, "_on_player_attack"))
 		room.on_message("damageDealt").on(Callable(ch, "_on_damage_dealt"))
 		room.on_message("experienceGained").on(Callable(ch, "_on_experience_gained"))
+		room.on_message("partyInvite").on(Callable(ch, "_on_party_invite"))
+		room.on_message("partyJoined").on(Callable(ch, "_on_party_joined"))
+		room.on_message("inviteFail").on(Callable(ch, "_on_invite_fail"))
+		room.on_message("partyHealthUpdate").on(Callable(ch, "_on_party_health_update"))
 		CharacterHelper.prepare_health_bar(ch, value.health, value.max_health)
 		CharacterHelper.prepare_mana_bar(ch, value.mana, value.max_mana)
 		CharacterHelper.prepare_experience_bar(ch, value.experience, value.level, value.max_exp)
@@ -100,6 +105,7 @@ func _on_players_add(target, value, key):
 		inventory.player = ch
 		ch.skills_updated.connect(spellbook.display_player_skills)
 		spellbook.hide()
+		ch.get_node("PlayerMenu").hide()
 		ch.get_node("CastBar").visible = false
 	else:
 		CharacterHelper.setup_remote_player(ch)

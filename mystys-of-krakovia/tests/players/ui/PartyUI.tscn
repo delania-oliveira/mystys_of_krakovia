@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bt602ad5g4u3k"]
+
+[ext_resource type="Script" uid="uid://dqoyn04l166p7" path="res://tests/players/ui/party_ui.gd" id="1_tj8dn"]
+
+[node name="PartyUi" type="VBoxContainer"]
+offset_left = 177.0
+offset_top = 339.0
+offset_right = 177.0
+offset_bottom = 339.0
+script = ExtResource("1_tj8dn")

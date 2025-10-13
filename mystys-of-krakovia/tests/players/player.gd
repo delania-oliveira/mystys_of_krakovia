@@ -40,6 +40,9 @@ var is_standing = true
 var floating_popup_scene = preload("res://tests/players/ui/Popup.tscn")
 var menu_tab_scene = preload("res://ui/MenuTab.tscn")
 var player_alert_scene = preload("res://tests/players/ui/PlayerAlert.tscn")
+var party_invite_scene = preload("res://tests/players/ui/PartyInvitePopup.tscn")
+var party_ui_scene = preload("res://tests/players/ui/PartyUI.tscn")
+var party_ui_instance = null
 var character_class
 var is_attacking = false
 var dead: bool = false
@@ -53,6 +56,7 @@ var ARCANEBALL_SCENE = preload("res://assets/effects/shoot_effects/Arcaneball.ts
 signal skills_updated(new_skills)
 var menu_instance = null
 @onready var spellbook = $SpellBook
+@onready var player_menu = $PlayerMenu
 @onready var inventory = $Inventory
 var skills: Array = []
 var attack_locked = false
@@ -140,7 +144,11 @@ func get_target_by_id(target_id):
 func get_user_by_id(user_id):
 	if user_id:
 		return room.state.players.at(user_id)
-			
+		
+func _on_party_health_update(data):
+	if is_instance_valid(party_ui_instance):
+		party_ui_instance._update_member_health(data)
+		
 func _on_target_health_update(data):
 	if not current_target or not is_instance_valid(current_target):
 		return
@@ -276,8 +284,27 @@ func show_player_alert(text):
 	get_tree().root.add_child(alert_instance)
 	alert_instance.set_value(text)
 	
-func _on_too_far_away(data):
+func _on_too_far_away():
 	show_player_alert("Inimigo muito distante!")
+
+func _on_invite_fail(data):
+	show_player_alert(data.text)
+	
+func _on_party_joined(data):
+	if is_instance_valid(party_ui_instance):
+		party_ui_instance.queue_free()
+	party_ui_instance = party_ui_scene.instantiate()
+	party_ui_instance._create_party(data.members, data.leader)
+	get_tree().root.add_child(party_ui_instance)
+	
+func _on_party_invite(data):
+	var party_invite_instance = party_invite_scene.instantiate()
+	party_invite_instance.get_child(0).text = data.invitingPlayerName + " te convidou para um grupo."
+	party_invite_instance.invitingPlayer = data.invitingPlayerId
+	party_invite_instance.invitedPlayer = id
+	party_invite_instance.room = room
+	get_tree().root.add_child(party_invite_instance)
+	
 func _unhandled_input(event):
 	if !is_local:
 		return
@@ -295,6 +322,7 @@ func _unhandled_input(event):
 		var result = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(from, to))
 		if result and result.collider.is_in_group("targetable"):
 			set_target(result.collider)
+		
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			var from = get_viewport().get_camera_3d().project_ray_origin(event.position)
 			var to = from + get_viewport().get_camera_3d().project_ray_normal(event.position) * 1000
@@ -311,6 +339,12 @@ func _unhandled_input(event):
 					get_viewport().set_input_as_handled()
 				else:
 					show_player_alert("Muito longe!")
+			if result and result.collider.is_in_group("players") and result.collider.id != id:
+				player_menu.global_position = get_viewport().get_mouse_position()
+				player_menu.show()
+				if current_target != result.collider:
+					set_target(result.collider)
+				
 	if event.is_action_pressed("toggle_skill_book"):
 		spellbook.visible = not spellbook.visible
 	if event.is_action_pressed("toggle_inventory"):
@@ -351,6 +385,9 @@ func set_target(new_target: Node3D):
 		target_picture.texture = null
 		target_frame.hide()
 
+func _on_invite_to_party_button_down() -> void:
+	room.send("partyInvite", {"playerInvitingId": id, "invitedPlayerId": current_target.id})
+	player_menu.hide()
 
-func _on_v_box_container_gui_input(event: InputEvent) -> void:
-	pass # Replace with function body.
+func _on_cancel_button_down() -> void:
+	player_menu.hide()

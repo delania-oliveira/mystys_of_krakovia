@@ -1,0 +1,72 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8gr7is525qff"]
+
+[ext_resource type="Script" uid="uid://dtwxw57onk36p" path="res://tests/players/ui/party_invite_popup.gd" id="1_awgn3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_awgn3"]
+bg_color = Color(0.37, 0.37, 0.37, 1)
+
+[node name="PartyInvitePopup" type="Control"]
+custom_minimum_size = Vector2(240, 120)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_awgn3")
+
+[node name="PlayerName" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = 12.0
+offset_right = 20.0
+offset_bottom = 35.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 14
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -40.0
+offset_right = 80.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="Accept" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "Aceitar"
+
+[node name="Refuse" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "Recusar"
+
+[node name="Panel" type="Panel" parent="."]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_awgn3")
+
+[connection signal="button_down" from="HBoxContainer/Accept" to="." method="_on_accept_button_down"]
+[connection signal="button_down" from="HBoxContainer/Refuse" to="." method="_on_refuse_button_down"]

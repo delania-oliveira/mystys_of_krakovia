@@ -199,7 +199,7 @@ func update_gold(new_value):
 	gold_label.text = "Gold: " + str(current_gold)
 	
 func _on_looted_item(data):
-	inventory.update_inventory(data.itemId, data.quantity, data.defense, data.attack, data.description, data.name, data.type)
+	inventory.update_inventory(data)
 	
 func on_network_data_received(data):
 	if data.targetName:
@@ -273,6 +273,7 @@ func show_player_alert(text):
 	var alert_instance = player_alert_scene.instantiate()
 	get_tree().root.add_child(alert_instance)
 	alert_instance.set_value(text)
+	
 func _on_too_far_away(data):
 	show_player_alert("Inimigo muito distante!")
 func _unhandled_input(event):

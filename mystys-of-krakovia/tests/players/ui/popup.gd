@@ -13,9 +13,11 @@ func _ready():
 	global_position.x += randf_range(-0.2, 0.2)
 	global_position.z += randf_range(-0.2, 0.2)
 
-func set_damage(amount: int):
-	label.text = str(amount)
-
+func set_value(amount: int, type):
+	if type == "Gold" || type == "Experience":
+		label.text = "+" + str(amount)
+	else:
+		label.text = str(amount)
 func _process(delta):
 	time_passed += delta
 	translate(Vector3(0, float_speed * delta, 0))

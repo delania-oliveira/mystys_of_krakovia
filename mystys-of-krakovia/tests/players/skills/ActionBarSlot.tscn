@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://c01o1kr5nssku"]
+
+[ext_resource type="Texture2D" uid="uid://fiqdnp7dh64l" path="res://assets/icons/skills/action_bar_slot.png" id="1_7mms0"]
+[ext_resource type="Script" uid="uid://csabxty3j64a1" path="res://tests/players/skills/action_bar_slot.gd" id="1_sskj2"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8pimf"]
+texture = ExtResource("1_7mms0")
+
+[node name="ActionBarSlot" type="Panel"]
+custom_minimum_size = Vector2(64, 64)
+theme_override_styles/panel = SubResource("StyleBoxTexture_8pimf")
+script = ExtResource("1_sskj2")
+
+[node name="Icon" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_7mms0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="IndexLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 3.0
+offset_right = 43.0
+offset_bottom = 23.0

@@ -26,4 +26,7 @@ export class Monster extends Schema {
   @type("number") defense = 0
   @type("number") experience = 0
   @type("boolean") isDead = false
+  @type("boolean") isAggroed = false
+  @type("string") taggedPlayerId = ""
+   _threatTable?: Record<string, number>;
 }

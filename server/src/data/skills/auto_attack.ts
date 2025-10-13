@@ -1,19 +1,27 @@
 import { Skill } from "./skills"
 
-export const AutoAttackHunter: Skill = {
-  id: "auto_attack_hunter",
-  name: "Auto Attack",
-  baseDamage: 1,
+export const DefaultSkillArcher: Skill = {
+  id: "default_skill_hunter",
+  name: "Flechada",
+  level: 1,
+  baseDamage: 2,
+  range: 30,
   area: 0,
-  animation: "AutoAttack",
+  animation: "DefaultAttack",
   effect: "ArrowShot",
+  characterClass: "Hunter",
+  description: "Atira uma flecha no alvo.",
 }
 
-export const AutoAttackMage: Skill = {
-  id: "auto_attack_mage",
-  name: "Auto Attack",
-  baseDamage: 1,
+export const DefaultSkillMage: Skill = {
+  id: "default_skill_mage",
+  name: "Bola Arcana",
+  level: 1,
+  baseDamage: 4,
+  range: 25,
   area: 0,
-  animation: "AutoAttack",
-  effect: "Fireball",
+  animation: "DefaultCast",
+  effect: "ArcaneBall",
+  characterClass: "Mage",
+  description: "Lança uma bola arcana explosiva no alvo.",
 }

@@ -1,36 +1,36 @@
 [gd_scene load_steps=17 format=3 uid="uid://cykmrdsp7s8j8"]
 
-[ext_resource type="Script" uid="uid://fgb0rscsulp7" path="res://assets/effects/shoot_effects/fireball.gd" id="1_gvfng"]
-[ext_resource type="Shader" uid="uid://dhskhvme3hduy" path="res://assets/effects/shoot_effects/Fireball.gdshader" id="2_td1fs"]
-[ext_resource type="Texture2D" uid="uid://b4sikicp53j7n" path="res://assets/effects/shoot_effects/FlameTexture.png" id="3_ecygr"]
-[ext_resource type="Shader" uid="uid://fv7upp4ro6vn" path="res://addons/GPUTrail/shaders/trail.gdshader" id="4_pulen"]
-[ext_resource type="Shader" uid="uid://dbw8fda6ugyct" path="res://addons/GPUTrail/shaders/trail_draw_pass.gdshader" id="5_3srh5"]
-[ext_resource type="Script" uid="uid://wu5qrdxr1m62" path="res://addons/GPUTrail/GPUTrail3D.gd" id="6_c2mf4"]
+[ext_resource type="Script" uid="uid://fgb0rscsulp7" path="res://assets/effects/shoot_effects/arcaneball.gd" id="1_e4y1c"]
+[ext_resource type="Shader" uid="uid://b6nm821wgggta" path="res://assets/effects/shoot_effects/Arcane.gdshader" id="2_h7lnx"]
+[ext_resource type="Texture2D" uid="uid://b4sikicp53j7n" path="res://assets/effects/shoot_effects/FlameTexture.png" id="3_264ph"]
+[ext_resource type="Shader" uid="uid://fv7upp4ro6vn" path="res://addons/GPUTrail/shaders/trail.gdshader" id="4_bcfmk"]
+[ext_resource type="Shader" uid="uid://dbw8fda6ugyct" path="res://addons/GPUTrail/shaders/trail_draw_pass.gdshader" id="5_jh35h"]
+[ext_resource type="Script" uid="uid://wu5qrdxr1m62" path="res://addons/GPUTrail/GPUTrail3D.gd" id="6_ko5qs"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_25vlv"]
 render_priority = 0
-shader = ExtResource("2_td1fs")
+shader = ExtResource("2_h7lnx")
 shader_parameter/time = 0.0
-shader_parameter/frame_scope = 1.6500000751151205
+shader_parameter/frame_scope = 1.5000000679901202
 shader_parameter/use_system_time = true
 shader_parameter/time_accel = 5.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dkquj"]
-albedo_color = Color(1, 0.4627451, 0, 1)
-albedo_texture = ExtResource("3_ecygr")
+albedo_color = Color(1, 0, 0.9333334, 1)
+albedo_texture = ExtResource("3_264ph")
 albedo_texture_force_srgb = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_25vlv"]
 material = SubResource("StandardMaterial3D_dkquj")
-radius = 0.4
-height = 0.8
+radius = 0.25
+height = 0.5
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pulen"]
-shader = ExtResource("4_pulen")
+shader = ExtResource("4_bcfmk")
 
 [sub_resource type="Gradient" id="Gradient_3srh5"]
 offsets = PackedFloat32Array(0, 0.54, 1)
-colors = PackedColorArray(1, 0.32156864, 0, 1, 1, 0, 0, 0.52156866, 1, 1, 1, 0)
+colors = PackedColorArray(0.74121255, 0.0016137278, 0.8905346, 1, 0.45042318, 0.2964573, 1, 0.52156866, 1, 1, 1, 0)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_c2mf4"]
 gradient = SubResource("Gradient_3srh5")
@@ -46,8 +46,8 @@ curve = SubResource("Curve_mr5bj")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_o4stx"]
 resource_local_to_scene = true
 render_priority = 0
-shader = ExtResource("5_3srh5")
-shader_parameter/tex = ExtResource("3_ecygr")
+shader = ExtResource("5_jh35h")
+shader_parameter/tex = ExtResource("3_264ph")
 shader_parameter/uv_offset = Vector2(0, 0)
 shader_parameter/color_ramp = SubResource("GradientTexture1D_c2mf4")
 shader_parameter/curve = SubResource("CurveTexture_f1d3o")
@@ -57,8 +57,8 @@ shader_parameter/flags = 44
 [sub_resource type="QuadMesh" id="QuadMesh_yacpo"]
 material = SubResource("ShaderMaterial_o4stx")
 
-[node name="Fireball" type="Node3D"]
-script = ExtResource("1_gvfng")
+[node name="Arcaneball" type="Node3D"]
+script = ExtResource("1_e4y1c")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 light_color = Color(1, 0.41568628, 0, 1)
@@ -79,9 +79,9 @@ explosiveness = 1.0
 fixed_fps = 75
 process_material = SubResource("ShaderMaterial_pulen")
 draw_pass_1 = SubResource("QuadMesh_yacpo")
-script = ExtResource("6_c2mf4")
+script = ExtResource("6_ko5qs")
 length_seconds = 1.3333333333333333
-texture = ExtResource("3_ecygr")
+texture = ExtResource("3_264ph")
 color_ramp = SubResource("GradientTexture1D_c2mf4")
 curve = SubResource("CurveTexture_f1d3o")
 billboard = true

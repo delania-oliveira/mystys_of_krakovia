@@ -1,7 +1,18 @@
-[gd_scene load_steps=8 format=3 uid="uid://drsrs7v3ykkwq"]
+[gd_scene load_steps=20 format=3 uid="uid://drsrs7v3ykkwq"]
 
 [ext_resource type="Script" uid="uid://cq0rk5lox1lkw" path="res://tests/players/player.gd" id="1_g5nvm"]
+[ext_resource type="Script" uid="uid://cendqjf0d6vsl" path="res://tests/players/skills/action_bar.gd" id="3_g5nvm"]
 [ext_resource type="Script" uid="uid://bqu316xxkwfjg" path="res://tests/npcs/monsters/name.gd" id="3_qg6v4"]
+[ext_resource type="PackedScene" uid="uid://c01o1kr5nssku" path="res://tests/players/skills/ActionBarSlot.tscn" id="4_qg6v4"]
+[ext_resource type="Script" uid="uid://nbcbqlfilm3u" path="res://tests/players/ui/spell_book.gd" id="5_qg6v4"]
+[ext_resource type="Texture2D" uid="uid://df4qin4sf0xat" path="res://assets/ui_textures/spellbook.jpg" id="6_iietm"]
+[ext_resource type="Script" uid="uid://b55hhr0lbrbw5" path="res://tests/players/ui/cast_bar.gd" id="7_hdun8"]
+[ext_resource type="Script" uid="uid://cpp43ln1c65t2" path="res://tests/players/ui/inventory.gd" id="8_4o6cj"]
+[ext_resource type="Texture2D" uid="uid://bji76j2dchu7u" path="res://assets/login/input.png" id="9_c388k"]
+[ext_resource type="Script" uid="uid://bptre7qwurywy" path="res://tests/players/ui/player_item_button.gd" id="9_j0ttc"]
+[ext_resource type="Texture2D" uid="uid://bcjmaebl82lwr" path="res://assets/icons/items/equipment/helmet_empty.png" id="10_r5luj"]
+[ext_resource type="Texture2D" uid="uid://d1xhfiejyqcxp" path="res://assets/icons/items/equipment/body_empty.png" id="11_ybssk"]
+[ext_resource type="Texture2D" uid="uid://d4k2f13e34e6o" path="res://assets/icons/items/equipment/weapon_empty.png" id="12_r5luj"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_ibhvg"]
 radius = 2.0
@@ -18,6 +29,9 @@ bg_color = Color(0.8129326, 0.16886139, 0.19228163, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qg6v4"]
 bg_color = Color(0.5764706, 0.2627451, 1, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hdun8"]
+bg_color = Color(0.79732555, 0.1793153, 0.91482085, 1)
+
 [node name="Player" type="CharacterBody3D" groups=["players", "targetable"]]
 collision_mask = 4
 script = ExtResource("1_g5nvm")
@@ -33,18 +47,24 @@ transform = Transform3D(0.70710677, -0.4055798, 0.579228, 0, 0.81915206, 0.57357
 [node name="ManaBar" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
+offset_left = 493.0
+offset_right = 533.0
 offset_bottom = 40.0
 
 [node name="ProgressManaBar" type="ProgressBar" parent="ManaBar"]
-layout_mode = 0
-offset_left = 725.0
-offset_top = 15.0
-offset_right = 1065.0
-offset_bottom = 42.0
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -119.0
+offset_top = 31.0
+offset_right = 221.0
+offset_bottom = 58.0
+grow_horizontal = 2
 theme_override_styles/fill = SubResource("StyleBoxFlat_mp81i")
 step = 1.0
 value = 100.0
+show_percentage = false
 
 [node name="ManaLabel" type="Label" parent="ManaBar/ProgressManaBar"]
 layout_mode = 1
@@ -67,14 +87,15 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="ProgressHealthBar" type="ProgressBar" parent="HealthBar"]
-layout_mode = 0
-offset_left = 155.0
-offset_top = 15.0
-offset_right = 495.0
-offset_bottom = 42.0
+layout_mode = 1
+offset_left = 14.0
+offset_top = 31.0
+offset_right = 354.0
+offset_bottom = 58.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_g5nvm")
 step = 1.0
 value = 100.0
+show_percentage = false
 
 [node name="HealthLabel" type="Label" parent="HealthBar/ProgressHealthBar"]
 layout_mode = 1
@@ -98,15 +119,24 @@ script = ExtResource("3_qg6v4")
 [node name="Target" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 342.0
+offset_top = 108.0
+offset_right = 535.0
+offset_bottom = 239.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Target"]
-layout_mode = 0
-offset_left = 206.0
-offset_top = 120.0
-offset_right = 350.0
-offset_bottom = 174.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -72.0
+offset_top = -28.5
+offset_right = 72.0
+offset_bottom = 28.5
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="TextureRect" type="TextureRect" parent="Target/HBoxContainer"]
 layout_mode = 2
@@ -125,6 +155,7 @@ layout_mode = 2
 theme_override_styles/fill = SubResource("StyleBoxFlat_whe6v")
 step = 1.0
 value = 100.0
+show_percentage = false
 
 [node name="HealthLabel" type="Label" parent="Target/HBoxContainer/VBoxContainer/HealthBar"]
 layout_mode = 1
@@ -142,17 +173,34 @@ grow_vertical = 2
 
 [node name="ExperienceBar" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -78.0
+offset_right = 20.0
+offset_bottom = -42.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
 
 [node name="ProgressExperienceBar" type="ProgressBar" parent="ExperienceBar"]
-layout_mode = 0
-offset_left = 450.0
-offset_top = 689.0
-offset_right = 810.0
-offset_bottom = 716.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -13.5
+offset_right = 180.0
+offset_bottom = 13.5
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_qg6v4")
+show_percentage = false
 
 [node name="ExperienceLabel" type="Label" parent="ExperienceBar/ProgressExperienceBar"]
 layout_mode = 1
@@ -177,3 +225,286 @@ offset_top = -11.5
 offset_right = 40.0
 offset_bottom = 11.5
 grow_vertical = 2
+
+[node name="ActionBar" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -237.0
+offset_top = 380.0
+offset_right = -119.0
+offset_bottom = 426.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 8
+script = ExtResource("3_g5nvm")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ActionBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ActionBarSlot" parent="ActionBar/HBoxContainer" instance=ExtResource("4_qg6v4")]
+layout_mode = 2
+
+[node name="ActionBarSlot2" parent="ActionBar/HBoxContainer" instance=ExtResource("4_qg6v4")]
+layout_mode = 2
+
+[node name="ActionBarSlot3" parent="ActionBar/HBoxContainer" instance=ExtResource("4_qg6v4")]
+layout_mode = 2
+
+[node name="ActionBarSlot4" parent="ActionBar/HBoxContainer" instance=ExtResource("4_qg6v4")]
+layout_mode = 2
+
+[node name="ActionBarSlot5" parent="ActionBar/HBoxContainer" instance=ExtResource("4_qg6v4")]
+layout_mode = 2
+
+[node name="ActionBarSlot6" parent="ActionBar/HBoxContainer" instance=ExtResource("4_qg6v4")]
+layout_mode = 2
+
+[node name="ActionBarSlot7" parent="ActionBar/HBoxContainer" instance=ExtResource("4_qg6v4")]
+layout_mode = 2
+
+[node name="SpellBook" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1131.0
+offset_top = 147.0
+offset_right = 1614.0
+offset_bottom = 608.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("5_qg6v4")
+
+[node name="SkillsGridContainer" type="GridContainer" parent="SpellBook"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -169.0
+offset_top = 82.0
+offset_right = -129.0
+offset_bottom = 122.0
+grow_horizontal = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 24
+
+[node name="TextureRect" type="TextureRect" parent="SpellBook"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("6_iietm")
+
+[node name="Header" type="Label" parent="SpellBook"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -120.5
+offset_top = 17.0
+offset_right = 120.5
+offset_bottom = 62.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+text = "Livro de Magias"
+
+[node name="CastBar" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("7_hdun8")
+
+[node name="CastProgressBar" type="ProgressBar" parent="CastBar"]
+layout_mode = 0
+offset_left = -103.0
+offset_top = 350.0
+offset_right = 161.0
+offset_bottom = 377.0
+theme_override_styles/background = SubResource("StyleBoxFlat_hdun8")
+show_percentage = false
+
+[node name="Label" type="Label" parent="CastBar/CastProgressBar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Inventory" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+script = ExtResource("8_4o6cj")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Inventory"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/separation = 44
+
+[node name="PlayerEquipment" type="HBoxContainer" parent="Inventory/HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+theme_override_constants/separation = 44
+
+[node name="Weapon" type="Button" parent="Inventory/HBoxContainer/PlayerEquipment"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("9_j0ttc")
+
+[node name="TextureRect" type="TextureRect" parent="Inventory/HBoxContainer/PlayerEquipment/Weapon"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = -20.0
+offset_right = 22.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("12_r5luj")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="Inventory/HBoxContainer/PlayerEquipment/Weapon"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Inventory/HBoxContainer/PlayerEquipment"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 44
+
+[node name="Helmet" type="Button" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer"]
+layout_mode = 2
+script = ExtResource("9_j0ttc")
+
+[node name="TextureRect" type="TextureRect" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer/Helmet"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = -20.0
+offset_right = 22.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("10_r5luj")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer/Helmet"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Body" type="Button" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer"]
+layout_mode = 2
+script = ExtResource("9_j0ttc")
+
+[node name="TextureRect" type="TextureRect" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer/Body"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = -20.0
+offset_right = 22.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11_ybssk")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer/Body"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="InventoryItems" type="VBoxContainer" parent="Inventory/HBoxContainer"]
+layout_mode = 2
+
+[node name="InventoryContainer" type="GridContainer" parent="Inventory/HBoxContainer/InventoryItems"]
+layout_mode = 2
+theme_override_constants/h_separation = 1
+theme_override_constants/v_separation = 1
+columns = 10
+
+[node name="Gold" type="Control" parent="Inventory/HBoxContainer/InventoryItems"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Inventory/HBoxContainer/InventoryItems/Gold"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_right = 110.0
+offset_bottom = 30.0
+grow_vertical = 2
+texture = ExtResource("9_c388k")
+expand_mode = 2
+
+[node name="GoldAmount" type="Label" parent="Inventory/HBoxContainer/InventoryItems/Gold/TextureRect"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 3.0
+offset_top = -11.5
+offset_right = 43.0
+offset_bottom = 11.5
+grow_vertical = 2
+
+[connection signal="gui_input" from="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer" to="." method="_on_v_box_container_gui_input"]

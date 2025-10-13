@@ -281,6 +281,9 @@ export class Krakovia extends Room<KrakoviaState> {
           monster.targetId = "";
           monster.isTargeting = false;
           monster.taggedPlayerId = "";
+          if (monster._threatTable) {
+            monster._threatTable = {};
+          }
           monster.health = monster.max_health
           this.broadcast("playerTargetHealthUpdate", {
             id: target.id,

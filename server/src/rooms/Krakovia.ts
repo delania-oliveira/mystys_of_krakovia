@@ -60,6 +60,75 @@ export class Krakovia extends Room<KrakoviaState> {
       }
     });
 
+    this.onMessage("partyInvite", (client, data) => {
+      const invitingPlayer = this.state.players.get(data.playerInvitingId)
+      const invitedPlayer = this.state.players.get(data.invitedPlayerId)
+      const invitedPlayerClient = this.clients.find(c => c.sessionId === invitedPlayer.id);
+      const invitingPlayerClient = this.clients.find(c => c.sessionId === invitingPlayer.id);
+
+      if (invitedPlayer.partyId){
+        invitingPlayerClient.send("inviteFail", {"text": "Jogador já está em um grupo!"})
+        return
+      }
+
+      if (invitingPlayer.partyId && invitingPlayer.partyId !== invitingPlayer.id){
+        invitingPlayerClient.send("inviteFail", {"text": "Você não é o líder do grupo!"})
+        return
+      }
+
+      invitedPlayerClient.send("partyInvite", {"invitingPlayerName": invitingPlayer.name, "invitingPlayerId": invitingPlayer.id})
+    })
+
+    this.onMessage("addToParty", (client, data) => {
+      const invitingPlayer = this.state.players.get(data.playerInvitingId);
+      const invitedPlayer = this.state.players.get(data.playerInvitedId);
+      let newParty = false
+      if (!invitingPlayer || !invitedPlayer) return;
+      if (invitedPlayer.partyId) {
+        // send message later
+        return
+      }
+      if (invitingPlayer.partyId && invitingPlayer.id != invitingPlayer.partyId) {
+        return
+      }
+      if (!invitingPlayer._party) {
+        invitingPlayer._party = {};
+      }
+      let partyId = invitingPlayer.partyId;
+      if (!partyId) {
+        partyId = invitingPlayer.id
+        invitingPlayer.partyId = partyId;
+        invitingPlayer._party[partyId] = [invitingPlayer];
+        newParty = true
+      }
+      invitedPlayer.partyId = partyId;
+      invitingPlayer._party[partyId].push(invitedPlayer);
+      const invitingClient = this.clients.find(c => c.sessionId === invitingPlayer.id);
+      const invitedClient = this.clients.find(c => c.sessionId === invitedPlayer.id);
+      const partyMembers = invitingPlayer._party[partyId].map(p => ({
+        id: p.id,
+        name: p.name,
+        max_health: p.max_health,
+        current_health: p.health,
+        level: p.level,
+        character_class: p.character_class
+      }));
+
+      if (invitedClient && invitingClient && newParty) {
+        invitedClient.send("partyJoined", { leader: partyId, members: partyMembers });
+        invitingClient.send("partyJoined", { leader: partyId, members: partyMembers });
+      } else {
+        const party = invitingPlayer._party[partyId];
+        party.forEach(member => {
+          const memberClient = this.clients.find(c => c.sessionId === member.id);
+
+          if (memberClient) {
+            memberClient.send("partyJoined", { leader: partyId, members: partyMembers });
+          }
+        });
+      }
+    });
+
     this.onMessage("playerAttack", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
@@ -319,6 +388,18 @@ export class Krakovia extends Room<KrakoviaState> {
               isDead: target.health <= 0,
               damage: finalDamage,
             });
+            const partyId = target.partyId
+            if (partyId) {
+              const partyLeader = this.state.players.get(partyId)
+              const party = partyLeader._party[partyId];
+              party.forEach(member => {
+                const memberClient = this.clients.find(c => c.sessionId === member.id);
+                
+                if (memberClient) {
+                  memberClient.send("partyHealthUpdate", { member: target.id, health: target.health });
+                }
+              });
+            }
             if (target.health <= 0) {
               target.isDead = true;
               target.health = 0;
@@ -403,7 +484,6 @@ export class Krakovia extends Room<KrakoviaState> {
         console.log(error);
       }
     }
-
     this.state.players.set(client.sessionId, player);
   }
 

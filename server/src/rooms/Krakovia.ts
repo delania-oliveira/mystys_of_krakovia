@@ -99,7 +99,9 @@ export class Krakovia extends Room<KrakoviaState> {
       const player = this.state.players.get(client.sessionId)
       if (player) {
         const equippedItem = items[data.itemId]
-        player.defense += equippedItem.defense
+        if (equippedItem.limitedClasses.includes(player.character_class)){
+          player.defense += equippedItem.defense
+        }
       }
     })
     this.onMessage("looted", (client, data) => {
@@ -110,13 +112,14 @@ export class Krakovia extends Room<KrakoviaState> {
       } else {
         const lootedItem = items[data.itemId]
         const payload: any = {
-          itemId: data.itemId,
+          itemId: lootedItem.id,
           name: lootedItem.name,
           quantity: data.itemQuantity,
           description: lootedItem.description,
-          type: lootedItem.type
+          type: lootedItem.type,
+          limitedClasses: lootedItem.limitedClasses
         };
-        if (lootedItem.type === "Armor") {
+        if (lootedItem.type === "Armor" || lootedItem.type === "Helmet") {
           payload.attack = 0
           payload.defense = lootedItem.defense;
         }

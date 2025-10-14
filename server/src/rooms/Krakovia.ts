@@ -171,21 +171,20 @@ export class Krakovia extends Room<KrakoviaState> {
       if (player) {
         this.damagedTargets = []
         player.isAttacking = false
+        player.animation = "Idle"
         const skill = skills.get(data.skillId)
-        player.animation = "Idle";
         player.skillEffect = skill.effect
         const payload: any = {
           id: client.sessionId,
           skillEffect: skill.effect,
           animation: skill.animation,
           isAttacking: false,
-          area: skill.area
+          area: skill.area,
+          targetId: data.targetId
         };
-        if (skill.needTarget) {
-          player.targetId = data.targetId;
-          payload.targetId = data.targetId;
-          payload.needTarget = true
-        } else {
+        player.targetId = data.targetId;
+        payload.needTarget = true
+        if (!skill.needTarget) {
           payload.needTarget = false
         }
         if (skill.castTime) {
@@ -277,6 +276,7 @@ export class Krakovia extends Room<KrakoviaState> {
         }
         
         const finalDamage = calculatePlayerDamage(player, target, skill)
+        player.animation = "Idle"
         if (!this.damagedTargets.includes(target)){
           target._threatTable[player.id] = (target._threatTable[player.id] || 0) + finalDamage;
           target.health -= finalDamage
@@ -297,7 +297,7 @@ export class Krakovia extends Room<KrakoviaState> {
           target.targetId = topThreatPlayerId;
           target.isAggroed = true;
         }
-    
+        
         this.broadcast("playerTargetHealthUpdate", {
           id: client.sessionId,
           targetId: target.monster_id,

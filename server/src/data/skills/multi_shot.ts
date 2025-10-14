@@ -7,7 +7,7 @@ export const MultiShotArcher: Skill = {
   baseDamage: 1,
   range: 30,
   area: 10,
-  animation: "MultiShot",
+  animation: "AttackMultiShot",
   effect: "ArrowMultiShot",
   characterClass: "Archer",
   description: "Atira flechas em múltiplos alvos",

@@ -35,5 +35,6 @@ export class Player extends Schema {
     @type("number") gold = 0
     @type("number") lootId = 0
     @type("string") partyId: string | null = null
+    @type("number") castTime: number
     _party?: Record<string, Player[]>;
 }

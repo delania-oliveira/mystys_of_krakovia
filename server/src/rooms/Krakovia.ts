@@ -21,6 +21,8 @@ export class Krakovia extends Room<KrakoviaState> {
   maxClients = 4;
   hasProcessedAttack = false
   private monsterSpawns = new Map<string, Monster>();
+  private damagedTargets: Monster[] = []
+
   onCreate(options: any) {
     this.state = new KrakoviaState();
     const monsters = loadMonsters()
@@ -167,18 +169,29 @@ export class Krakovia extends Room<KrakoviaState> {
     this.onMessage("playerAttack", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
+        this.damagedTargets = []
         player.isAttacking = false
         const skill = skills.get(data.skillId)
         player.animation = "Idle";
         player.skillEffect = skill.effect
-        player.targetId = data.targetId;
-        this.broadcast("playerAttack", {
+        const payload: any = {
           id: client.sessionId,
           skillEffect: skill.effect,
           animation: skill.animation,
-          targetId: data.targetId,
           isAttacking: false,
-        });
+          area: skill.area
+        };
+        if (skill.needTarget) {
+          player.targetId = data.targetId;
+          payload.targetId = data.targetId;
+          payload.needTarget = true
+        } else {
+          payload.needTarget = false
+        }
+        if (skill.castTime) {
+          player.castTime = skill.castTime
+        }
+        this.broadcast("playerAttack", payload);
       } 
     });
 
@@ -186,19 +199,33 @@ export class Krakovia extends Room<KrakoviaState> {
       const player = this.state.players.get(client.sessionId);
       if (player) {
         const skill = skills.get(data.skillId)
-        const target = this.state.monsters.get(data.targetId)
-        const dx = target.x  - player.x
-        const dz = target.z - player.z
-        const distance = Math.sqrt(dx * dx + dz * dz)
-        if (distance > skill.range) {
-          client.send("too_far_away")
+        if (skill.needTarget) {
+          const target = this.state.monsters.get(data.targetId)
+          if (!target) return
+          const dx = target.x  - player.x
+          const dz = target.z - player.z
+          const distance = Math.sqrt(dx * dx + dz * dz)
+          if (distance > skill.range) {
+            client.send("too_far_away")
+          } else {
+            player.isAttacking = true
+            player.animation = skill.animation;
+            player.skillId = skill.id
+            if (skill.castTime) {
+              player.castTime = skill.castTime
+            }
+          }
         } else {
           player.isAttacking = true
           player.animation = skill.animation;
           player.skillId = skill.id
+          if (skill.castTime) {
+            player.castTime = skill.castTime
+          }
         }
-      } 
+      }
     });
+    
     this.onMessage("equipItem", (client, data) =>{
       const player = this.state.players.get(client.sessionId)
       if (player) {
@@ -235,22 +262,29 @@ export class Krakovia extends Room<KrakoviaState> {
         client.send("looted_item", payload);
       }
     })
+
     this.onMessage("attackDealDamage", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
         const target = this.state.monsters.get(data.targetId)
-        if (!target || target.isDead) return
+        const skill = skills.get(data.skillId)
+        if (skill.needTarget && !target || target.isDead) return
         if (target.health === target.max_health) {
           target.taggedPlayerId = player.id
         }
         if (!target._threatTable) {
           target._threatTable = {};
         }
-        const skill = skills.get(data.skillId)
+        
         const finalDamage = calculatePlayerDamage(player, target, skill)
-        target._threatTable[player.id] = (target._threatTable[player.id] || 0) + finalDamage;
-        target.health -= finalDamage
+        if (!this.damagedTargets.includes(target)){
+          target._threatTable[player.id] = (target._threatTable[player.id] || 0) + finalDamage;
+          target.health -= finalDamage
+        }
         target.isDead = target.health <= 0
+        if (skill.area > 0){
+          this.damagedTargets.push(target)
+        }
         let topThreatPlayerId = target.targetId;
         let topThreatValue = -1;
         for (const [pid, threat] of Object.entries(target._threatTable)) {

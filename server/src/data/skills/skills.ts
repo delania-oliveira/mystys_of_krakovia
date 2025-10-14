@@ -9,6 +9,8 @@ export interface Skill {
   effect: string
   characterClass: string
   description: string
+  castTime?: number
+  needTarget: boolean
 }
 
 export const skills = new Map<string, Skill>();

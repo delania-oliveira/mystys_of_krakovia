@@ -51,6 +51,7 @@ var character_name = ""
 var current_target_name = ""
 var attack_speed = 1.0
 var defense = 0
+var partyId
 var ARROW_SCENE = preload("res://assets/effects/shoot_effects/Arrow.tscn")
 var ARCANEBALL_SCENE = preload("res://assets/effects/shoot_effects/Arcaneball.tscn")
 signal skills_updated(new_skills)
@@ -176,7 +177,7 @@ func update_player_health(data):
 		health_bar.value = current_health
 			
 func _on_experience_gained(data):
-	if data.taggedPlayerId == id:
+	if "taggedPlayerId" in data and data.taggedPlayerId == id or ("partyId" in data && data.partyId == partyId):
 		update_player_experience(data)
 	
 func update_player_experience(data):
@@ -293,6 +294,7 @@ func _on_invite_fail(data):
 func _on_party_joined(data):
 	if is_instance_valid(party_ui_instance):
 		party_ui_instance.queue_free()
+	partyId = data.leader
 	party_ui_instance = party_ui_scene.instantiate()
 	party_ui_instance._create_party(data.members, data.leader)
 	get_tree().root.add_child(party_ui_instance)

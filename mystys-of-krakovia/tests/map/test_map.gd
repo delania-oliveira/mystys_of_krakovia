@@ -35,8 +35,8 @@ func _spawn_monster(value, key):
 	monster.get_node("AggroArea/CollisionShape3D").shape.radius = value.detectionRange
 	if value.detectionRange != 0:
 		monster.is_aggressive = true
-	monster.position = Vector3(value.spawn_x, value.spawn_y, value.spawn_z)
-	monster.network_position = Vector3(value.spawn_x, value.spawn_y, value.spawn_z)
+	monster.position = Vector3(value.x, value.y, value.z)
+	monster.network_position = Vector3(value.x, value.y, value.z)
 	add_child(monster)
 	monster.model = monster_model_instance
 	value.listen(":change").on(Callable(self, "_on_monster").bind(monster))
@@ -45,7 +45,7 @@ func _spawn_monster(value, key):
 func _on_monster(changes, monster_instance):
 	if not is_instance_valid(monster_instance):
 		return
-	monster_instance.network_position = Vector3(changes.x, changes.y, changes.z)
+	monster_instance.network_position = Vector3(changes.x, 2, changes.z)
 	monster_instance.is_targeting = changes.isTargeting
 	monster_instance.target_id = changes.targetId
 	monster_instance.current_health = changes.health

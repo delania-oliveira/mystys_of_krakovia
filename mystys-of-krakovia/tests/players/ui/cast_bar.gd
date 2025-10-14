@@ -11,10 +11,10 @@ var cast_position
 var label_update_timer := 0.0
 var skill_id
 
-func cast_skill(skillId):
+func cast_skill(skillId, castDuration):
 	skill_id = skillId
 	cast_bar.show_percentage = false
-	cast_duration = player.attack_speed
+	cast_duration = castDuration
 	cast_elapsed = 0.0
 	is_casting = true
 	cast_bar.visible = true

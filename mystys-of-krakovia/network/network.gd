@@ -79,6 +79,7 @@ class Player extends colyseus.Schema:
 			colyseus.Field.new("gold", colyseus.NUMBER),
 			colyseus.Field.new("lootId", colyseus.NUMBER),
 			colyseus.Field.new("partyId", colyseus.STRING),
+			colyseus.Field.new("castTime", colyseus.NUMBER),
 		]
 	var node
 	

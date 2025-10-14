@@ -16,7 +16,7 @@ export function Footer() {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const response = await api.get<ServerStatus>('/health_check/Krakovia')
+        const response = await axios.get<ServerStatus>('http://week-characterized.gl.at.ply.gg:29821/health_check/Krakovia')
 
         if (response.status === 200) {
           setStatus('online')

@@ -87,7 +87,7 @@ func _ready() -> void:
 	if deathAnim:
 		library.add_animation("Death", deathAnim)
 		library.add_animation("DefaultAttack", shotAnim)
-		library.add_animation("MultiShot", shotAnim)
+		library.add_animation("AttackMultiShot", multiShotAnim)
 		library.add_animation("DefaultCast", castAnim)
 		library.add_animation("ArcaneExplosionCast", arcaneExplosionAnim)
 	else:
@@ -203,8 +203,9 @@ func update_player_experience(data):
 		experience_bar.max_value = data.maxExp
 	
 func _on_player_attack(data):
-	if "skillEffect" in data and data.needTarget and current_target:
+	if "skillEffect" in data and data.needTarget and data.targetId:
 		var target = get_target_by_id(data.targetId)
+		attack_locked = false
 		if data.skillEffect == "ArcaneBall":
 			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, ARCANEBALL_SCENE)
 		elif data.skillEffect == "ArrowShot":
@@ -232,11 +233,7 @@ func _on_player_attack(data):
 			var ARCANE_EXPLOSION_SCENE = preload("res://assets/effects/aoe_effects/ArcaneExplosion.tscn")
 			var explosion = ARCANE_EXPLOSION_SCENE.instantiate()
 			var caster = get_user_by_id(data.id)
-			if !is_local:
-				explosion.global_transform.origin = global_position
-			else:
-				explosion.global_transform.origin = Vector3(caster.x - 2, caster.y - 2, caster.z - 1)
-				
+			explosion.global_transform.origin = Vector3(caster.x - 1.5, caster.y - 2, caster.z + 1)
 			explosion.room = room
 			explosion.playerId = id
 			get_tree().current_scene.add_child(explosion)
@@ -262,7 +259,7 @@ func on_network_data_received(data):
 		update_gold(data.gold)
 	if not dead:
 		if data.animation:
-			if data.animation.contains("Attack") or data.animation.contains("MultiShot") and data.isAttacking:
+			if is_local and data.animation.contains("Attack") and data.isAttacking:
 				anim_player.connect("animation_finished", Callable(self, "_on_attack_animation_finished"), CONNECT_ONE_SHOT)
 				anim_player.play(data.animation, -1.0, attack_speed)
 				attack_locked = true
@@ -281,12 +278,14 @@ func on_network_data_received(data):
 		die()
 		
 func _on_attack_animation_finished(anim_name):
-	if anim_name.contains("Attack"):
+	if !is_local:
+		return
+	if anim_name == ("DefaultAttack"):
 		room.send("playerAttack", {
 			"skillId": "default_skill_" + character_class.to_lower(),
 			"targetId": target_id
 		})
-	elif anim_name == "MultiShot":
+	elif anim_name == "AttackMultiShot":
 		room.send("playerAttack", {
 			"skillId": "multi_shot_archer",
 			"targetId": target_id

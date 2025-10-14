@@ -7,11 +7,11 @@ var room
 var playerId
 var userId
 func _ready() -> void:
-	var hunter_scene = load("res://assets/character/Hunter.glb")
-	var hunter_instance = hunter_scene.instantiate()
+	var archer_scene = load("res://assets/character/Archer.glb")
+	var archer_instance = archer_scene.instantiate()
 
 	# Find the ErikaArcherEyesMesh inside it
-	var eyes_mesh = hunter_instance.get_node_or_null("Node/Skeleton3D/Erika_Archer_Eyes_Mesh")
+	var eyes_mesh = archer_instance.get_node_or_null("Node/Skeleton3D/Erika_Archer_Eyes_Mesh")
 	if eyes_mesh and eyes_mesh is MeshInstance3D:
 		$MeshInstance3D.mesh = eyes_mesh.mesh
 	else:
@@ -34,5 +34,5 @@ func _process(delta):
 		# You can add impact effects here (e.g., play an explosion)
 		# and notify the server/target that damage was dealt.
 		if playerId == userId:
-			room.send("attackDealDamage", {"targetId": target.monster_id, "skillId": "default_skill_hunter", "playerId": playerId})
+			room.send("attackDealDamage", {"targetId": target.monster_id, "skillId": "default_skill_archer", "playerId": playerId})
 		queue_free() # Destroy the arrow

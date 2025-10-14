@@ -1,7 +1,7 @@
 import { Skill } from "./skills"
 
 export const DefaultSkillArcher: Skill = {
-  id: "default_skill_hunter",
+  id: "default_skill_archer",
   name: "Flechada",
   level: 1,
   baseDamage: 2,
@@ -9,7 +9,7 @@ export const DefaultSkillArcher: Skill = {
   area: 0,
   animation: "DefaultAttack",
   effect: "ArrowShot",
-  characterClass: "Hunter",
+  characterClass: "Archer",
   description: "Atira uma flecha no alvo.",
 }
 

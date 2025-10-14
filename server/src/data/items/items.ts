@@ -21,7 +21,7 @@ export const items: Record<string, Item> = {
     defense: 4,
     description: "Uma jaqueta de couro básica.",
     type: "Armor",
-    limitedClasses: ["Hunter", "Assassin", "Warrior"],
+    limitedClasses: ["Archer", "Assassin", "Warrior"],
   },
   "4": {
     id: 4,
@@ -53,7 +53,7 @@ export const items: Record<string, Item> = {
     defense: 3,
     description: "Um capuz de couro utilizado por assassinos e arqueiros.",
     type: "Helmet",
-    limitedClasses: ["Hunter", "Assassin", "Warrior"],
+    limitedClasses: ["Archer", "Assassin", "Warrior"],
   },
   "8": {
     id: 8,

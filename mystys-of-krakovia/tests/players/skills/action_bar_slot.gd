@@ -24,5 +24,9 @@ func activate_skill(player):
 	if not current_skill_data.is_empty():
 		if current_skill_id.contains("default_skill"):
 			player.play_default_skill(player.current_target)
+		if current_skill_id.contains("arcane_explosion_mage"):
+			player.play_arcane_explosion()
+		if current_skill_id.contains("multi_shot_archer"):
+			player.play_multi_shot(player.current_target)
 	else:
 		print("This action slot is empty.")

@@ -1,0 +1,43 @@
+[gd_scene load_steps=8 format=3 uid="uid://bapic6c4sa7mi"]
+
+[ext_resource type="Script" uid="uid://bf5wtgbhdgyo0" path="res://assets/effects/aoe_effects/arcane_explosion.gd" id="1_cl4mf"]
+[ext_resource type="Shader" uid="uid://dtaup7sd3bci4" path="res://assets/effects/aoe_effects/arcane_explosion.gdshader" id="2_aou6g"]
+[ext_resource type="Shader" uid="uid://b6nm821wgggta" path="res://assets/effects/shoot_effects/Arcane.gdshader" id="3_idbhp"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_aou6g"]
+radius = 10.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aou6g"]
+render_priority = 0
+shader = ExtResource("2_aou6g")
+shader_parameter/color_start = Vector4(0.6, 0.2, 1, 1)
+shader_parameter/color_end = Vector4(0.6, 0.2, 1, 0.8)
+shader_parameter/progress = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_idbhp"]
+render_priority = 0
+shader = ExtResource("3_idbhp")
+shader_parameter/time = 0.0
+shader_parameter/frame_scope = 1.25000005611512
+shader_parameter/use_system_time = true
+shader_parameter/time_accel = 1.0000000149012
+
+[sub_resource type="SphereMesh" id="SphereMesh_idbhp"]
+radius = 10.0
+height = 10.0
+is_hemisphere = true
+
+[node name="ArcaneExplosion" type="Node3D"]
+script = ExtResource("1_cl4mf")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_aou6g")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("ShaderMaterial_aou6g")
+material_overlay = SubResource("ShaderMaterial_idbhp")
+mesh = SubResource("SphereMesh_idbhp")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

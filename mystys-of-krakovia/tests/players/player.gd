@@ -54,6 +54,7 @@ var defense = 0
 var partyId
 var ARROW_SCENE = preload("res://assets/effects/shoot_effects/Arrow.tscn")
 var ARCANEBALL_SCENE = preload("res://assets/effects/shoot_effects/Arcaneball.tscn")
+
 signal skills_updated(new_skills)
 var menu_instance = null
 @onready var spellbook = $SpellBook
@@ -64,25 +65,31 @@ var attack_locked = false
 
 func _ready() -> void:
 	var deathAnim = null
-	var attackAnim = null
+	var shotAnim = null
 	var castAnim = null
+	var arcaneExplosionAnim = null
+	var multiShotAnim = null
 	var library = anim_player.get_animation_library("")
 	if library.has_animation("StandingReactDeathBackward"):
 		# Mage.glb - Mage model
 		deathAnim = library.get_animation("StandingReactDeathBackward")
 		castAnim = library.get_animation("Standing1HMagicAttack01")
+		arcaneExplosionAnim = library.get_animation("Standing2HMagicAreaAttack02")
 		library.remove_animation("StandingReactDeathBackward")
 		library.remove_animation("Standing1HMagicAttack01")
 	elif library.has_animation("StandingDeathForward02"):
 		# Archer.glb - Archer model
-		attackAnim = library.get_animation("StandingDrawArrow")
+		shotAnim = library.get_animation("StandingDrawArrow")
+		multiShotAnim = library.get_animation("StandingDrawArrow")
 		deathAnim = library.get_animation("StandingDeathForward02")
 		library.remove_animation("StandingDeathForward02")
 		library.remove_animation("StandingDrawArrow")
 	if deathAnim:
 		library.add_animation("Death", deathAnim)
-		library.add_animation("DefaultAttack", attackAnim)
+		library.add_animation("DefaultAttack", shotAnim)
+		library.add_animation("MultiShot", shotAnim)
 		library.add_animation("DefaultCast", castAnim)
+		library.add_animation("ArcaneExplosionCast", arcaneExplosionAnim)
 	else:
 		push_warning("No death animation found to rename.")
 		
@@ -175,7 +182,7 @@ func update_player_health(data):
 		current_health = data.health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = current_health
-			
+		
 func _on_experience_gained(data):
 	if "taggedPlayerId" in data and data.taggedPlayerId == id or ("partyId" in data && data.partyId == partyId):
 		update_player_experience(data)
@@ -196,12 +203,44 @@ func update_player_experience(data):
 		experience_bar.max_value = data.maxExp
 	
 func _on_player_attack(data):
-	if "skillEffect" in data and current_target:
+	if "skillEffect" in data and data.needTarget and current_target:
+		var target = get_target_by_id(data.targetId)
 		if data.skillEffect == "ArcaneBall":
-			spawn_ranged_skill(get_target_by_id(data.targetId), get_user_by_id(data.id), data.id, ARCANEBALL_SCENE)
-		else:
-			spawn_ranged_skill(get_target_by_id(data.targetId), get_user_by_id(data.id), data.id, ARROW_SCENE)
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, ARCANEBALL_SCENE)
+		elif data.skillEffect == "ArrowShot":
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, ARROW_SCENE)
+		elif data.skillEffect == "ArrowMultiShot":
+			var radius = data.area
+			var area_center = Vector3(target.x, target.y, target.z)
 
+			var space_state = get_world_3d().direct_space_state
+			var shape = SphereShape3D.new()
+			shape.radius = radius
+
+			var query = PhysicsShapeQueryParameters3D.new()
+			query.shape = shape
+			query.transform = Transform3D(Basis(), area_center)
+			query.collide_with_areas = false
+			query.collide_with_bodies = true
+			var results = space_state.intersect_shape(query, 32)
+			for result in results:
+				var body = result.collider
+				if body.is_in_group("monsters"):
+					spawn_ranged_skill(get_target_by_id(body.id), get_user_by_id(data.id), data.id, ARROW_SCENE)
+	if "skillEffect" in data and !data.needTarget:
+		if data.skillEffect == "ArcaneExplosion":
+			var ARCANE_EXPLOSION_SCENE = preload("res://assets/effects/aoe_effects/ArcaneExplosion.tscn")
+			var explosion = ARCANE_EXPLOSION_SCENE.instantiate()
+			var caster = get_user_by_id(data.id)
+			if !is_local:
+				explosion.global_transform.origin = global_position
+			else:
+				explosion.global_transform.origin = Vector3(caster.x - 2, caster.y - 2, caster.z - 1)
+				
+			explosion.room = room
+			explosion.playerId = id
+			get_tree().current_scene.add_child(explosion)
+			
 func update_gold(new_value):
 	var gold_diff = new_value - current_gold
 	if gold_diff > 0:
@@ -223,19 +262,21 @@ func on_network_data_received(data):
 		update_gold(data.gold)
 	if not dead:
 		if data.animation:
-			if data.animation.contains("Attack") and data.isAttacking:
+			if data.animation.contains("Attack") or data.animation.contains("MultiShot") and data.isAttacking:
 				anim_player.connect("animation_finished", Callable(self, "_on_attack_animation_finished"), CONNECT_ONE_SHOT)
 				anim_player.play(data.animation, -1.0, attack_speed)
 				attack_locked = true
 			elif not attack_locked:
 				anim_player.play(data.animation)
-			if is_local and data.animation.contains("Cast") and data.isAttacking == true and is_standing:
+			if is_local and data.animation.contains("Cast") and "castTime" in data and data.isAttacking == true:
 				cast_bar.player = self
 				cast_bar.room = room
 				cast_bar.visible = true
 				cast_bar.cast_position = global_position
-				cast_bar.cast_skill(data.skillId)
-				anim_player.play(data.animation, -1.0, attack_speed)
+				cast_bar.cast_skill(data.skillId, data.castTime)
+				var anim = anim_player.get_animation(data.animation)
+				var calculated_speed = (anim.length / data.castTime) - 0.6
+				anim_player.play(data.animation, -1.0, calculated_speed)
 	if data.isDead || data.health <= 0 || current_health <= 0:
 		die()
 		
@@ -245,8 +286,12 @@ func _on_attack_animation_finished(anim_name):
 			"skillId": "default_skill_" + character_class.to_lower(),
 			"targetId": target_id
 		})
-		attack_locked = false
-		
+	elif anim_name == "MultiShot":
+		room.send("playerAttack", {
+			"skillId": "multi_shot_archer",
+			"targetId": target_id
+		})
+	attack_locked = false
 func _process(delta):
 	if is_local:
 		return
@@ -285,7 +330,7 @@ func show_player_alert(text):
 	get_tree().root.add_child(alert_instance)
 	alert_instance.set_value(text)
 	
-func _on_too_far_away():
+func _on_too_far_away(data):
 	show_player_alert("Inimigo muito distante!")
 
 func _on_invite_fail(data):
@@ -364,6 +409,19 @@ func play_default_skill(target):
 	target_id = target.id
 	is_attacking = true
 	room.send("playerStartedAttack", {"skillId": "default_skill_" + character_class.to_lower(), "targetId": target_id})
+	
+func play_arcane_explosion():
+	if is_attacking or !is_local:
+		return
+	is_attacking = true
+	room.send("playerStartedAttack", {"skillId": "arcane_explosion_mage"})
+	
+func play_multi_shot(target):
+	if is_attacking or !is_local or !target:
+		return
+	target_id = target.id
+	is_attacking = true
+	room.send("playerStartedAttack", {"skillId": "multi_shot_archer", "targetId": target_id})
 	
 func spawn_ranged_skill(target_node, user, userId, scene):
 	var skill = scene.instantiate()

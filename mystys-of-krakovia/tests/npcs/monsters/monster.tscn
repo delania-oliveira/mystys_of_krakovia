@@ -21,7 +21,7 @@ billboard = 1
 font_size = 52
 script = ExtResource("3_n38wx")
 
-[node name="AggroArea" type="Area3D" parent="."]
+[node name="AggroArea" type="Area3D" parent="." groups=["monsters", "targetable"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AggroArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.008472323, 0)

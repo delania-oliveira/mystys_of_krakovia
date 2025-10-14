@@ -4,7 +4,7 @@ export const MultiShotArcher: Skill = {
   id: "multi_shot_archer",
   name: "Tiro Múltiplo",
   level: 3,
-  baseDamage: 1,
+  baseDamage: 2,
   range: 30,
   area: 10,
   animation: "AttackMultiShot",

@@ -20,6 +20,7 @@ const PLAYER_SPEED = 14
 export class Krakovia extends Room<KrakoviaState> {
   maxClients = 4;
   hasProcessedAttack = false
+  private monsterSpawns = new Map<string, Monster>();
   onCreate(options: any) {
     this.state = new KrakoviaState();
     const monsters = loadMonsters()
@@ -44,8 +45,9 @@ export class Krakovia extends Room<KrakoviaState> {
         attackRange: 2.0,
         difficulty: monster.difficulty,
         experience: monster.experience,
+        respawn: monster.respawn
       });
-  
+      this.monsterSpawns.set(loadedMonster.monster_id, loadedMonster);
       this.state.monsters.set(loadedMonster.monster_id, loadedMonster);
     })
   
@@ -276,7 +278,40 @@ export class Krakovia extends Room<KrakoviaState> {
           damage: finalDamage,
         });
         if (target.isDead) {
+          const monsterIdToRespawn = target.monster_id;
           const loot = generateLoot(target)
+          const monsterData = this.monsterSpawns.get(monsterIdToRespawn);
+          this.clock.setTimeout(() => {
+            this.state.monsters.delete(monsterIdToRespawn);
+          }, 1000);
+          this.clock.setTimeout(() => {
+            if (monsterData) {
+              const respawnedMonster = new Monster().assign({
+                monster_id: monsterData.monster_id,
+                type: monsterData.type,
+                name: monsterData.name,
+                x: monsterData.spawn_x,
+                y: GROUND_LEVEL - 1,
+                z: monsterData.spawn_z,
+                spawn_x: monsterData.spawn_x,
+                spawn_y: GROUND_LEVEL - 1,
+                spawn_z: monsterData.spawn_z,
+                speed: monsterData.speed,
+                attack: monsterData.attack,
+                health: monsterData.max_health,
+                max_health: monsterData.max_health,
+                detectionRange: monsterData.detectionRange,
+                attackCooldown: 2.0,
+                attackTimer: 0.0,
+                attackRange: 2.0,
+                difficulty: monsterData.difficulty,
+                experience: monsterData.experience,
+                respawn: monsterData.respawn
+              });
+
+              this.state.monsters.set(respawnedMonster.monster_id, respawnedMonster);
+            }
+          }, monsterData.respawn * 1000);
           let levelsGained = 0
           const killer = this.state.players.get(target.taggedPlayerId)
           const partyId = killer.partyId
@@ -328,10 +363,6 @@ export class Krakovia extends Room<KrakoviaState> {
               }
             });
           }
-        
-          this.clock.setTimeout(() => {
-            this.state.monsters.delete(target.monster_id);
-          }, 1000)
         }
       } 
     })

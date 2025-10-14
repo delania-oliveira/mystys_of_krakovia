@@ -129,6 +129,39 @@ export class Krakovia extends Room<KrakoviaState> {
       }
     });
 
+   this.onMessage("leaveParty", (client, data) => {
+    const player = this.state.players.get(client.sessionId);
+    if (player && player.partyId) {
+      const partyId = player.partyId;
+      const partyLeader = this.state.players.get(partyId);
+      const party = partyLeader._party[partyId];
+
+      party.forEach(member => {
+        const memberClient = this.clients.find(c => c.sessionId === member.id);
+        if (memberClient) {
+          memberClient.send("leaveParty", { leavingMember: player.id });
+        }
+      });
+
+      const updatedParty = party.filter(member => member.id !== player.id);
+      partyLeader._party[partyId] = updatedParty;
+
+      player.partyId = "";
+
+      if (updatedParty.length <= 1) {
+        const lastMember = updatedParty[0];
+        if (lastMember) {
+          const memberClient = this.clients.find(c => c.sessionId === lastMember.id);
+          if (memberClient) {
+            memberClient.send("leaveParty", { leavingMember: lastMember.id });
+          }
+          lastMember.partyId = "";
+        }
+        delete partyLeader._party[partyId];
+        }
+      }
+    });
+
     this.onMessage("playerAttack", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {

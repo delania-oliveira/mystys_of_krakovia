@@ -290,12 +290,19 @@ func _on_too_far_away():
 
 func _on_invite_fail(data):
 	show_player_alert(data.text)
+
+func _on_party_leave(data):
+	var member = party_ui_instance.get_node_or_null(str(data.leavingMember))
+	if (member):
+		member.queue_free()
 	
 func _on_party_joined(data):
 	if is_instance_valid(party_ui_instance):
 		party_ui_instance.queue_free()
 	partyId = data.leader
 	party_ui_instance = party_ui_scene.instantiate()
+	party_ui_instance.room = room
+	party_ui_instance.local_player_id = id
 	party_ui_instance._create_party(data.members, data.leader)
 	get_tree().root.add_child(party_ui_instance)
 	
@@ -346,7 +353,6 @@ func _unhandled_input(event):
 				player_menu.show()
 				if current_target != result.collider:
 					set_target(result.collider)
-				
 	if event.is_action_pressed("toggle_skill_book"):
 		spellbook.visible = not spellbook.visible
 	if event.is_action_pressed("toggle_inventory"):

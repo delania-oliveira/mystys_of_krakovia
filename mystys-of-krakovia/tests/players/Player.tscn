@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://bqu316xxkwfjg" path="res://tests/npcs/monsters/name.gd" id="3_qg6v4"]
 [ext_resource type="PackedScene" uid="uid://c01o1kr5nssku" path="res://tests/players/skills/ActionBarSlot.tscn" id="4_qg6v4"]
 [ext_resource type="Script" uid="uid://nbcbqlfilm3u" path="res://tests/players/ui/spell_book.gd" id="5_qg6v4"]
-[ext_resource type="Texture2D" uid="uid://p8xvtbq1plfp" path="res://assets/ui_textures/spellbook.png" id="6_r5luj"]
+[ext_resource type="Texture2D" uid="uid://c0l6npoqek6ph" path="res://assets/ui_textures/spellbook.png" id="6_r5luj"]
 [ext_resource type="Script" uid="uid://b55hhr0lbrbw5" path="res://tests/players/ui/cast_bar.gd" id="7_hdun8"]
 [ext_resource type="Script" uid="uid://cpp43ln1c65t2" path="res://tests/players/ui/inventory.gd" id="8_4o6cj"]
 [ext_resource type="Texture2D" uid="uid://bji76j2dchu7u" path="res://assets/login/input.png" id="9_c388k"]
@@ -228,24 +228,25 @@ grow_vertical = 2
 
 [node name="ActionBar" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 8
+anchors_preset = 7
 anchor_left = 0.5
-anchor_top = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -237.0
-offset_top = 380.0
-offset_right = -119.0
-offset_bottom = 426.0
+anchor_bottom = 1.0
+offset_left = -118.0
+offset_top = -138.0
+offset_bottom = -92.0
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
 size_flags_vertical = 8
 script = ExtResource("3_g5nvm")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ActionBar"]
 layout_mode = 0
-offset_right = 40.0
+offset_left = -49.0
+offset_right = 287.0
 offset_bottom = 40.0
+theme_override_constants/separation = 56
 
 [node name="ActionBarSlot" parent="ActionBar/HBoxContainer" instance=ExtResource("4_qg6v4")]
 layout_mode = 2
@@ -284,10 +285,10 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -185.0
-offset_top = 106.0
-offset_right = -145.0
-offset_bottom = 146.0
+offset_left = -198.0
+offset_top = 144.0
+offset_right = -158.0
+offset_bottom = 184.0
 grow_horizontal = 2
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 24
@@ -303,20 +304,6 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("6_r5luj")
 expand_mode = 3
-
-[node name="Header" type="Label" parent="SpellBook"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -120.5
-offset_top = 58.0
-offset_right = 120.5
-offset_bottom = 103.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 32
-text = "Livro de Magias"
 
 [node name="CastBar" type="Control" parent="."]
 layout_mode = 3

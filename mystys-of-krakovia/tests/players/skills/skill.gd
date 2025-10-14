@@ -12,7 +12,7 @@ func setup_skill(data: Dictionary, icon_texture: Texture2D):
 	name_label.text = data.name
 
 	var description = data.get("description", "No description available.")
-	self.tooltip_text = "%s\nDano: %s\nClasse: %s\nDescrição: %s" % [data.name, data.baseDamage, data.characterClass, description]
+	self.tooltip_text = "%s\nDano Base: %s\nClasse: %s\nDescrição: %s" % [data.name, data.baseDamage, data.characterClass, description]
 
 func _get_drag_data(at_position: Vector2):
 	var data_to_drag = {

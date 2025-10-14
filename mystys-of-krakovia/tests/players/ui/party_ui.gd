@@ -3,7 +3,9 @@ extends VBoxContainer
 var room
 var local_player_id
 var current_party
-
+@onready var leave_party_container = $PanelContainer
+func _ready() -> void:
+	leave_party_container.hide()
 func _create_party(members, leader):
 	for player in members:
 		_add_member(player, leader)
@@ -41,7 +43,7 @@ func _add_member(player, leader):
 	
 	# Add to main PartyUI
 	add_child(member_box)
-	
+		
 func _update_member_health(data):
 	var member_box = get_node_or_null(str(data.member))
 	if member_box:
@@ -51,3 +53,22 @@ func _update_member_health(data):
 func clear_members():
 	for child in get_children():
 		child.queue_free()
+		
+func toggle_party_leave_ui():
+	if leave_party_container.visible:
+		leave_party_container.hide()
+	else:
+		leave_party_container.show()
+		
+func _on_leave_party_button_down() -> void:
+	clear_members()
+	room.send("leaveParty", {"leavingPlayerId": local_player_id})
+	
+func _on_cancel_button_down() -> void:
+	leave_party_container.hide()
+
+# This function is called when any input event occurs over the control node.
+func _on_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.is_pressed():
+		toggle_party_leave_ui()
+		get_viewport().set_input_as_handled()

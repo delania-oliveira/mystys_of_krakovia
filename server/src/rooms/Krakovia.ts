@@ -246,26 +246,56 @@ export class Krakovia extends Room<KrakoviaState> {
           const loot = generateLoot(target)
           let levelsGained = 0
           const killer = this.state.players.get(target.taggedPlayerId)
+          const partyId = killer.partyId
           const killerClient = this.clients.find(c => c.sessionId === killer.id);
-          if (killerClient) {
+          if (killerClient && !partyId) {
             killerClient.send("set_monster_loot", {"loot": loot, "loot_pos_x": target.x, "loot_pos_y": target.y, "loot_pos_z": target.z})
+            killer.experience += target.experience
+            while (killer.experience >= ExperienceTable[killer.level]) {
+              const requiredExp = ExperienceTable[killer.level];
+              killer.experience -= requiredExp;
+              killer.level += 1;
+              killer.max_exp = ExperienceTable[killer.level];
+              levelsGained += 1;
+            }
+            this.broadcast("experienceGained", {
+              id: killer.id,
+              taggedPlayerId: target.taggedPlayerId,
+              experience: target.experience,
+              maxExp: killer.max_exp,
+              levelsGained: levelsGained,
+              currentExperience: killer.experience
+            });
+          } else {
+            const partyLeader = this.state.players.get(partyId)
+            const party = partyLeader._party[partyId]
+            const memberCount = party.length            
+            const bonusMultiplier = 1 + (0.25 * (memberCount - 1))
+            const share = Math.floor((target.experience * bonusMultiplier) / memberCount)
+            party.forEach(member => {
+              member.experience += share
+              while (member.experience >= ExperienceTable[member.level]) {
+                const requiredExp = ExperienceTable[member.level];
+                member.experience -= requiredExp;
+                member.level += 1;
+                member.max_exp = ExperienceTable[member.level];
+                levelsGained += 1;
+              }
+              this.broadcast("experienceGained", {
+                id: member.id,
+                partyId: member.partyId,
+                experience: share,
+                maxExp: member.max_exp,
+                levelsGained: levelsGained,
+                currentExperience: member.experience
+              });
+              const memberClient = this.clients.find(c => c.sessionId === member.id);
+              if (memberClient) {
+                memberClient.send("set_monster_loot", {"loot": loot, "loot_pos_x": target.x, "loot_pos_y": target.y, "loot_pos_z": target.z});
+              }
+            });
           }
-          killer.experience += target.experience
-          while (killer.experience >= ExperienceTable[killer.level]) {
-            const requiredExp = ExperienceTable[killer.level];
-            killer.experience -= requiredExp;
-            killer.level += 1;
-            killer.max_exp = ExperienceTable[killer.level];
-            levelsGained += 1;
-          }
-          this.broadcast("experienceGained", {
-            id: killer.id,
-            taggedPlayerId: target.taggedPlayerId,
-            experience: target.experience,
-            maxExp: killer.max_exp,
-            levelsGained: levelsGained,
-            currentExperience: killer.experience
-          });
+        
           this.clock.setTimeout(() => {
             this.state.monsters.delete(target.monster_id);
           }, 1000)

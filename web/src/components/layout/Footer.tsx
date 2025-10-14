@@ -1,4 +1,3 @@
-import { api } from "../../../api/axios";
 import axios from "axios";
 import { Circle, Loader2, Users } from "lucide-react";
 import { useEffect, useState } from "react";

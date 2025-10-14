@@ -17,7 +17,7 @@ func _can_drop_data(at_position: Vector2, data) -> bool:
 func _drop_data(at_position: Vector2, data):
 	current_skill_data = data.skill_full_data
 	current_skill_id = data.skill_id
-	icon.tooltip_text = "Nome: %s\nDano: %s" % [current_skill_data.name, current_skill_data.baseDamage]
+	icon.tooltip_text = "Nome: %s\nDano Base: %s" % [current_skill_data.name, current_skill_data.baseDamage]
 	icon.texture = data.source_texture
 	
 func activate_skill(player):

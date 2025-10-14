@@ -3,7 +3,7 @@ extends StaticBody3D
 @onready var loot_ui = $LootUI
 var playerId
 var room
-@onready var base_texture = preload("res://assets/icons/skills/action_bar_slot.png")
+@onready var base_texture = preload("res://assets/loot/loot_slot.png")
 
 func _ready() -> void:
 	loot_ui.hide()

@@ -28,5 +28,7 @@ func activate_skill(player):
 			player.play_arcane_explosion()
 		if current_skill_id.contains("multi_shot_archer"):
 			player.play_multi_shot(player.current_target)
+		if current_skill_id.contains("flame_arrow_archer"):
+			player.play_flame_arrow(player.current_target)
 	else:
 		print("This action slot is empty.")

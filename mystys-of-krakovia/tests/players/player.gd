@@ -54,7 +54,7 @@ var defense = 0
 var partyId
 var ARROW_SCENE = preload("res://assets/effects/shoot_effects/Arrow.tscn")
 var ARCANEBALL_SCENE = preload("res://assets/effects/shoot_effects/Arcaneball.tscn")
-
+var FLAME_ARROW_SCENE = preload("res://assets/effects/shoot_effects/FlameArrow.tscn")
 signal skills_updated(new_skills)
 var menu_instance = null
 @onready var spellbook = $SpellBook
@@ -80,14 +80,14 @@ func _ready() -> void:
 	elif library.has_animation("StandingDeathForward02"):
 		# Archer.glb - Archer model
 		shotAnim = library.get_animation("StandingDrawArrow")
-		multiShotAnim = library.get_animation("StandingDrawArrow")
 		deathAnim = library.get_animation("StandingDeathForward02")
 		library.remove_animation("StandingDeathForward02")
 		library.remove_animation("StandingDrawArrow")
 	if deathAnim:
 		library.add_animation("Death", deathAnim)
 		library.add_animation("DefaultAttack", shotAnim)
-		library.add_animation("AttackMultiShot", multiShotAnim)
+		library.add_animation("AttackMultiShot", shotAnim)
+		library.add_animation("AttackFlameArrow", shotAnim)
 		library.add_animation("DefaultCast", castAnim)
 		library.add_animation("ArcaneExplosionCast", arcaneExplosionAnim)
 	else:
@@ -211,23 +211,9 @@ func _on_player_attack(data):
 		elif data.skillEffect == "ArrowShot":
 			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, ARROW_SCENE)
 		elif data.skillEffect == "ArrowMultiShot":
-			var radius = data.area
-			var area_center = Vector3(target.x, target.y, target.z)
-
-			var space_state = get_world_3d().direct_space_state
-			var shape = SphereShape3D.new()
-			shape.radius = radius
-
-			var query = PhysicsShapeQueryParameters3D.new()
-			query.shape = shape
-			query.transform = Transform3D(Basis(), area_center)
-			query.collide_with_areas = false
-			query.collide_with_bodies = true
-			var results = space_state.intersect_shape(query, 32)
-			for result in results:
-				var body = result.collider
-				if body.is_in_group("monsters"):
-					spawn_ranged_skill(get_target_by_id(body.id), get_user_by_id(data.id), data.id, ARROW_SCENE)
+			spawn_multi_shot(data, target)
+		elif data.skillEffect == "FlameArrow":
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, FLAME_ARROW_SCENE)
 	if "skillEffect" in data and !data.needTarget:
 		if data.skillEffect == "ArcaneExplosion":
 			var ARCANE_EXPLOSION_SCENE = preload("res://assets/effects/aoe_effects/ArcaneExplosion.tscn")
@@ -238,6 +224,25 @@ func _on_player_attack(data):
 			explosion.playerId = id
 			get_tree().current_scene.add_child(explosion)
 			
+func spawn_multi_shot(data, target):
+	var radius = data.area
+	var area_center = Vector3(target.x, target.y, target.z)
+
+	var space_state = get_world_3d().direct_space_state
+	var shape = SphereShape3D.new()
+	shape.radius = radius
+
+	var query = PhysicsShapeQueryParameters3D.new()
+	query.shape = shape
+	query.transform = Transform3D(Basis(), area_center)
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+	var results = space_state.intersect_shape(query, 32)
+	for result in results:
+		var body = result.collider
+		if body.is_in_group("monsters"):
+			spawn_ranged_skill(get_target_by_id(body.id), get_user_by_id(data.id), data.id, ARROW_SCENE)
+
 func update_gold(new_value):
 	var gold_diff = new_value - current_gold
 	if gold_diff > 0:
@@ -288,6 +293,11 @@ func _on_attack_animation_finished(anim_name):
 	elif anim_name == "AttackMultiShot":
 		room.send("playerAttack", {
 			"skillId": "multi_shot_archer",
+			"targetId": target_id
+		})
+	elif anim_name == "AttackFlameArrow":
+		room.send("playerAttack", {
+			"skillId": "flame_arrow_archer",
 			"targetId": target_id
 		})
 	attack_locked = false
@@ -421,6 +431,13 @@ func play_multi_shot(target):
 	target_id = target.id
 	is_attacking = true
 	room.send("playerStartedAttack", {"skillId": "multi_shot_archer", "targetId": target_id})
+
+func play_flame_arrow(target):
+	if is_attacking or !is_local or !target:
+		return
+	target_id = target.id
+	is_attacking = true
+	room.send("playerStartedAttack", {"skillId": "flame_arrow_archer", "targetId": target_id})
 	
 func spawn_ranged_skill(target_node, user, userId, scene):
 	var skill = scene.instantiate()

@@ -83,7 +83,7 @@ func _on_players_add(target, value, key):
 	if key == room.session_id:
 		room.on_message("set_skills").on(Callable(ch, "_on_set_skills"))
 		room.on_message("looted_item").on(Callable(ch, "_on_looted_item"))
-		room.on_message("too_far_away").on(Callable(ch, "_on_too_far_away"))
+		room.on_message("skillFail").on(Callable(ch, "_on_skill_fail"))
 		room.on_message("playerTargetHealthUpdate").on(Callable(ch, "_on_target_health_update"))
 		room.on_message("playerAttack").on(Callable(ch, "_on_player_attack"))
 		room.on_message("damageDealt").on(Callable(ch, "_on_damage_dealt"))

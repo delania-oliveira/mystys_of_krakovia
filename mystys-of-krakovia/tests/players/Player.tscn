@@ -290,7 +290,7 @@ offset_top = 144.0
 offset_right = -100.0
 offset_bottom = 184.0
 grow_horizontal = 2
-theme_override_constants/h_separation = 42
+theme_override_constants/h_separation = 52
 theme_override_constants/v_separation = 42
 columns = 2
 

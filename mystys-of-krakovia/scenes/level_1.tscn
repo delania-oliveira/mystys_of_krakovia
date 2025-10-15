@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://dmgw2qrb5gapi"]
+[gd_scene load_steps=40 format=3 uid="uid://dmgw2qrb5gapi"]
 
 [ext_resource type="Texture2D" uid="uid://e7tb7eq8e7tg" path="res://assets/terrain_textures/Grass002_1K-JPG_Color.jpg" id="2_so66j"]
 [ext_resource type="Texture2D" uid="uid://ciyh7i4l7enaq" path="res://assets/terrain_textures/Grass002_1K-JPG_NormalGL.jpg" id="3_tr1x6"]
@@ -19,8 +19,9 @@
 [ext_resource type="Texture2D" uid="uid://clgcydcarb73v" path="res://assets/terrain_textures/PavingStones148_1K-JPG_Color.jpg" id="18_tdlki"]
 [ext_resource type="Texture2D" uid="uid://1j5qel786i8x" path="res://assets/terrain_textures/PavingStones148_1K-JPG_NormalGL.jpg" id="19_v8pws"]
 [ext_resource type="Texture2D" uid="uid://c67b7v6mxfexe" path="res://assets/terrain_textures/Bricks076C_1K-JPG_Color.jpg" id="20_rscm6"]
-[ext_resource type="PackedScene" uid="uid://ddw8l2l8b2pxk" path="res://assets/FOREST2.glb" id="21_so66j"]
+[ext_resource type="PackedScene" uid="uid://cgowrcml3jow" path="res://FOREST2.glb" id="21_tr1x6"]
 [ext_resource type="Texture2D" uid="uid://cgykip405s0qy" path="res://assets/terrain_textures/Bricks076C_1K-JPG_NormalGL.jpg" id="21_wom8k"]
+[ext_resource type="PackedScene" uid="uid://ncuy5vvws0ak" path="res://medieval_sceneray.glb" id="22_d5akn"]
 
 [sub_resource type="Gradient" id="Gradient_a202f"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -161,5 +162,8 @@ collision_layer = 5
 top_level = true
 metadata/_edit_lock_ = true
 
-[node name="FOREST2" parent="." instance=ExtResource("21_so66j")]
-transform = Transform3D(-8.881413, 0, 1.0616345, 0, 9.52217, 0, -0.81170917, 0, -11.615999, 182.16574, -0.060963154, 206.65027)
+[node name="FOREST2" parent="." instance=ExtResource("21_tr1x6")]
+transform = Transform3D(-7.816335, 0, 1.7043793, 0, 8, 0, -1.7043793, 0, -7.816335, 191.97064, -0.05164981, 171.39166)
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("22_d5akn")]
+transform = Transform3D(0.008611482, 0, -0.018051105, 0, 0.02, 0, 0.018051105, 0, 0.008611482, 162.90881, -0.39336157, 28.111607)

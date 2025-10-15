@@ -10,7 +10,7 @@ export const DesintegrateMage: Skill = {
   animation: "DesintegrateCast",
   effect: "Desintegrate",
   characterClass: "Mage",
-  description: "Desintegra o alvo com um raio poderoso.",
+  description: "Desintegra o inimigo com um raio de pura energia arcana",
   castTime: 2.5,
   needTarget: true,
   cooldown: 10

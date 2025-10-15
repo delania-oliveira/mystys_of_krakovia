@@ -12,5 +12,6 @@ export const ArcaneExplosionMage: Skill = {
   characterClass: "Mage",
   description: "Explosão arcana.",
   castTime: 2.0,
-  needTarget: false
+  needTarget: false,
+  cooldown: 0
 }

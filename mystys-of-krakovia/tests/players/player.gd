@@ -62,13 +62,13 @@ var menu_instance = null
 @onready var inventory = $Inventory
 var skills: Array = []
 var attack_locked = false
+var action_slot
 
 func _ready() -> void:
 	var deathAnim = null
 	var shotAnim = null
 	var castAnim = null
 	var arcaneExplosionAnim = null
-	var multiShotAnim = null
 	var library = anim_player.get_animation_library("")
 	if library.has_animation("StandingReactDeathBackward"):
 		# Mage.glb - Mage model
@@ -340,6 +340,7 @@ func show_player_alert(text):
 	alert_instance.set_value(text)
 	
 func _on_too_far_away(data):
+	action_slot._on_cooldown_finished()
 	show_player_alert("Inimigo muito distante!")
 
 func _on_invite_fail(data):
@@ -419,24 +420,27 @@ func play_default_skill(target):
 	is_attacking = true
 	room.send("playerStartedAttack", {"skillId": "default_skill_" + character_class.to_lower(), "targetId": target_id})
 	
-func play_arcane_explosion():
+func play_arcane_explosion(action_slot):
 	if is_attacking or !is_local:
 		return
 	is_attacking = true
+	self.action_slot = action_slot
 	room.send("playerStartedAttack", {"skillId": "arcane_explosion_mage"})
 	
-func play_multi_shot(target):
+func play_multi_shot(target, action_slot):
 	if is_attacking or !is_local or !target:
 		return
 	target_id = target.id
 	is_attacking = true
+	self.action_slot = action_slot
 	room.send("playerStartedAttack", {"skillId": "multi_shot_archer", "targetId": target_id})
 
-func play_flame_arrow(target):
+func play_flame_arrow(target, action_slot):
 	if is_attacking or !is_local or !target:
 		return
 	target_id = target.id
 	is_attacking = true
+	self.action_slot = action_slot
 	room.send("playerStartedAttack", {"skillId": "flame_arrow_archer", "targetId": target_id})
 	
 func spawn_ranged_skill(target_node, user, userId, scene):

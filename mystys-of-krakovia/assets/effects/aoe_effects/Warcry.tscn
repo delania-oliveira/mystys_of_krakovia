@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://bo74olbepja8w"]
+
+[ext_resource type="Script" uid="uid://qycfy8lyatb6" path="res://assets/effects/aoe_effects/warcry.gd" id="1_my1gs"]
+[ext_resource type="Shader" uid="uid://dtaup7sd3bci4" path="res://assets/effects/aoe_effects/arcane_explosion.gdshader" id="2_fjbpu"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pfe04"]
+render_priority = 0
+shader = ExtResource("2_fjbpu")
+shader_parameter/color_start = Vector4(1, 0.4, 0.5, 1)
+shader_parameter/color_end = Vector4(0.6, 0.6, 1, 0.7)
+shader_parameter/progress = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_my1gs"]
+size = Vector2(10, 10)
+center_offset = Vector3(-0.5, -1, 0.5)
+
+[node name="Warcry" type="Node3D"]
+script = ExtResource("1_my1gs")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("ShaderMaterial_pfe04")
+mesh = SubResource("PlaneMesh_my1gs")

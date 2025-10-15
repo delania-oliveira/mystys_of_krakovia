@@ -72,6 +72,7 @@ class Player extends colyseus.Schema:
 			colyseus.Field.new("targetHealth", colyseus.NUMBER),
 			colyseus.Field.new("targetName", colyseus.STRING),
 			colyseus.Field.new("defense", colyseus.NUMBER),
+			colyseus.Field.new("attack", colyseus.NUMBER),
 			colyseus.Field.new("skillEffect", colyseus.STRING),
 			colyseus.Field.new("isAttacking", colyseus.BOOLEAN),
 			colyseus.Field.new("max_exp", colyseus.NUMBER),

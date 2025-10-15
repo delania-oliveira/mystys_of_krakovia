@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=3 uid="uid://dv0b6b2buon1e"]
 
-[ext_resource type="PackedScene" uid="uid://bvlxk1edwcrh" path="res://assets/loot/loot.glb" id="1_n4q25"]
+[ext_resource type="PackedScene" uid="uid://djm4umvpnqq1e" path="res://assets/loot/loot.glb" id="1_n4q25"]
 [ext_resource type="Script" uid="uid://bmqd3my33t8xt" path="res://tests/npcs/monsters/loot.gd" id="1_vkkrm"]
 [ext_resource type="Script" uid="uid://cncooouavus0n" path="res://tests/npcs/monsters/item_slot.gd" id="3_8p36u"]
 [ext_resource type="Texture2D" uid="uid://fiqdnp7dh64l" path="res://assets/loot/loot_slot.png" id="3_v3bp1"]

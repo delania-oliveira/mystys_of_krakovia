@@ -198,6 +198,10 @@ export class Krakovia extends Room<KrakoviaState> {
       const player = this.state.players.get(client.sessionId);
       if (player) {
         const skill = skills.get(data.skillId)
+        if (skill.level > player.level) {
+          client.send("skillFail", {"text": "Level muito baixo para usar a skill!"})
+          return
+        }
         if (skill.needTarget) {
           const target = this.state.monsters.get(data.targetId)
           if (!target) return
@@ -205,7 +209,7 @@ export class Krakovia extends Room<KrakoviaState> {
           const dz = target.z - player.z
           const distance = Math.sqrt(dx * dx + dz * dz)
           if (distance > skill.range) {
-            client.send("too_far_away")
+            client.send("skillFail", {"text": "Inimigo muito distante!"})
           } else {
             player.isAttacking = true
             player.animation = skill.animation;

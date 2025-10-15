@@ -2,7 +2,7 @@ extends Control
 
 # --- Node References ---
 @onready var container = $HBoxContainer/InventoryItems/InventoryContainer
-@onready var stats = $HBoxContainer/PlayerEquipment/PlayerStats
+@onready var stats = $PlayerStats
 @onready var gold_label = $HBoxContainer/InventoryItems/Gold/TextureRect/GoldAmount
 @onready var helmet_equipment_slot = $HBoxContainer/PlayerEquipment/VBoxContainer/Helmet/TextureRect
 @onready var armor_equipment_slot = $HBoxContainer/PlayerEquipment/VBoxContainer/Body/TextureRect

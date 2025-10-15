@@ -26,6 +26,6 @@ func _unhandled_input(event):
 	# Check for Action 3 (Key "3")
 	if Input.is_action_just_pressed("action_3"):
 		if slots.size() > 2:
-			slots[2].activate_skill()
+			slots[2].activate_skill(player)
 			get_viewport().set_input_as_handled()
 	

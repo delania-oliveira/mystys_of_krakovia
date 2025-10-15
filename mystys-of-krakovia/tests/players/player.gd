@@ -70,14 +70,17 @@ func _ready() -> void:
 	var shotAnim = null
 	var castAnim = null
 	var arcaneExplosionAnim = null
+	var desintegrateAnim = null
 	var library = anim_player.get_animation_library("")
 	if library.has_animation("StandingReactDeathBackward"):
 		# Mage.glb - Mage model
 		deathAnim = library.get_animation("StandingReactDeathBackward")
 		castAnim = library.get_animation("Standing1HMagicAttack01")
 		arcaneExplosionAnim = library.get_animation("Standing2HMagicAreaAttack02")
+		desintegrateAnim = library.get_animation("Standing2HMagicAttack04")
 		library.remove_animation("StandingReactDeathBackward")
 		library.remove_animation("Standing1HMagicAttack01")
+		library.remove_animation("Standing2HMagicAttack04")
 	elif library.has_animation("StandingDeathForward02"):
 		# Archer.glb - Archer model
 		shotAnim = library.get_animation("StandingDrawArrow")
@@ -183,8 +186,10 @@ func update_player_health(data):
 		current_health = data.health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = current_health
+		
 func _on_resist_damage(data):
 	show_floating_text(0, true, null, "Damage")
+	
 func _on_experience_gained(data):
 	if "taggedPlayerId" in data and data.taggedPlayerId == id or ("partyId" in data && data.partyId == partyId):
 		update_player_experience(data)
@@ -311,6 +316,7 @@ func _on_attack_animation_finished(anim_name):
 			"targetId": target_id
 		})
 	attack_locked = false
+	
 func _process(delta):
 	if is_local:
 		return
@@ -410,7 +416,7 @@ func _unhandled_input(event):
 			if result and result.collider.is_in_group("monsters"):
 				if current_target != result.collider:
 					set_target(result.collider)
-				play_default_skill(result.collider)
+				play_skill(result.collider, null, "default_skill_" + character_class.to_lower(), true)
 			if result and result.collider.has_method("toggle_loot_ui"):
 				var loot = result.collider
 				if global_position.distance_to(loot.global_position) <= 5:
@@ -428,35 +434,17 @@ func _unhandled_input(event):
 	if event.is_action_pressed("toggle_inventory"):
 		inventory.visible = not inventory.visible
 		
-func play_default_skill(target):
-	if is_attacking or !is_local or !target:
-		return
-	target_id = target.id
-	is_attacking = true
-	room.send("playerStartedAttack", {"skillId": "default_skill_" + character_class.to_lower(), "targetId": target_id})
-	
-func play_arcane_explosion(action_slot):
+func play_skill(target, action_slot, skillId, needTarget):
 	if is_attacking or !is_local:
 		return
-	is_attacking = true
-	self.action_slot = action_slot
-	room.send("playerStartedAttack", {"skillId": "arcane_explosion_mage"})
-	
-func play_multi_shot(target, action_slot):
-	if is_attacking or !is_local or !target:
+	if needTarget == true and !target:
 		return
-	target_id = target.id
+	elif needTarget == true and target:
+		target_id = target.id
 	is_attacking = true
-	self.action_slot = action_slot
-	room.send("playerStartedAttack", {"skillId": "multi_shot_archer", "targetId": target_id})
-
-func play_flame_arrow(target, action_slot):
-	if is_attacking or !is_local or !target:
-		return
-	target_id = target.id
-	is_attacking = true
-	self.action_slot = action_slot
-	room.send("playerStartedAttack", {"skillId": "flame_arrow_archer", "targetId": target_id})
+	if action_slot:
+		self.action_slot = action_slot
+	room.send("playerStartedAttack", {"skillId": skillId, "targetId": target_id})
 	
 func spawn_ranged_skill(target_node, user, userId, scene):
 	var skill = scene.instantiate()

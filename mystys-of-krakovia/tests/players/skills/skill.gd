@@ -7,7 +7,6 @@ var skill_data: Dictionary = {}
 
 func setup_skill(data: Dictionary, icon_texture: Texture2D):
 	skill_data = data
-
 	self.texture = icon_texture
 	name_label.text = data.name
 
@@ -21,9 +20,10 @@ func _get_drag_data(at_position: Vector2):
 		"skill_name": skill_data.name,
 		"skill_full_data": skill_data,
 		"source_texture": self.texture,
-		"cooldown": skill_data.cooldown
+		"cooldown": skill_data.cooldown,
+		"need_target": skill_data.needTarget
 	}
-		
+	
 	var drag_preview = TextureRect.new()
 	drag_preview.texture = self.texture
 	drag_preview.expand_mode = TextureRect.EXPAND_FIT_WIDTH

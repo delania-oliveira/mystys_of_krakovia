@@ -42,16 +42,11 @@ func _drop_data(at_position: Vector2, data):
 func activate_skill(player):
 	if is_on_cooldown:
 		return
-		
 	if not current_skill_data.is_empty():
-		if current_skill_id.contains("default_skill"):
-			player.play_default_skill(player.current_target)
-		elif current_skill_id.contains("arcane_explosion_mage"):
-			player.play_arcane_explosion(self)
-		elif current_skill_id.contains("multi_shot_archer"):
-			player.play_multi_shot(player.current_target, self)
-		elif current_skill_id.contains("flame_arrow_archer"):
-			player.play_flame_arrow(player.current_target, self)
+		if current_skill_data.needTarget == true:
+			player.play_skill(player.current_target, self, current_skill_id, true)
+		else:
+			player.play_skill(null, self, current_skill_id, false)
 		start_cooldown(current_skill_data.cooldown)
 	else:
 		print("This action slot is empty.")

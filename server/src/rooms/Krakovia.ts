@@ -233,7 +233,7 @@ export class Krakovia extends Room<KrakoviaState> {
       const player = this.state.players.get(client.sessionId)
       if (player) {
         const equippedItem = items[data.itemId]
-        if (equippedItem.limitedClasses.includes(player.character_class)){
+        if (equippedItem.limitedClasses.includes(player.character_class) || equippedItem.limitedClasses.includes("Todas")){
           player.defense += equippedItem.defense
         }
       }
@@ -511,6 +511,10 @@ export class Krakovia extends Room<KrakoviaState> {
           if (!target.isDead) {
             monster.isTargeting = true
             const finalDamage = calculateMonsterDamage(monster, target);
+            if (finalDamage === 0) {
+              const targetClient = this.clients.find(c => c.sessionId === target.id);
+              targetClient.send("resistDamage")
+            }
             target.health -= finalDamage;
             this.broadcast("playerTargetHealthUpdate", {
               id: target.id,

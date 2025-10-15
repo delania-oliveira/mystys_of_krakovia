@@ -5,6 +5,9 @@ import { Player } from "../rooms/schema/Player";
 export function calculateMonsterDamage(monster: Monster, player: Player){
   let attackerDamage = monster.attack + getRandomInt(monster.difficulty + 5)
   attackerDamage -= player.defense
+  if (attackerDamage < 0) {
+    attackerDamage = 0
+  }
   return attackerDamage
 }
 

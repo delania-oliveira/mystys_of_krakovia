@@ -11,7 +11,7 @@ var skill_icons: Dictionary = {
 	"arcane_explosion_mage": preload("res://assets/icons/skills/arcane_explosion_mage_icon.png"),
 	"multi_shot_archer": preload("res://assets/icons/skills/multi_shot_archer_icon.png"),
 	"flame_arrow_archer": preload("res://assets/icons/skills/flame_arrow_archer_icon.png"),
-	"desintegrate_mage_icon": preload("res://assets/icons/skills/desintegrate_mage_icon.png"),
+	"desintegrate_mage": preload("res://assets/icons/skills/desintegrate_mage_icon.png"),
 }
 
 func display_player_skills(player_skills_data: Array):

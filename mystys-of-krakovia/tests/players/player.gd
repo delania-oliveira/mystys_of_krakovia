@@ -55,6 +55,7 @@ var defense = 0
 var partyId
 var ARROW_SCENE = preload("res://assets/effects/shoot_effects/Arrow.tscn")
 var ARCANEBALL_SCENE = preload("res://assets/effects/shoot_effects/Arcaneball.tscn")
+var DESINTEGRATE_SCENE = preload("res://assets/effects/shoot_effects/Desintegrate.tscn")
 var FLAME_ARROW_SCENE = preload("res://assets/effects/shoot_effects/FlameArrow.tscn")
 signal skills_updated(new_skills)
 var menu_instance = null
@@ -94,6 +95,7 @@ func _ready() -> void:
 		library.add_animation("AttackFlameArrow", shotAnim)
 		library.add_animation("DefaultCast", castAnim)
 		library.add_animation("ArcaneExplosionCast", arcaneExplosionAnim)
+		library.add_animation("DesintegrateCast", desintegrateAnim)
 	else:
 		push_warning("No death animation found to rename.")
 		
@@ -221,6 +223,8 @@ func _on_player_attack(data):
 			spawn_multi_shot(data, target)
 		elif data.skillEffect == "FlameArrow":
 			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, FLAME_ARROW_SCENE)
+		elif data.skillEffect == "Desintegrate":
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, DESINTEGRATE_SCENE)
 	if "skillEffect" in data and !data.needTarget:
 		if data.skillEffect == "ArcaneExplosion":
 			var ARCANE_EXPLOSION_SCENE = preload("res://assets/effects/aoe_effects/ArcaneExplosion.tscn")

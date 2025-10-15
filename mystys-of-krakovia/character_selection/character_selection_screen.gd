@@ -121,7 +121,7 @@ func _on_exit_pressed():
 
 func _on_join_game_pressed():
 	CharacterHelper.character_id = character_selected.id
-	get_tree().change_scene_to_file("res://tests/map/TestMap.tscn")
+	get_tree().change_scene_to_file("res://scenes/level_1.tscn")
 	
 func _on_success_dialog_confirmed() -> void:
 	get_tree().reload_current_scene()

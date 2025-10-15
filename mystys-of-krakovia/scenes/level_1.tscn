@@ -1,5 +1,6 @@
-[gd_scene load_steps=39 format=3 uid="uid://dmgw2qrb5gapi"]
+[gd_scene load_steps=41 format=3 uid="uid://dmgw2qrb5gapi"]
 
+[ext_resource type="Script" uid="uid://2rm4711lvp30" path="res://scenes/level_1.gd" id="1_tr1x6"]
 [ext_resource type="Texture2D" uid="uid://e7tb7eq8e7tg" path="res://assets/terrain_textures/Grass002_1K-JPG_Color.jpg" id="2_so66j"]
 [ext_resource type="Texture2D" uid="uid://ciyh7i4l7enaq" path="res://assets/terrain_textures/Grass002_1K-JPG_NormalGL.jpg" id="3_tr1x6"]
 [ext_resource type="Texture2D" uid="uid://dh1jgfjwbwoq6" path="res://assets/terrain_textures/Ground068_1K-JPG_Color.jpg" id="4_d5akn"]
@@ -151,15 +152,28 @@ normal_texture = ExtResource("21_wom8k")
 mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_i5arm")])
 texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_wa552"), SubResource("Terrain3DTextureAsset_v0i6o"), SubResource("Terrain3DTextureAsset_bamb7"), SubResource("Terrain3DTextureAsset_8jqp6"), SubResource("Terrain3DTextureAsset_jscgt"), SubResource("Terrain3DTextureAsset_0bysi"), SubResource("Terrain3DTextureAsset_y0ove"), SubResource("Terrain3DTextureAsset_awarj"), SubResource("Terrain3DTextureAsset_uuj1x"), SubResource("Terrain3DTextureAsset_3x5jj")])
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_tr1x6"]
+size = Vector3(2000, 2, 2000)
+
 [node name="Level_1" type="Node3D"]
+script = ExtResource("1_tr1x6")
 
 [node name="Terrain3D" type="Terrain3D" parent="."]
 data_directory = "res://scenes/Level_1_data"
 material = SubResource("Terrain3DMaterial_r3fl7")
 assets = SubResource("Terrain3DAssets_wc5p8")
-collision_layer = 5
+collision_mode = 3
+collision_layer = 4
+collision_mask = 0
 top_level = true
 metadata/_edit_lock_ = true
 
 [node name="FOREST2" parent="." instance=ExtResource("21_so66j")]
 transform = Transform3D(-8.881413, 0, 1.0616345, 0, 9.52217, 0, -0.81170917, 0, -11.615999, 182.16574, -0.060963154, 206.65027)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_tr1x6")

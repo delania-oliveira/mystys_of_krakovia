@@ -2,6 +2,7 @@ extends Control
 
 # --- Node References ---
 @onready var container = $HBoxContainer/InventoryItems/InventoryContainer
+@onready var stats = $PlayerStats
 @onready var gold_label = $HBoxContainer/InventoryItems/Gold/TextureRect/GoldAmount
 @onready var helmet_equipment_slot = $HBoxContainer/PlayerEquipment/VBoxContainer/Helmet/TextureRect
 @onready var armor_equipment_slot = $HBoxContainer/PlayerEquipment/VBoxContainer/Body/TextureRect
@@ -20,7 +21,11 @@ func _ready() -> void:
 		gold_label.text = "Gold: " + str(player.current_gold)
 	else:
 		gold_label.text = "Gold: 0"
-		
+	
+	if player and player.defense:
+		stats.text = "⚔️ 0" + "🛡️ " + str(player.defense) 
+	else:
+		stats.text = "⚔️ 0 " + " 🛡️ 0" 
 	for i in range(SLOT_COUNT):
 		var slot = Button.new()
 		slot.name = "Slot_%d" % i

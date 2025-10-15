@@ -360,16 +360,34 @@ grow_vertical = 2
 size_flags_horizontal = 4
 script = ExtResource("8_4o6cj")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Inventory"]
+[node name="PlayerStats" type="Label" parent="Inventory"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-theme_override_constants/separation = 44
+offset_left = -198.5
+offset_top = 87.5
+offset_right = -197.5
+offset_bottom = 110.5
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Inventory"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -70.0
+offset_top = -61.5
+offset_right = 70.0
+offset_bottom = 61.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 42
+alignment = 1
 
 [node name="PlayerEquipment" type="HBoxContainer" parent="Inventory/HBoxContainer"]
-custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-theme_override_constants/separation = 44
+theme_override_constants/separation = 42
 
 [node name="Weapon" type="Button" parent="Inventory/HBoxContainer/PlayerEquipment"]
 layout_mode = 2
@@ -410,10 +428,13 @@ grow_vertical = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="Inventory/HBoxContainer/PlayerEquipment"]
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_constants/separation = 44
+theme_override_constants/separation = 42
+alignment = 1
 
 [node name="Helmet" type="Button" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 script = ExtResource("9_j0ttc")
 
 [node name="TextureRect" type="TextureRect" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer/Helmet"]
@@ -439,6 +460,8 @@ offset_bottom = 23.0
 
 [node name="Body" type="Button" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 script = ExtResource("9_j0ttc")
 
 [node name="TextureRect" type="TextureRect" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer/Body"]

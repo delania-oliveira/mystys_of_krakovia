@@ -4,6 +4,7 @@ export interface PossibleItems {
   min_quantity: number;
   max_quantity: number;
   quantity: number;
+  chance: number
 }
 
 export interface DroppedItems {

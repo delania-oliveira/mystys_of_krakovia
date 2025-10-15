@@ -21,6 +21,7 @@ func _get_drag_data(at_position: Vector2):
 		"skill_name": skill_data.name,
 		"skill_full_data": skill_data,
 		"source_texture": self.texture,
+		"cooldown": skill_data.cooldown
 	}
 		
 	var drag_preview = TextureRect.new()

@@ -11,6 +11,7 @@ export interface Skill {
   description: string
   castTime?: number
   needTarget: boolean
+  cooldown: number
 }
 
 export const skills = new Map<string, Skill>();

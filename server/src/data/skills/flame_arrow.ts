@@ -11,5 +11,6 @@ export const FlameArrowArcher: Skill = {
   effect: "FlameArrow",
   characterClass: "Archer",
   description: "Atira uma flecha de fogo no alvo",
-  needTarget: true
+  needTarget: true,
+  cooldown: 10.0
 }

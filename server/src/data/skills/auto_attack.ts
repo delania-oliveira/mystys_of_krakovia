@@ -11,7 +11,8 @@ export const DefaultSkillArcher: Skill = {
   effect: "ArrowShot",
   characterClass: "Archer",
   description: "Atira uma flecha no alvo.",
-  needTarget: true
+  needTarget: true,
+  cooldown: 0
 }
 
 export const DefaultSkillMage: Skill = {
@@ -26,5 +27,6 @@ export const DefaultSkillMage: Skill = {
   characterClass: "Mage",
   description: "Lança uma bola arcana explosiva no alvo.",
   castTime: 1.0,
-  needTarget: true
+  needTarget: true,
+  cooldown: 0
 }

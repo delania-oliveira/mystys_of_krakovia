@@ -11,5 +11,6 @@ export const MultiShotArcher: Skill = {
   effect: "ArrowMultiShot",
   characterClass: "Archer",
   description: "Atira flechas em múltiplos alvos",
-  needTarget: true
+  needTarget: true,
+  cooldown: 3.0
 }

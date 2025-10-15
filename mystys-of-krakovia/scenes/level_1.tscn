@@ -19,7 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://clgcydcarb73v" path="res://assets/terrain_textures/PavingStones148_1K-JPG_Color.jpg" id="18_tdlki"]
 [ext_resource type="Texture2D" uid="uid://1j5qel786i8x" path="res://assets/terrain_textures/PavingStones148_1K-JPG_NormalGL.jpg" id="19_v8pws"]
 [ext_resource type="Texture2D" uid="uid://c67b7v6mxfexe" path="res://assets/terrain_textures/Bricks076C_1K-JPG_Color.jpg" id="20_rscm6"]
-[ext_resource type="PackedScene" uid="uid://b85aykr3q66ch" path="res://assets/construcoes/cloudy_mountain.glb" id="21_so66j"]
+[ext_resource type="PackedScene" uid="uid://ddw8l2l8b2pxk" path="res://assets/FOREST2.glb" id="21_so66j"]
 [ext_resource type="Texture2D" uid="uid://cgykip405s0qy" path="res://assets/terrain_textures/Bricks076C_1K-JPG_NormalGL.jpg" id="21_wom8k"]
 
 [sub_resource type="Gradient" id="Gradient_a202f"]
@@ -46,7 +46,7 @@ seamless = true
 [sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_r3fl7"]
 _shader_parameters = {
 &"bias_distance": 512.0,
-&"blend_sharpness": 0.87,
+&"blend_sharpness": 0.8010000380475,
 &"depth_blur": 0.0,
 &"enable_macro_variation": true,
 &"enable_projection": true,
@@ -107,6 +107,7 @@ name = "Moss001_1K-JPG_Color"
 id = 3
 albedo_texture = ExtResource("8_mmfjm")
 normal_texture = ExtResource("9_k8ld0")
+uv_scale = 0.205
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_jscgt"]
 name = "Gravel020_1K-JPG_Color"
@@ -119,12 +120,14 @@ name = "Rock030_1K-JPG_Color"
 id = 5
 albedo_texture = ExtResource("12_hnsmf")
 normal_texture = ExtResource("13_nossa")
+uv_scale = 0.179
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_y0ove"]
 name = "Rock061_1K-JPG_Color"
 id = 6
 albedo_texture = ExtResource("14_hjqri")
 normal_texture = ExtResource("15_hg84p")
+uv_scale = 0.33
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_awarj"]
 name = "Tiles089_1K-JPG_Color"
@@ -150,25 +153,13 @@ texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_
 
 [node name="Level_1" type="Node3D"]
 
-[node name="Character Arissa" parent="."]
-_import_path = NodePath("")
-unique_name_in_owner = false
-process_mode = 0
-process_priority = 0
-process_physics_priority = 0
-process_thread_group = 0
-physics_interpolation_mode = 0
-auto_translate_mode = 0
-editor_description = ""
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29214597, 0.8561361, 0.60896087)
-script = null
-
 [node name="Terrain3D" type="Terrain3D" parent="."]
 data_directory = "res://scenes/Level_1_data"
 material = SubResource("Terrain3DMaterial_r3fl7")
 assets = SubResource("Terrain3DAssets_wc5p8")
+collision_layer = 5
 top_level = true
 metadata/_edit_lock_ = true
 
-[node name="Sketchfab_Scene" parent="." instance=ExtResource("21_so66j")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 214.53262, 150.79424, 203.89957)
+[node name="FOREST2" parent="." instance=ExtResource("21_so66j")]
+transform = Transform3D(-8.881413, 0, 1.0616345, 0, 9.52217, 0, -0.81170917, 0, -11.615999, 182.16574, -0.060963154, 206.65027)

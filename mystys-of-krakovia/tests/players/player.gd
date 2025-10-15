@@ -37,6 +37,7 @@ var is_standing = true
 @onready var target_id
 @onready var cast_bar = $CastBar
 @onready var gold_label = get_node("Inventory/HBoxContainer/InventoryItems/Gold/TextureRect/GoldAmount")
+@onready var stats_label = get_node("Inventory/HBoxContainer/PlayerEquipment/PlayerStats")
 var floating_popup_scene = preload("res://tests/players/ui/Popup.tscn")
 var menu_tab_scene = preload("res://ui/MenuTab.tscn")
 var player_alert_scene = preload("res://tests/players/ui/PlayerAlert.tscn")
@@ -182,7 +183,8 @@ func update_player_health(data):
 		current_health = data.health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = current_health
-		
+func _on_resist_damage(data):
+	show_floating_text(0, true, null, "Damage")
 func _on_experience_gained(data):
 	if "taggedPlayerId" in data and data.taggedPlayerId == id or ("partyId" in data && data.partyId == partyId):
 		update_player_experience(data)
@@ -249,6 +251,12 @@ func update_gold(new_value):
 		show_floating_text(gold_diff, true, null, "Gold")
 	current_gold = new_value
 	gold_label.text = "Gold: " + str(current_gold)
+
+func update_defense(new_value):
+	var def_diff = new_value - defense
+	if def_diff > 0:
+		defense = new_value
+		stats_label.text = "⚔️ 0 " + "🛡️ " + str(defense) 
 	
 func _on_looted_item(data):
 	inventory.update_inventory(data)
@@ -260,8 +268,10 @@ func on_network_data_received(data):
 	network_direction = Vector3(-data.dirX, 0, -data.dirZ)
 	update_player_health(data)
 	is_attacking = data.isAttacking
-	if data.gold != null:
+	if data.gold != null and data.gold != 0:
 		update_gold(data.gold)
+	if data.defense != null and data.defense != 0:
+		update_defense(data.defense)
 	if not dead:
 		if data.animation:
 			if is_local and data.animation.contains("Attack") and data.isAttacking:
@@ -324,8 +334,12 @@ func show_floating_text(amount: int, tookDamage: bool, target, type: String):
 			popup_instance.set_color(Color(0.6, 0.2, 1.0))
 			popup_instance.set_value(amount, "Experience")
 		"Damage":
-			popup_instance.set_color(Color(1, 0, 0))
-			popup_instance.set_value(amount, "Damage")
+			if amount == 0:
+				popup_instance.set_color(Color(0.0, 0.067, 1.0, 1.0))
+				popup_instance.resist()
+			else:
+				popup_instance.set_color(Color(1, 0, 0))
+				popup_instance.set_value(amount, "Damage")
 		"Gold":
 			popup_instance.set_color(Color(0.95, 1.0, 0.0, 1.0))
 			popup_instance.set_value(amount, "Gold")

@@ -18,6 +18,8 @@ func set_value(amount: int, type):
 		label.text = "+" + str(amount)
 	else:
 		label.text = str(amount)
+func resist():
+	label.text = "Resist"
 func _process(delta):
 	time_passed += delta
 	translate(Vector3(0, float_speed * delta, 0))

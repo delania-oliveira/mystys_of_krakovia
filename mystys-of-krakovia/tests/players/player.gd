@@ -339,9 +339,10 @@ func show_player_alert(text):
 	get_tree().root.add_child(alert_instance)
 	alert_instance.set_value(text)
 	
-func _on_too_far_away(data):
-	action_slot._on_cooldown_finished()
-	show_player_alert("Inimigo muito distante!")
+func _on_skill_fail(data):
+	if action_slot:
+		action_slot._on_cooldown_finished()
+	show_player_alert(data.text)
 
 func _on_invite_fail(data):
 	show_player_alert(data.text)

@@ -12,6 +12,7 @@ import { ExperienceTable } from "../data/exp_table/experience_table";
 import { getSkillsByClass } from "../data/skills/skills";
 import { generateLoot } from "../mechanics/generateLoot";
 import { items } from "../data/items/items";
+import { levelUp } from "../mechanics/levelUp";
 const GRAVITY = 75
 const JUMP_STRENGTH = 20
 const GROUND_LEVEL = 3
@@ -176,6 +177,7 @@ export class Krakovia extends Room<KrakoviaState> {
         player.skillEffect = skill.effect
         const payload: any = {
           id: client.sessionId,
+          skillId: skill.id,
           skillEffect: skill.effect,
           animation: skill.animation,
           isAttacking: false,
@@ -191,6 +193,21 @@ export class Krakovia extends Room<KrakoviaState> {
           player.castTime = skill.castTime
         }
         this.broadcast("playerAttack", payload);
+      } 
+    });
+
+    this.onMessage("playerBuff", (client, data) => {
+      const player = this.state.players.get(client.sessionId);
+      if (player) {
+        player.isAttacking = false
+        player.animation = "Idle"
+        const skill = skills.get(data.skillId)
+        player.defense += skill.buffDef
+        player.attack += skill.buffAtk
+        this.clock.setTimeout(() => {
+            player.defense -= skill.buffDef
+            player.attack -= skill.buffDef
+          }, skill.buffDuration * 1000);
       } 
     });
 
@@ -235,6 +252,7 @@ export class Krakovia extends Room<KrakoviaState> {
         const equippedItem = items[data.itemId]
         if (equippedItem.limitedClasses.includes(player.character_class) || equippedItem.limitedClasses.includes("Todas")){
           player.defense += equippedItem.defense
+          player.attack += equippedItem.attack
         }
       }
     })
@@ -282,7 +300,11 @@ export class Krakovia extends Room<KrakoviaState> {
         const finalDamage = calculatePlayerDamage(player, target, skill)
         player.animation = "Idle"
         if (!this.damagedTargets.includes(target)){
-          target._threatTable[player.id] = (target._threatTable[player.id] || 0) + finalDamage;
+          if (player.character_class == "Warrior"){
+            target._threatTable[player.id] = (target._threatTable[player.id] || 0) + finalDamage * 1.50;
+          } else {
+            target._threatTable[player.id] = (target._threatTable[player.id] || 0) + finalDamage;
+          }
           target.health -= finalDamage
         }
         target.isDead = target.health <= 0
@@ -360,8 +382,8 @@ export class Krakovia extends Room<KrakoviaState> {
             while (killer.experience >= ExperienceTable[killer.level]) {
               const requiredExp = ExperienceTable[killer.level];
               killer.experience -= requiredExp;
-              killer.level += 1;
               killer.max_exp = ExperienceTable[killer.level];
+              levelUp(player)
               levelsGained += 1;
             }
             this.broadcast("experienceGained", {
@@ -606,6 +628,9 @@ export class Krakovia extends Room<KrakoviaState> {
           player.experience = character.experience;
           player.max_exp = ExperienceTable[player.level]
           player.level = character.level;
+          player.attack = player.attack
+          player.gold = player.gold
+          player.defense = player.defense
           player.x = character.x_position;
           player.y = character.y_position;
           player.z = character.z_position;

@@ -12,7 +12,7 @@ export function calculateMonsterDamage(monster: Monster, player: Player){
 }
 
 export function calculatePlayerDamage(player: Player, target: Monster, skill: Skill){
-  let attackerDamage = skill.baseDamage + getRandomInt(player.level + 5)
+  let attackerDamage = skill.baseDamage + getRandomInt(player.attack)
   attackerDamage -= target.defense
   return attackerDamage
 }

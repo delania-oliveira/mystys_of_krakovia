@@ -10,7 +10,7 @@ export const ArcaneExplosionMage: Skill = {
   animation: "ArcaneExplosionCast",
   effect: "ArcaneExplosion",
   characterClass: "Mage",
-  description: "Explosão arcana.",
+  description: "Concentra pura energia arcana em um ponto e a libera em uma poderosa explosão mágica",
   castTime: 2.0,
   needTarget: false,
   cooldown: 0

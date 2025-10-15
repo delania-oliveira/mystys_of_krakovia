@@ -37,7 +37,7 @@ var is_standing = true
 @onready var target_id
 @onready var cast_bar = $CastBar
 @onready var gold_label = get_node("Inventory/HBoxContainer/InventoryItems/Gold/TextureRect/GoldAmount")
-@onready var stats_label = get_node("Inventory/HBoxContainer/PlayerEquipment/PlayerStats")
+@onready var stats_label = get_node("Inventory/PlayerStats")
 var floating_popup_scene = preload("res://tests/players/ui/Popup.tscn")
 var menu_tab_scene = preload("res://ui/MenuTab.tscn")
 var player_alert_scene = preload("res://tests/players/ui/PlayerAlert.tscn")
@@ -52,11 +52,13 @@ var character_name = ""
 var current_target_name = ""
 var attack_speed = 1.0
 var defense = 0
+var attack = 0
 var partyId
 var ARROW_SCENE = preload("res://assets/effects/shoot_effects/Arrow.tscn")
 var ARCANEBALL_SCENE = preload("res://assets/effects/shoot_effects/Arcaneball.tscn")
 var DESINTEGRATE_SCENE = preload("res://assets/effects/shoot_effects/Desintegrate.tscn")
 var FLAME_ARROW_SCENE = preload("res://assets/effects/shoot_effects/FlameArrow.tscn")
+var WARCRY_SCENE = preload("res://assets/effects/aoe_effects/Warcry.tscn")
 signal skills_updated(new_skills)
 var menu_instance = null
 @onready var spellbook = $SpellBook
@@ -188,6 +190,11 @@ func update_player_health(data):
 		current_health = data.health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = current_health
+	if data.max_health and data.max_health != max_health:
+		max_health = data.max_health
+		health_bar.max_value = data.max_health
+		health_label.text = str(current_health) + " / " + str(max_health)
+		health_bar.value = max_health
 		
 func _on_resist_damage(data):
 	show_floating_text(0, true, null, "Damage")
@@ -225,6 +232,16 @@ func _on_player_attack(data):
 			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, FLAME_ARROW_SCENE)
 		elif data.skillEffect == "Desintegrate":
 			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, DESINTEGRATE_SCENE)
+		elif data.skillEffect == "DefaultAttackMelee":
+			if data.id == id:
+				if not is_instance_valid(target):
+					return
+				room.send("attackDealDamage", {"targetId": target.monster_id, "skillId": data.skillId, "playerId": id})
+		elif data.skillEffect == "CleaveAttackMelee":
+			if not is_instance_valid(target):
+					return
+			if data.id == id:
+				cleave_warrior(data, target)
 	if "skillEffect" in data and !data.needTarget:
 		if data.skillEffect == "ArcaneExplosion":
 			var ARCANE_EXPLOSION_SCENE = preload("res://assets/effects/aoe_effects/ArcaneExplosion.tscn")
@@ -234,7 +251,13 @@ func _on_player_attack(data):
 			explosion.room = room
 			explosion.playerId = id
 			get_tree().current_scene.add_child(explosion)
-			
+		elif data.skillEffect == "WarcryWarrior":
+			var warcry = WARCRY_SCENE.instantiate()
+			var caster = get_user_by_id(data.id)
+			warcry.global_transform.origin = Vector3(caster.x, caster.y, caster.z)
+			get_tree().current_scene.add_child(warcry)
+			if data.id == id:
+				room.send("playerBuff", {"skillId": data.skillId, "playerId": id})
 func spawn_multi_shot(data, target):
 	var radius = data.area
 	var area_center = Vector3(target.x, target.y, target.z)
@@ -253,7 +276,25 @@ func spawn_multi_shot(data, target):
 		var body = result.collider
 		if body.is_in_group("monsters"):
 			spawn_ranged_skill(get_target_by_id(body.id), get_user_by_id(data.id), data.id, ARROW_SCENE)
+			
+func cleave_warrior(data, target):
+	var radius = data.area
+	var area_center = Vector3(target.x, target.y, target.z)
 
+	var space_state = get_world_3d().direct_space_state
+	var shape = SphereShape3D.new()
+	shape.radius = radius
+
+	var query = PhysicsShapeQueryParameters3D.new()
+	query.shape = shape
+	query.transform = Transform3D(Basis(), area_center)
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+	var results = space_state.intersect_shape(query, 32)
+	for result in results:
+		var body = result.collider
+		if body.is_in_group("monsters") and id == data.id:
+			room.send("attackDealDamage", {"targetId": body.id, "skillId": data.skillId, "playerId": id})
 func update_gold(new_value):
 	var gold_diff = new_value - current_gold
 	if gold_diff > 0:
@@ -262,11 +303,13 @@ func update_gold(new_value):
 	gold_label.text = "Gold: " + str(current_gold)
 
 func update_defense(new_value):
-	var def_diff = new_value - defense
-	if def_diff > 0:
+	if defense != new_value:
 		defense = new_value
-		stats_label.text = "⚔️ 0 " + "🛡️ " + str(defense) 
-	
+		stats_label.text = "⚔️ " + str(attack) + "🛡️ " + str(new_value)
+func update_attack(new_value):
+	if attack != new_value:
+		attack = new_value
+		stats_label.text = "⚔️ " + str(attack) + "🛡️ " + str(defense)
 func _on_looted_item(data):
 	inventory.update_inventory(data)
 	
@@ -279,15 +322,28 @@ func on_network_data_received(data):
 	is_attacking = data.isAttacking
 	if data.gold != null and data.gold != 0:
 		update_gold(data.gold)
-	if data.defense != null and data.defense != 0:
+	if data.defense != null:
 		update_defense(data.defense)
+	if data.attack != null:
+		update_attack(data.attack)
 	if not dead:
 		if data.animation:
 			if is_local and data.animation.contains("Attack") and data.isAttacking:
 				anim_player.connect("animation_finished", Callable(self, "_on_attack_animation_finished"), CONNECT_ONE_SHOT)
 				anim_player.play(data.animation, -1.0, attack_speed)
 				attack_locked = true
+			if is_local and data.animation.contains("Ataque") and data.isAttacking:
+				anim_player.connect("animation_finished", Callable(self, "_on_attack_animation_finished"), CONNECT_ONE_SHOT)
+				anim_player.play(data.animation, -1.0, attack_speed + 0.5)
+				attack_locked = true
+			if is_local and data.animation == "Buff":
+				anim_player.connect("animation_finished", Callable(self, "_on_attack_animation_finished"), CONNECT_ONE_SHOT)
+				anim_player.play(data.animation, -1.0, attack_speed)
+				attack_locked = true
 			elif not attack_locked:
+				if data.animation == "Idle":
+					var anim = anim_player.get_animation("Idle")
+					anim.loop_mode = Animation.LOOP_LINEAR
 				anim_player.play(data.animation)
 			if is_local and data.animation.contains("Cast") and "castTime" in data and data.isAttacking == true:
 				cast_bar.player = self
@@ -309,6 +365,11 @@ func _on_attack_animation_finished(anim_name):
 			"skillId": "default_skill_" + character_class.to_lower(),
 			"targetId": target_id
 		})
+	elif anim_name == ("Ataque Leve"):
+		room.send("playerAttack", {
+			"skillId": "default_skill_" + character_class.to_lower(),
+			"targetId": target_id
+		})
 	elif anim_name == "AttackMultiShot":
 		room.send("playerAttack", {
 			"skillId": "multi_shot_archer",
@@ -317,6 +378,16 @@ func _on_attack_animation_finished(anim_name):
 	elif anim_name == "AttackFlameArrow":
 		room.send("playerAttack", {
 			"skillId": "flame_arrow_archer",
+			"targetId": target_id
+		})
+	elif anim_name == "Ataque Pesado":
+		room.send("playerAttack", {
+			"skillId": "cleave_attack_warrior",
+			"targetId": target_id
+		})
+	elif anim_name == "Buff":
+		room.send("playerAttack", {
+			"skillId": "warcry_warrior",
 			"targetId": target_id
 		})
 	attack_locked = false

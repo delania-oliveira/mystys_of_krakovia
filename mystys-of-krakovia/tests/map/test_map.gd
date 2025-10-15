@@ -75,9 +75,10 @@ func _on_players_add(target, value, key):
 	ch.character_name = value.name
 	ch.current_health = value.health
 	ch.current_gold = 0
+	ch.defense = value.defense
+	ch.attack = value.attack
 	ch.max_health = value.max_health
 	ch.character_class = value.character_class
-	ch.defense = value.defense
 	ch.get_node("Target").hide()
 	value.listen(":change").on(Callable(self, "_on_player"))
 	if key == room.session_id:
@@ -94,6 +95,8 @@ func _on_players_add(target, value, key):
 		room.on_message("inviteFail").on(Callable(ch, "_on_invite_fail"))
 		room.on_message("partyHealthUpdate").on(Callable(ch, "_on_party_health_update"))
 		room.on_message("leaveParty").on(Callable(ch, "_on_party_leave"))
+		ch.get_node("Inventory/HBoxContainer/InventoryItems/Gold/TextureRect/GoldAmount").text = "Gold: " + str(value.gold)
+		ch.get_node("Inventory/PlayerStats").text = "⚔️ " + str(value.attack) + "🛡️ " + str(value.defense)
 		CharacterHelper.prepare_health_bar(ch, value.health, value.max_health)
 		CharacterHelper.prepare_mana_bar(ch, value.mana, value.max_mana)
 		CharacterHelper.prepare_experience_bar(ch, value.experience, value.level, value.max_exp)

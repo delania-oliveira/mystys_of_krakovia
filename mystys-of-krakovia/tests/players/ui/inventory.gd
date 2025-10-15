@@ -17,15 +17,6 @@ func _ready() -> void:
 		"Armor": armor_equipment_slot
 	}
 	
-	if player and player.current_gold:
-		gold_label.text = "Gold: " + str(player.current_gold)
-	else:
-		gold_label.text = "Gold: 0"
-	
-	if player and player.defense:
-		stats.text = "⚔️ 0" + "🛡️ " + str(player.defense) 
-	else:
-		stats.text = "⚔️ 0 " + " 🛡️ 0" 
 	for i in range(SLOT_COUNT):
 		var slot = Button.new()
 		slot.name = "Slot_%d" % i

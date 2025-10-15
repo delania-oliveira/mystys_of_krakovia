@@ -2,35 +2,31 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c0aohmx11yrg4"
-path.s3tc="res://.godot/imported/Warrior_4.png-e772cb3abf4c8256ca25df9340584cd8.s3tc.ctex"
+uid="uid://cmsdwolkjsvo1"
+path="res://.godot/imported/default_skill_warrior_icon.png-c56d777d55699777f95034d2e0394bdb.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
-}
-generator_parameters={
-"md5": "cb8d4fa653210ad52a7a99430fc3e045"
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/character/Warrior_4.png"
-dest_files=["res://.godot/imported/Warrior_4.png-e772cb3abf4c8256ca25df9340584cd8.s3tc.ctex"]
+source_file="res://assets/icons/skills/default_skill_warrior_icon.png"
+dest_files=["res://.godot/imported/default_skill_warrior_icon.png-c56d777d55699777f95034d2e0394bdb.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
-compress/normal_map=1
+compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
-roughness/mode=1
-roughness/src_normal="res://assets/character/Warrior_4.png"
+roughness/mode=0
+roughness/src_normal=""
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2
@@ -41,4 +37,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

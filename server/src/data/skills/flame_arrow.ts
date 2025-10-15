@@ -10,7 +10,7 @@ export const FlameArrowArcher: Skill = {
   animation: "AttackFlameArrow",
   effect: "FlameArrow",
   characterClass: "Archer",
-  description: "Atira uma flecha de fogo no alvo",
+  description: "Dispara uma flecha envolta em chamas ardentes, consumindo tudo em seu caminho",
   needTarget: true,
   cooldown: 10.0
 }

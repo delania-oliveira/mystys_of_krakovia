@@ -27,7 +27,8 @@ export class Player extends Schema {
     @type("string") targetId = ""
     @type("number") targetHealth = 0
     @type("string") targetName = ""
-    @type("number") defense = 0
+    @type("number") defense = 1
+    @type("number") attack = 1
     @type("string") skillEffect = ""
     @type("boolean") isAttacking = false
     @type("number") max_exp = 0

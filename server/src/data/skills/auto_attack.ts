@@ -30,3 +30,18 @@ export const DefaultSkillMage: Skill = {
   needTarget: true,
   cooldown: 0
 }
+
+export const DefaultSkillWarrior: Skill = {
+  id: "default_skill_warrior",
+  name: "Ataque Leve",
+  level: 1,
+  baseDamage: 2,
+  range: 5,
+  area: 0,
+  animation: "Ataque Leve",
+  effect: "DefaultAttackMelee",
+  characterClass: "Warrior",
+  description: "Espadada",
+  needTarget: true,
+  cooldown: 0
+}

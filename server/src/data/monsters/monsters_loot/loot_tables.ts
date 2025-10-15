@@ -11,8 +11,8 @@ export const LootTable: Record<string, PossibleItems[]> = {
   ],
   Goblin: [
     { id: 1, name: "Ouro", min_quantity: 25, max_quantity: 50, quantity: 0, chance: 100 },
-    { id: 3, name: "Jaqueta de Pano", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 10 },
-    { id: 6, name: "Capuz de Seda", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 5 },
+    { id: 3, name: "Jaqueta de Pano", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 100 },
+    { id: 6, name: "Capuz de Seda", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 100 },
   ],
   Skeleton: [
     { id: 1, name: "Ouro", min_quantity: 25, max_quantity: 50, quantity: 0, chance: 100 },

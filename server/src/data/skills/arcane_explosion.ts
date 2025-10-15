@@ -3,7 +3,7 @@ import { Skill } from "./skills"
 export const ArcaneExplosionMage: Skill = {
   id: "arcane_explosion_mage",
   name: "Explosão Arcana",
-  level: 3,
+  level: 1,
   baseDamage: 10,
   range: 0,
   area: 10,

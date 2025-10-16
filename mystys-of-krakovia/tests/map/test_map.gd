@@ -90,6 +90,7 @@ func _on_players_add(target, value, key):
 		room.on_message("resistDamage").on(Callable(ch, "_on_resist_damage"))
 		room.on_message("damageDealt").on(Callable(ch, "_on_damage_dealt"))
 		room.on_message("experienceGained").on(Callable(ch, "_on_experience_gained"))
+		room.on_message("partyMemberLevelUp").on(Callable(ch, "_on_party_member_level_up"))
 		room.on_message("partyInvite").on(Callable(ch, "_on_party_invite"))
 		room.on_message("partyJoined").on(Callable(ch, "_on_party_joined"))
 		room.on_message("inviteFail").on(Callable(ch, "_on_invite_fail"))

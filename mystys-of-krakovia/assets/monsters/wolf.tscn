@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://dcmktefom4q0x"]
+
+[ext_resource type="PackedScene" uid="uid://chydve2qiihxr" path="res://assets/monsters/wolf.glb" id="1_lsnus"]
+
+[node name="Wolf" instance=ExtResource("1_lsnus")]

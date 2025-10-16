@@ -41,6 +41,7 @@ class Monster extends colyseus.Schema:
 			colyseus.Field.new("isAggroed", colyseus.BOOLEAN),
 			colyseus.Field.new("taggedPlayerId", colyseus.STRING),
 			colyseus.Field.new("respawn", colyseus.NUMBER),
+			colyseus.Field.new("animation", colyseus.STRING),
 		]
 class Player extends colyseus.Schema:
 	static func define_fields():

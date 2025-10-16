@@ -14,12 +14,16 @@ func _ready():
 	global_position.z += randf_range(-0.2, 0.2)
 
 func set_value(amount: int, type):
-	if type == "Gold" || type == "Experience":
+	if type == "Gold" || type == "Experience" || type == "Healing":
 		label.text = "+" + str(amount)
-	else:
+	elif type == "LevelUp":
+		label.text = "Level Up!"
+	elif type == "Damage":
 		label.text = str(amount)
+		
 func resist():
 	label.text = "Resist"
+	
 func _process(delta):
 	time_passed += delta
 	translate(Vector3(0, float_speed * delta, 0))

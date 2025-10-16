@@ -250,8 +250,9 @@ export class Krakovia extends Room<KrakoviaState> {
       const player = this.state.players.get(client.sessionId)
       if (player) {
         const equippedItem = items[data.itemId]
-        if (equippedItem.limitedClasses.includes(player.character_class) || equippedItem.limitedClasses.includes("Todas")){
+        if ((equippedItem.limitedClasses.includes(player.character_class) || equippedItem.limitedClasses.includes("Todas")) && equippedItem.defense){
           player.defense += equippedItem.defense
+        } else {
           player.attack += equippedItem.attack
         }
       }
@@ -372,57 +373,93 @@ export class Krakovia extends Room<KrakoviaState> {
               this.state.monsters.set(respawnedMonster.monster_id, respawnedMonster);
             }
           }, monsterData.respawn * 1000);
-          let levelsGained = 0
           const killer = this.state.players.get(target.taggedPlayerId)
           const partyId = killer.partyId
           const killerClient = this.clients.find(c => c.sessionId === killer.id);
           if (killerClient && !partyId) {
-            killerClient.send("set_monster_loot", {"loot": loot, "loot_pos_x": target.x, "loot_pos_y": target.y, "loot_pos_z": target.z})
-            killer.experience += target.experience
+            let levelsGained = 0;
+
+            killerClient.send("set_monster_loot", {
+              loot,
+              loot_pos_x: target.x,
+              loot_pos_y: target.y,
+              loot_pos_z: target.z
+            });
+
+            killer.experience += target.experience;
+
             while (killer.experience >= ExperienceTable[killer.level]) {
-              const requiredExp = ExperienceTable[killer.level];
-              killer.experience -= requiredExp;
-              killer.max_exp = ExperienceTable[killer.level];
-              levelUp(player)
-              levelsGained += 1;
+              killer.experience -= ExperienceTable[killer.level];
+              levelUp(killer);
+              levelsGained++;
             }
-            this.broadcast("experienceGained", {
-              id: killer.id,
-              taggedPlayerId: target.taggedPlayerId,
+
+            killer.max_exp = ExperienceTable[killer.level];
+
+            killerClient.send("experienceGained", {
               experience: target.experience,
               maxExp: killer.max_exp,
-              levelsGained: levelsGained,
+              levelsGained,
               currentExperience: killer.experience
             });
-          } else {
-            const partyLeader = this.state.players.get(partyId)
-            const party = partyLeader._party[partyId]
-            const memberCount = party.length            
-            const bonusMultiplier = 1 + (0.25 * (memberCount - 1))
-            const share = Math.floor((target.experience * bonusMultiplier) / memberCount)
+
+          } else if (partyId) {
+            const partyLeader = this.state.players.get(partyId);
+            const party = partyLeader._party[partyId];
+            const memberCount = party.length;
+            const bonusMultiplier = 1 + (0.25 * (memberCount - 1));
+            const share = Math.floor((target.experience * bonusMultiplier) / memberCount);
+
+            const membersLeveledUp: any[] = []
+
             party.forEach(member => {
-              member.experience += share
-              while (member.experience >= ExperienceTable[member.level]) {
-                const requiredExp = ExperienceTable[member.level];
-                member.experience -= requiredExp;
-                member.level += 1;
-                member.max_exp = ExperienceTable[member.level];
-                levelsGained += 1;
-              }
-              this.broadcast("experienceGained", {
-                id: member.id,
-                partyId: member.partyId,
-                experience: share,
-                maxExp: member.max_exp,
-                levelsGained: levelsGained,
-                currentExperience: member.experience
-              });
+              let levelsGained = 0;
               const memberClient = this.clients.find(c => c.sessionId === member.id);
+
+              member.experience += share;
+
+              while (member.experience >= ExperienceTable[member.level]) {
+                member.experience -= ExperienceTable[member.level];
+                levelUp(member);
+                levelsGained++;
+              }
+
+              if (levelsGained != 0){
+                membersLeveledUp.push({
+                  id: member.id,
+                  name: member.name,
+                  level: member.level,
+                  character_class: member.character_class,
+                  partyId: member.partyId
+                })
+              }
+
+              if (membersLeveledUp.length > 0) {
+                this.broadcast("partyMemberLevelUp", { membersLeveledUp });
+              }
+
+              member.max_exp = ExperienceTable[member.level];
+              
               if (memberClient) {
-                memberClient.send("set_monster_loot", {"loot": loot, "loot_pos_x": target.x, "loot_pos_y": target.y, "loot_pos_z": target.z});
+                memberClient.send("experienceGained", {
+                  id: member.id,
+                  partyId: member.partyId,
+                  experience: share,
+                  maxExp: member.max_exp,
+                  levelsGained,
+                  currentExperience: member.experience,
+                  membersLeveledUp: membersLeveledUp
+                });
+                memberClient.send("set_monster_loot", {
+                  loot,
+                  loot_pos_x: target.x,
+                  loot_pos_y: target.y,
+                  loot_pos_z: target.z
+                });
               }
             });
           }
+
         }
       } 
     })
@@ -641,6 +678,7 @@ export class Krakovia extends Room<KrakoviaState> {
         if (characterFound.length > 0) {
           const character = characterFound[0];
           player.id = client.sessionId;
+          player.dbId = options.character_id;
           player.name = character.name;
           player.character_class = character.class;
           player.health = character.health;
@@ -648,16 +686,16 @@ export class Krakovia extends Room<KrakoviaState> {
           player.mana = character.mana;
           player.max_mana = character.max_mana;
           player.experience = character.experience;
-          player.max_exp = ExperienceTable[player.level]
+          player.max_exp = ExperienceTable[character.level]
           player.level = character.level;
           player.attack = player.attack
           player.gold = player.gold
           player.defense = player.defense
-          player.x = 0;
+          player.x = character.spawn_x;
           player.y = 3;
-          player.z = 0;
-          player.spawn_x = character.x_position
-          player.spawn_z = character.z_position
+          player.z = character.spawn_z;
+          player.spawn_x = character.spawn_x
+          player.spawn_z = character.spawn_z
           await db.update(schema.characters).set({
             lastLogin: sql`NOW()`
           })
@@ -672,8 +710,25 @@ export class Krakovia extends Room<KrakoviaState> {
     this.state.players.set(client.sessionId, player);
   }
 
-  onLeave(client: Client, consented: boolean) {
+  async onLeave(client: Client, consented: boolean) {
     console.log(client.sessionId, "left!");
+    const player = this.state.players.get(client.sessionId)
+    try {
+      await db.update(schema.characters).set({
+        health: player.health,
+        max_health: player.max_health,
+        mana: player.mana,
+        max_mana: player.max_mana,
+        experience: player.experience,
+        level: player.level,
+        gold: player.gold,
+        spawn_x: player.x,
+        spawn_z: player.z
+      }).where(eq(schema.characters.id, player.dbId));
+    } catch (error) {
+      console.log(error)
+    }
+
     this.state.players.delete(client.sessionId);
   }
 

@@ -5,6 +5,8 @@ export class Player extends Schema {
     @type("number") x = 0;
     @type("number") y = 0;
     @type("number") z = 0;
+    @type("number") spawn_x = 0;
+    @type("number") spawn_z = 0;
     @type("number") vx = 0;
     @type("number") vy = 0;
     @type("number") vz = 0;

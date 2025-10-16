@@ -57,8 +57,8 @@ export class Krakovia extends Room<KrakoviaState> {
     this.onMessage("movePlayer", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
-        player.inputX = data.x ?? 0;
-        player.inputZ = data.z ?? 0;
+        player.inputX = data.x;
+        player.inputZ = data.z;
         const isMoving = Math.abs(data.x) >= 0.1 || Math.abs(data.z) >= 0.1;
         player.animation = isMoving ? "Running" : "Idle";
         player.isAttacking = false
@@ -426,6 +426,28 @@ export class Krakovia extends Room<KrakoviaState> {
         }
       } 
     })
+    this.onMessage("respawnPlayer", (client, data) => {
+      const player = this.state.players.get(client.sessionId)
+      if (player) {
+        player.x = 0
+        player.y = 3
+        player.z = 0
+        player.isDead = false
+        player.health = player.max_health
+        player.animation = "Idle"
+      }
+    })
+
+    this.onMessage("unstuck", (client, data) => {
+      const player = this.state.players.get(client.sessionId)
+      if (player) {
+        player.x = 0
+        player.y += 10
+        player.vy = 100;
+        player.z = 0
+        player.animation = "Idle"
+      }
+    })
 
     this.onMessage("moveMonster", (client, data) => {
       const monster = this.state.monsters.get(data.monsterId);
@@ -631,9 +653,11 @@ export class Krakovia extends Room<KrakoviaState> {
           player.attack = player.attack
           player.gold = player.gold
           player.defense = player.defense
-          player.x = character.x_position;
-          player.y = character.y_position;
-          player.z = character.z_position;
+          player.x = 0;
+          player.y = 3;
+          player.z = 0;
+          player.spawn_x = character.x_position
+          player.spawn_z = character.z_position
           await db.update(schema.characters).set({
             lastLogin: sql`NOW()`
           })

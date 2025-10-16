@@ -2,4 +2,4 @@
 
 [ext_resource type="PackedScene" uid="uid://chydve2qiihxr" path="res://assets/monsters/wolf.glb" id="1_lsnus"]
 
-[node name="Wolf" instance=ExtResource("1_lsnus")]
+[node name="wolf" instance=ExtResource("1_lsnus")]

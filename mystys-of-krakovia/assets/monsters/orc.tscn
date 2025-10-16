@@ -1,5 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://5d7n4s8gc8xf"]
-
-[ext_resource type="PackedScene" uid="uid://c0qxe50peb2o4" path="res://assets/monsters/zeromus.glb" id="1_0y8in"]
-
-[node name="Orc" instance=ExtResource("1_0y8in")]

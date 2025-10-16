@@ -27,7 +27,7 @@ func _spawn_monster(value, key):
 	var MonsterScene = load(MonsterSceneLocation)
 	var monster = MonsterScene.instantiate()
 	var monster_model_scene
-	var path = "res://assets/monsters/" + value.name.to_lower() + ".tscn"
+	var path = "res://assets/monsters/" + value.name.to_lower().replace(" ", "_") + ".tscn"
 	if ResourceLoader.exists(path):
 		monster_model_scene = load(path)
 	else:

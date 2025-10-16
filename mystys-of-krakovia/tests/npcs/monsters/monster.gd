@@ -20,13 +20,13 @@ var loot: Dictionary
 var lootPosition
 var network_animation
 @onready var MOVEMENT_TRESHOLD = 0.1
-@onready var anim_player = get_node("Pivot/" + character_name + "/AnimationPlayer")
+@onready var anim_player = get_node("Pivot/" + character_name.to_lower().replace(" ", "_") + "/AnimationPlayer")
 var rotation_model = -PI/2
 func _ready() -> void:
 	match character_name:
 		"Wolf":
 			rotation_model = -PI/2
-		"Orc":
+		"Galdurg the Obliterator":
 			rotation_model = PI
 		
 	if anim_player:

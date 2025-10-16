@@ -49,6 +49,8 @@ class Player extends colyseus.Schema:
 			colyseus.Field.new("x", colyseus.NUMBER),
 			colyseus.Field.new("y", colyseus.NUMBER),
 			colyseus.Field.new("z", colyseus.NUMBER),
+			colyseus.Field.new("spawn_x", colyseus.NUMBER),
+			colyseus.Field.new("spawn_z", colyseus.NUMBER),
 			colyseus.Field.new("vx", colyseus.NUMBER),
 			colyseus.Field.new("vy", colyseus.NUMBER),
 			colyseus.Field.new("vz", colyseus.NUMBER),

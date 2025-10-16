@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://vrxamatar0uh"]
+[gd_scene load_steps=6 format=3 uid="uid://vrxamatar0uh"]
 
+[ext_resource type="Script" uid="uid://cd0ykgqb0ck3x" path="res://ui/menu_tab.gd" id="1_b86io"]
 [ext_resource type="Script" uid="uid://dc7e612pi4vbx" path="res://ui/config.gd" id="1_cwvcx"]
 [ext_resource type="Script" uid="uid://co0frlk0qdgux" path="res://ui/logout.gd" id="2_7tfok"]
 [ext_resource type="Script" uid="uid://b8sv16kshsd13" path="res://ui/exit.gd" id="3_cv601"]
@@ -15,6 +16,7 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_b86io")
 
 [node name="Config" type="Button" parent="."]
 custom_minimum_size = Vector2(200, 35)
@@ -29,6 +31,33 @@ offset_bottom = 101.0
 grow_horizontal = 2
 text = "Configurações"
 script = ExtResource("1_cwvcx")
+
+[node name="Unstuck" type="Button" parent="."]
+custom_minimum_size = Vector2(200, 35)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -17.5
+offset_right = 100.0
+offset_bottom = 17.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Unstuck"
+
+[node name="ColorRect" type="ColorRect" parent="Unstuck"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.4263087, 0.49123925, 1, 1)
 
 [node name="Logout" type="Button" parent="."]
 custom_minimum_size = Vector2(200, 35)
@@ -76,5 +105,6 @@ mouse_filter = 2
 texture = ExtResource("4_26xnw")
 
 [connection signal="button_down" from="Config" to="Config" method="_on_button_down"]
+[connection signal="button_down" from="Unstuck" to="." method="_on_unstuck_button_down"]
 [connection signal="button_down" from="Logout" to="Logout" method="_on_button_down"]
 [connection signal="button_down" from="Exit" to="Exit" method="_on_button_down"]

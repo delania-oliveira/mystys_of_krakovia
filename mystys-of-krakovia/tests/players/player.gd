@@ -198,10 +198,11 @@ func _on_damage_dealt(data):
 func update_player_health(data):
 	# UPDATE OWN PLAYER HEALTH
 	if data.health and data.health != current_health:
-		show_floating_text(current_health - data.health, true, null, "Damage")
 		current_health = data.health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = current_health
+		if "level" in data and data.level == 0:
+			show_floating_text(current_health - data.health, true, null, "Damage")
 	if data.max_health and data.max_health != max_health:
 		max_health = data.max_health
 		health_bar.max_value = data.max_health
@@ -212,16 +213,18 @@ func _on_resist_damage(data):
 	show_floating_text(0, true, null, "Damage")
 	
 func _on_experience_gained(data):
-	if "taggedPlayerId" in data and data.taggedPlayerId == id or ("partyId" in data && data.partyId == partyId):
-		update_player_experience(data)
+	update_player_experience(data)
 	
 func update_player_experience(data):
 	# UPDATE OWN PLAYER EXPERIENCE
-	if data.experience:
-		current_experience = data.currentExperience
-		experience_label.text = str(current_experience) + " / " + str(max_exp)
-		experience_bar.value = current_experience
-		show_floating_text(data.experience, true, null, "Experience")
+	var current_experience = data.currentExperience
+	var new_max_exp = data.maxExp
+	var gained_experience = data.experience
+
+	experience_bar.max_value = new_max_exp
+	experience_bar.value = current_experience
+	experience_label.text = str(current_experience) + " / " + str(new_max_exp)
+	show_floating_text(gained_experience, true, null, "Experience")
 	if data.levelsGained != 0:
 		max_exp = data.maxExp
 		current_level += data.levelsGained
@@ -229,7 +232,12 @@ func update_player_experience(data):
 		level_label.text = "Level: " + str(current_level)
 		experience_label.text = str(current_experience) + " / " + str(data.maxExp)
 		experience_bar.max_value = data.maxExp
-	
+		
+func _on_party_member_level_up(data):
+	if partyId and party_ui_instance:
+			for member in data.membersLeveledUp:
+				party_ui_instance._update_member_level(member)
+				
 func _on_player_attack(data):
 	if "skillEffect" in data and data.needTarget and data.targetId:
 		var target = get_target_by_id(data.targetId)

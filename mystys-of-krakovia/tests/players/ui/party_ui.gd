@@ -24,7 +24,7 @@ func _add_member(player, leader):
 	else:
 		name_label.text = "Lv." + str(player.level) + " " + player.name + " - " + player.character_class
 	name_label.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-
+	name_label.name = player.name
 	# Create HP bar
 	var hp_bar = ProgressBar.new()
 	hp_bar.name = "HealthBar"
@@ -49,6 +49,25 @@ func _update_member_health(data):
 	if member_box:
 		var health_bar = member_box.get_node("HealthBar")
 		health_bar.value = data.health
+		
+func _update_member_level(member):
+	var member_box = get_node(str(member.id))
+	if not member_box:
+		print("No member box found for id:", member.id)
+		return
+
+	var name_label = member_box.get_node(member.name)
+	if not name_label:
+		print("No name label found for:", member.name)
+		return
+
+	if member.id == member.partyId:
+		name_label.text = "👑 Lv." + str(member.level) + " " + member.name + " - " + member.character_class
+		name_label.add_theme_color_override("font_color", Color("ffd500ff"))
+	else:
+		name_label.text = "Lv." + str(member.level) + " " + member.name + " - " + member.character_class
+		name_label.add_theme_color_override("font_color", Color.WHITE)
+
 		
 func clear_members():
 	for child in get_children():

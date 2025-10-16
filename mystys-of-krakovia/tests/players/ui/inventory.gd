@@ -87,8 +87,8 @@ func update_inventory(loot_data):
 				"description": loot_data.description,
 				"type": loot_data.type,
 				"index": index,
-				"defense": loot_data.get("defense", null),
-				"attack": loot_data.get("attack", null),
+				"defense": loot_data.get("defense", 0),
+				"attack": loot_data.get("attack", 0),
 				"limitedClasses": loot_data.get("limitedClasses", null)
 			}
 			
@@ -100,7 +100,7 @@ func update_inventory(loot_data):
 			
 			if item_data.type == "Armor" or item_data.type == "Helmet":
 				set_slot_tooltip(icon, item_data.type, item_data)
-			elif item_data.attack != null:
+			elif item_data.attack != 0:
 				icon.tooltip_text = "%s\nAtaque: %s\n%s" % [item_data.name, item_data.attack, item_data.description]
 			else:
 				icon.tooltip_text = "%s\n%s\n" % [item_data.name, item_data.description]

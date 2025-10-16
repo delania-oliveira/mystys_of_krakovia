@@ -134,8 +134,15 @@ func _physics_process(delta):
 		# Moving the Character
 		velocity = target_velocity
 		move_and_slide()
+		var is_colliding_with_wall = false
+		for i in range(get_slide_collision_count()):
+			var collision = get_slide_collision(i)
+			# If the normal's Y value is low, it's a wall or a very steep slope.
+			if collision.get_normal().y < 0.5:
+				is_colliding_with_wall = true
+				break
 		is_standing = false
-		if velocity.length() == 0:
+		if velocity.length() < 0.1 or is_colliding_with_wall:
 			is_standing = true
 			if not was_idle:
 				room.send("movePlayer", { "x": 0, "y": 0, "z": 0 })
@@ -258,6 +265,7 @@ func _on_player_attack(data):
 			get_tree().current_scene.add_child(warcry)
 			if data.id == id:
 				room.send("playerBuff", {"skillId": data.skillId, "playerId": id})
+				
 func spawn_multi_shot(data, target):
 	var radius = data.area
 	var area_center = Vector3(target.x, target.y, target.z)

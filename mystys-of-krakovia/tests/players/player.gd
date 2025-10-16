@@ -485,6 +485,22 @@ func _on_party_invite(data):
 func _unhandled_input(event):
 	if !is_local:
 		return
+	if event and event.is_action("tab_target"):
+		var closest_monster = null
+		var min_distance = INF
+
+		var all_monsters = get_tree().get_nodes_in_group("monsters")
+
+		for monster in all_monsters:
+			if monster:
+				var distance = self.global_position.distance_to(monster.global_position)
+				if distance < min_distance:
+					min_distance = distance
+					closest_monster = monster
+		
+		# If a valid monster was found, set it as the target
+		if is_instance_valid(closest_monster):
+			set_target(closest_monster)
 	if event and event.is_action_pressed("ui_cancel"):
 		if not menu_instance:
 			menu_instance = menu_tab_scene.instantiate()
@@ -499,7 +515,6 @@ func _unhandled_input(event):
 		var result = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(from, to))
 		if result and result.collider.is_in_group("targetable"):
 			set_target(result.collider)
-		
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			var from = get_viewport().get_camera_3d().project_ray_origin(event.position)
 			var to = from + get_viewport().get_camera_3d().project_ray_normal(event.position) * 1000

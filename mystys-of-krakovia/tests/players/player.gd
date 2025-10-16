@@ -7,6 +7,7 @@ extends CharacterBody3D
 @export var jump_impulse = 20
 @export var bounce_impulse = 16
 @export var is_local: bool = false
+var server_authoritative_position
 var current_health: int
 var max_exp: int
 var max_health: int
@@ -134,6 +135,11 @@ func _physics_process(delta):
 		# Moving the Character
 		velocity = target_velocity
 		move_and_slide()
+		var error_distance = global_position.distance_to(server_authoritative_position)
+		if error_distance > 0.01:
+			global_position = global_position.lerp(server_authoritative_position, LERP_SPEED * delta)
+			
+		is_standing = velocity.length() < 0.1
 		var is_colliding_with_wall = false
 		for i in range(get_slide_collision_count()):
 			var collision = get_slide_collision(i)
@@ -141,14 +147,13 @@ func _physics_process(delta):
 			if collision.get_normal().y < 0.5:
 				is_colliding_with_wall = true
 				break
-		is_standing = false
 		if velocity.length() < 0.1 or is_colliding_with_wall:
-			is_standing = true
-			if not was_idle:
-				room.send("movePlayer", { "x": 0, "y": 0, "z": 0 })
-				was_idle = true
-				if !is_attacking and target_velocity.y == 0:
-					anim_player.play("Idle")
+			if is_standing:
+				if not was_idle:
+					room.send("movePlayer", { "x": 0, "y": 0, "z": 0 })
+					was_idle = true
+					if !is_attacking and target_velocity.y == 0:
+						anim_player.play("Idle")
 		else:
 			was_idle = false
 			room.send("movePlayer", { "x": direction.x, "y": 0, "z": direction.z })
@@ -159,7 +164,6 @@ func _physics_process(delta):
 			is_standing = false
 			target_velocity.y = jump_impulse
 			room.send("jumpPlayer")
-
 func get_target_by_id(target_id):
 	if target_id:
 		return room.state.monsters.at(target_id)
@@ -254,7 +258,7 @@ func _on_player_attack(data):
 			var ARCANE_EXPLOSION_SCENE = preload("res://assets/effects/aoe_effects/ArcaneExplosion.tscn")
 			var explosion = ARCANE_EXPLOSION_SCENE.instantiate()
 			var caster = get_user_by_id(data.id)
-			explosion.global_transform.origin = Vector3(caster.x - 1.5, caster.y - 2, caster.z + 1)
+			explosion.global_transform.origin = Vector3(caster.x, caster.y, caster.z)
 			explosion.room = room
 			explosion.playerId = id
 			get_tree().current_scene.add_child(explosion)
@@ -324,8 +328,11 @@ func _on_looted_item(data):
 func on_network_data_received(data):
 	if data.targetName:
 		current_target_name = data.targetName
-	network_position = Vector3(data.x, data.y, data.z)
-	network_direction = Vector3(-data.dirX, 0, -data.dirZ)
+	if is_local:
+		server_authoritative_position = Vector3(data.x, data.y, data.z)
+	else:
+		network_position = Vector3(data.x, data.y, data.z)
+		network_direction = Vector3(-data.dirX, 0, -data.dirZ)
 	update_player_health(data)
 	is_attacking = data.isAttacking
 	if data.gold != null and data.gold != 0:
@@ -357,6 +364,8 @@ func on_network_data_received(data):
 				cast_bar.player = self
 				cast_bar.room = room
 				cast_bar.visible = true
+				if action_slot:
+					cast_bar.action_slot = action_slot
 				cast_bar.cast_position = global_position
 				cast_bar.cast_skill(data.skillId, data.castTime)
 				var anim = anim_player.get_animation(data.animation)

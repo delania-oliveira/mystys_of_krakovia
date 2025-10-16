@@ -11,6 +11,7 @@ const CONFIG_PATH = "user://settings.cfg"
 @onready var windowed_fullscreen_check = $MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection/WindowedFullscreen
 @onready var ambient_slider = $MarginContainer/VBoxContainer/VolumeSection/VBoxContainer3/AmbientVolumeSlider
 @onready var sfx_slider = $MarginContainer/VBoxContainer/VolumeSection/VBoxContainer2/SoundEffectsVolumeSlider
+signal closed
 func _ready() -> void:
 	master_slider.value  = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Master")))
 	ambient_slider.value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Ambient")))
@@ -43,6 +44,7 @@ func save_settings():
 	config.save(CONFIG_PATH)
 	
 func _on_return_pressed():
+	closed.emit()
 	queue_free()
 	
 func load_settings():

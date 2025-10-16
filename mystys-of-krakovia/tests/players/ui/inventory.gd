@@ -6,6 +6,7 @@ extends Control
 @onready var gold_label = $HBoxContainer/InventoryItems/Gold/TextureRect/GoldAmount
 @onready var helmet_equipment_slot = $HBoxContainer/PlayerEquipment/VBoxContainer/Helmet/TextureRect
 @onready var armor_equipment_slot = $HBoxContainer/PlayerEquipment/VBoxContainer/Body/TextureRect
+@onready var weapon_equipment_slot = $HBoxContainer/PlayerEquipment/Weapon/TextureRect
 var player
 const SLOT_COUNT := 60
 var equipment_slots = {}
@@ -14,7 +15,8 @@ var equipment_slots = {}
 func _ready() -> void:
 	equipment_slots = {
 		"Helmet": helmet_equipment_slot,
-		"Armor": armor_equipment_slot
+		"Armor": armor_equipment_slot,
+		"Weapon": weapon_equipment_slot
 	}
 	
 	for i in range(SLOT_COUNT):
@@ -123,7 +125,13 @@ func set_slot_tooltip(icon, itemType, data):
 			data.description,
 			limited_classes_text
 		]
-
+	elif itemType == "Weapon":
+		icon.tooltip_text = "%s\nAtaque: %s\n%s%s" % [
+			data.name,
+			data.attack,
+			data.description,
+			limited_classes_text
+		]
 
 func empty_slot_data(slot):
 	slot.set_meta("item_data", null)

@@ -1,5 +1,7 @@
 extends Panel
 
+signal skill_activated(skill_id, cooldown_duration)
+
 @onready var icon: TextureRect = $Icon
 @onready var index_label: Label = $IndexLabel
 @onready var cooldown_overlay: ColorRect = $CooldownOverlay
@@ -38,20 +40,24 @@ func _drop_data(at_position: Vector2, data):
 	current_skill_id = data.skill_id
 	icon.tooltip_text = "Nome: %s\nDano Base: %s" % [current_skill_data.name, current_skill_data.baseDamage]
 	icon.texture = data.source_texture
-
+	get_parent().get_parent().check_cooldown_for_slot(self)
+	
 func activate_skill(player):
 	if is_on_cooldown:
 		return
 	if not current_skill_data.is_empty():
+		skill_activated.emit(current_skill_id, current_skill_data.cooldown)
 		if current_skill_data.needTarget == true:
 			player.play_skill(player.current_target, self, current_skill_id, true)
 		else:
 			player.play_skill(null, self, current_skill_id, false)
-		start_cooldown(current_skill_data.cooldown)
 	else:
 		print("This action slot is empty.")
 		
 func start_cooldown(duration: float):
+	if is_on_cooldown:
+		return
+
 	is_on_cooldown = true
 	cooldown_time = duration
 	total_cooldown_duration = duration
@@ -74,10 +80,8 @@ func _process(delta: float):
 		cooldown_label.text = str(ceil(cooldown_time))
 		var remaining_ratio = cooldown_time / total_cooldown_duration
 		cooldown_overlay.size.y = initial_overlay_size.y * remaining_ratio
-
 	else:
-		cooldown_label.text = ""
-		cooldown_overlay.visible = false
+		_on_cooldown_finished()
 		set_process(false)
 
 func _on_cooldown_finished():
@@ -85,3 +89,4 @@ func _on_cooldown_finished():
 	cooldown_overlay.visible = false
 	cooldown_label.visible = false
 	cooldown_overlay.size = initial_overlay_size
+	set_process(false)

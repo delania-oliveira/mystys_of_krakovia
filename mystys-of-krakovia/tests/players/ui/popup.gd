@@ -14,7 +14,7 @@ func _ready():
 	global_position.z += randf_range(-0.2, 0.2)
 
 func set_value(amount: int, type):
-	if type == "Gold" || type == "Experience":
+	if type == "Gold" || type == "Experience" || type == "Healing":
 		label.text = "+" + str(amount)
 	elif type == "LevelUp":
 		label.text = "Level Up!"

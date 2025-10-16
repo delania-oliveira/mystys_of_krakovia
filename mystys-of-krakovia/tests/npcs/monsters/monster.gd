@@ -21,15 +21,20 @@ var lootPosition
 var network_animation
 @onready var MOVEMENT_TRESHOLD = 0.1
 @onready var anim_player = get_node("Pivot/" + character_name + "/AnimationPlayer")
-var rotation_model
+var rotation_model = -PI/2
 func _ready() -> void:
+	match character_name:
+		"Wolf":
+			rotation_model = -PI/2
+		"Orc":
+			rotation_model = PI
+		
 	if anim_player:
 		var library = anim_player.get_animation_library("")
 		var runAnim = null
 		var atkAnim = null
 		var idleAnim = null
 		if library.has_animation("01_Run"):
-			rotation_model = -PI/2
 			runAnim = library.get_animation("01_Run")
 			idleAnim = library.get_animation("04_Idle")
 			atkAnim = library.get_animation("03_creep")
@@ -39,9 +44,7 @@ func _ready() -> void:
 			library.add_animation("Running", runAnim)
 			library.add_animation("Idle", idleAnim)
 			library.add_animation("Attack", atkAnim)
-			
 		elif library.has_animation("Frames"):
-			rotation_model = PI
 			atkAnim = library.get_animation("Frames")
 			library.add_animation("Attack", atkAnim)
 			library.add_animation("Idle", atkAnim)

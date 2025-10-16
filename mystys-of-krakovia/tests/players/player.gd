@@ -204,12 +204,16 @@ func update_player_health(data):
 		current_health = data.health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = current_health
-	if data.max_health and data.max_health != max_health:
+	elif data.max_health and data.max_health != max_health:
 		max_health = data.max_health
 		health_bar.max_value = data.max_health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = max_health
-		
+	elif data.health and data.health != current_health and data.health > current_health:
+		show_floating_text(data.health - current_health, true, null, "Healing")
+		current_health = data.health
+		health_label.text = str(current_health) + " / " + str(max_health)
+		health_bar.value = current_health
 func _on_resist_damage(data):
 	if !resisted:
 		resisted = true
@@ -478,6 +482,9 @@ func show_floating_text(amount: int, tookDamage: bool, target, type: String):
 		"Gold":
 			popup_instance.set_color(Color(0.95, 1.0, 0.0, 1.0))
 			popup_instance.set_value(amount, "Gold")
+		"Healing":
+			popup_instance.set_color(Color(0.416, 0.748, 0.0, 1.0))
+			popup_instance.set_value(amount, "Healing")
 	if tookDamage:
 		popup_instance.global_position = global_position + Vector3(0, 2.0, 0)
 	if target:

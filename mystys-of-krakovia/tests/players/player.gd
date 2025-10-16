@@ -7,6 +7,10 @@ extends CharacterBody3D
 @export var jump_impulse = 20
 @export var bounce_impulse = 16
 @export var is_local: bool = false
+var id
+var character_class
+var character_name
+var dead
 var server_authoritative_position
 var current_health: int
 var max_exp: int
@@ -23,6 +27,7 @@ var room
 var model: Node3D
 var target_model: Node3D
 var is_standing = true
+var is_attacking = false
 @onready var current_experience
 @onready var current_level
 @onready var health_label = $HealthBar/ProgressHealthBar/HealthLabel
@@ -43,13 +48,8 @@ var floating_popup_scene = preload("res://tests/players/ui/Popup.tscn")
 var menu_tab_scene = preload("res://ui/MenuTab.tscn")
 var player_alert_scene = preload("res://tests/players/ui/PlayerAlert.tscn")
 var party_invite_scene = preload("res://tests/players/ui/PartyInvitePopup.tscn")
+var death_screen_scene = preload("res://ui/DeathScreen.tscn")
 var party_ui_scene = preload("res://tests/players/ui/PartyUI.tscn")
-var party_ui_instance = null
-var character_class
-var is_attacking = false
-var dead: bool = false
-var id
-var character_name = ""
 var current_target_name = ""
 var attack_speed = 1.0
 var defense = 0
@@ -68,6 +68,7 @@ var menu_instance = null
 var skills: Array = []
 var attack_locked = false
 var action_slot
+var party_ui_instance = null
 
 func _ready() -> void:
 	var deathAnim = null
@@ -175,7 +176,7 @@ func get_user_by_id(user_id):
 func _on_party_health_update(data):
 	if is_instance_valid(party_ui_instance):
 		party_ui_instance._update_member_health(data)
-		
+
 func _on_target_health_update(data):
 	if not current_target or not is_instance_valid(current_target):
 		return
@@ -371,8 +372,10 @@ func on_network_data_received(data):
 				var anim = anim_player.get_animation(data.animation)
 				var calculated_speed = (anim.length / data.castTime) - 0.6
 				anim_player.play(data.animation, -1.0, calculated_speed)
-	if data.isDead || data.health <= 0 || current_health <= 0:
+	if data.isDead and not dead:
 		die()
+	elif not data.isDead and dead:
+		respawn()
 		
 func _on_attack_animation_finished(anim_name):
 	if !is_local:
@@ -416,14 +419,34 @@ func _process(delta):
 	if network_direction.length() > 0.1:
 		look_at(global_position + network_direction.normalized(), Vector3.UP)
 
+func respawn():
+	if not dead:
+		return
+	
+	dead = false
+	anim_player.play("Idle") 
+	velocity = Vector3.ZERO
+	
+	if is_local:
+		var death_screen = find_child("DeathScreenUI")
+		if is_instance_valid(death_screen):
+			death_screen.queue_free()
+
 func die():
 	if dead:
 		return
 	dead = true
 	anim_player.play("Death")
 	
-	velocity = Vector3.ZERO
-	
+	if is_local:
+		var death_screen = death_screen_scene.instantiate()
+		death_screen.name = "DeathScreenUI" 
+		death_screen.room = room
+		death_screen.player = self
+		add_child(death_screen)
+
+		velocity = Vector3.ZERO
+		
 func show_floating_text(amount: int, tookDamage: bool, target, type: String):
 	var popup_instance = floating_popup_scene.instantiate()
 	get_tree().root.add_child(popup_instance)
@@ -504,6 +527,7 @@ func _unhandled_input(event):
 	if event and event.is_action_pressed("ui_cancel"):
 		if not menu_instance:
 			menu_instance = menu_tab_scene.instantiate()
+			menu_instance.player = self
 			add_child(menu_instance)
 		else:
 			menu_instance.queue_free()

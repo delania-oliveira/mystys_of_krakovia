@@ -16,10 +16,14 @@ func _ready():
 func set_value(amount: int, type):
 	if type == "Gold" || type == "Experience":
 		label.text = "+" + str(amount)
-	else:
+	elif type == "LevelUp":
+		label.text = "Level Up!"
+	elif type == "Damage":
 		label.text = str(amount)
+		
 func resist():
 	label.text = "Resist"
+	
 func _process(delta):
 	time_passed += delta
 	translate(Vector3(0, float_speed * delta, 0))

@@ -26,7 +26,12 @@ func _spawn_monster(value, key):
 	var MonsterSceneLocation = "res://tests/npcs/monsters/monster.tscn"
 	var MonsterScene = load(MonsterSceneLocation)
 	var monster = MonsterScene.instantiate()
-	var monster_model_scene = load("res://tests/npcs/monsters/monster.glb")
+	var monster_model_scene
+	var path = "res://assets/monsters/" + value.name.to_lower() + ".tscn"
+	if ResourceLoader.exists(path):
+		monster_model_scene = load(path)
+	else:
+		monster_model_scene = load("res://tests/npcs/monsters/monster.glb")
 	var monster_model_instance = monster_model_scene.instantiate()
 	monster.get_node("Pivot").add_child(monster_model_instance)
 	monster.id = key
@@ -36,7 +41,9 @@ func _spawn_monster(value, key):
 	if value.detectionRange != 0:
 		monster.is_aggressive = true
 	monster.position = Vector3(value.x, value.y, value.z)
+	monster.spawn_position = Vector3(value.x, value.y, value.z)
 	monster.network_position = Vector3(value.x, value.y, value.z)
+	monster.network_animation = "Idle"
 	add_child(monster)
 	monster.model = monster_model_instance
 	value.listen(":change").on(Callable(self, "_on_monster").bind(monster))
@@ -49,6 +56,8 @@ func _on_monster(changes, monster_instance):
 	monster_instance.is_targeting = changes.isTargeting
 	monster_instance.target_id = changes.targetId
 	monster_instance.current_health = changes.health
+	if changes.animation:
+		monster_instance.network_animation = changes.animation
 	if changes.isDead:
 		var timer = Timer.new()
 		timer.wait_time = 0.25

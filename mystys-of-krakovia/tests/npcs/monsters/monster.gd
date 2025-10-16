@@ -18,10 +18,46 @@ var difficulty
 var is_aggressive = false
 var loot: Dictionary
 var lootPosition
-
+var network_animation
+@onready var MOVEMENT_TRESHOLD = 0.1
+@onready var anim_player = get_node("Pivot/" + character_name + "/AnimationPlayer")
+var rotation_model
+func _ready() -> void:
+	if anim_player:
+		var library = anim_player.get_animation_library("")
+		var runAnim = null
+		var atkAnim = null
+		var idleAnim = null
+		if library.has_animation("01_Run"):
+			rotation_model = -PI/2
+			runAnim = library.get_animation("01_Run")
+			idleAnim = library.get_animation("04_Idle")
+			atkAnim = library.get_animation("03_creep")
+			library.remove_animation("01_Run")
+			library.remove_animation("03_creep")
+			library.remove_animation("04_Idle")
+			library.add_animation("Running", runAnim)
+			library.add_animation("Idle", idleAnim)
+			library.add_animation("Attack", atkAnim)
+			
+		elif library.has_animation("Frames"):
+			rotation_model = PI
+			atkAnim = library.get_animation("Frames")
+			library.add_animation("Attack", atkAnim)
+			library.add_animation("Idle", atkAnim)
+			library.add_animation("Running", atkAnim)
 func _process(delta):
 	position = position.lerp(network_position, LERP_SPEED * delta)
-	
+	if position.distance_squared_to(network_position) > 0.1:
+		if target_id:
+			$Pivot.look_at(network_position, Vector3.UP)
+			$Pivot.rotate_y(rotation_model)
+		else:
+			$Pivot.look_at(spawn_position, Vector3.UP)
+			$Pivot.rotate_y(rotation_model)
+	if anim_player:
+		anim_player.play(network_animation)
+			
 func _on_set_monster_loot(data):
 	var current_loot = data.loot
 	var loot_scene = load("res://tests/npcs/monsters/Loot.tscn")

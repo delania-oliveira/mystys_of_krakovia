@@ -14,6 +14,7 @@ var dead
 var server_authoritative_position
 var current_health: int
 var max_exp: int
+var resisted = false
 var max_health: int
 var current_target: Node3D = null
 var target_velocity = Vector3.ZERO
@@ -197,12 +198,12 @@ func _on_damage_dealt(data):
 	
 func update_player_health(data):
 	# UPDATE OWN PLAYER HEALTH
-	if data.health and data.health != current_health:
+	if data.health and data.health != current_health and data.health < current_health:
+		resisted = false
+		show_floating_text(current_health - data.health, true, null, "Damage")
 		current_health = data.health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = current_health
-		if "level" in data and data.level == 0:
-			show_floating_text(current_health - data.health, true, null, "Damage")
 	if data.max_health and data.max_health != max_health:
 		max_health = data.max_health
 		health_bar.max_value = data.max_health
@@ -210,7 +211,9 @@ func update_player_health(data):
 		health_bar.value = max_health
 		
 func _on_resist_damage(data):
-	show_floating_text(0, true, null, "Damage")
+	if !resisted:
+		resisted = true
+		show_floating_text(0, true, null, "Damage")
 	
 func _on_experience_gained(data):
 	update_player_experience(data)
@@ -459,11 +462,14 @@ func show_floating_text(amount: int, tookDamage: bool, target, type: String):
 	var popup_instance = floating_popup_scene.instantiate()
 	get_tree().root.add_child(popup_instance)
 	match type:
+		"LevelUp":
+			popup_instance.set_color(Color(0.6, 0.2, 1.0))
+			popup_instance.set_value(amount, "LevelUp")
 		"Experience":
 			popup_instance.set_color(Color(0.6, 0.2, 1.0))
 			popup_instance.set_value(amount, "Experience")
 		"Damage":
-			if amount == 0:
+			if amount == 0 and resisted:
 				popup_instance.set_color(Color(0.0, 0.067, 1.0, 1.0))
 				popup_instance.resist()
 			else:

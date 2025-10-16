@@ -585,16 +585,19 @@ export class Krakovia extends Room<KrakoviaState> {
 
           monster.x += moveX;
           monster.z += moveZ;
+          monster.animation = "Running"
         }
         
         const attackRange = monster.attackRange;
         if (monster.attackTimer <= 0 && distance <= attackRange && monster.isAggroed && !monster.isDead) {
           if (!target.isDead) {
             monster.isTargeting = true
+            monster.animation = "Attack"
             const finalDamage = calculateMonsterDamage(monster, target);
             if (finalDamage === 0) {
               const targetClient = this.clients.find(c => c.sessionId === target.id);
               targetClient.send("resistDamage")
+              return
             }
             target.health -= finalDamage;
             this.broadcast("playerTargetHealthUpdate", {
@@ -637,8 +640,10 @@ export class Krakovia extends Room<KrakoviaState> {
                   if (topThreatPlayerId) {
                     monster.targetId = topThreatPlayerId;
                     monster.isTargeting = true;
+                    monster.animation = "Idle"
                   } else {
                     monster.targetId = "";
+                    monster.animation = "Running"
                     monster.isTargeting = false;
                   }
                 }
@@ -662,10 +667,12 @@ export class Krakovia extends Room<KrakoviaState> {
 
           monster.x += moveX;
           monster.z += moveZ;
+          monster.animation = "Running"
+        } else {
+          monster.animation = "Idle"
         }
       }
     });
-
   }
   
   async onJoin(client: Client, options: { character_id: string }) {
@@ -690,7 +697,8 @@ export class Krakovia extends Room<KrakoviaState> {
           player.level = character.level;
           player.attack = player.attack
           player.gold = player.gold
-          player.defense = player.defense
+          player.defense = player.level
+          player.attack = player.level
           player.x = character.spawn_x;
           player.y = 3;
           player.z = character.spawn_z;

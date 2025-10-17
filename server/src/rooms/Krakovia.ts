@@ -46,7 +46,7 @@ export class Krakovia extends Room<KrakoviaState> {
         detectionRange: monster.detectionRange,
         attackCooldown: 2.0,
         attackTimer: 0.0,
-        attackRange: 2.0,
+        attackRange: monster.attack_range,
         difficulty: monster.difficulty,
         experience: monster.experience,
         respawn: monster.respawn
@@ -378,7 +378,7 @@ export class Krakovia extends Room<KrakoviaState> {
                 detectionRange: monsterData.detectionRange,
                 attackCooldown: 2.0,
                 attackTimer: 0.0,
-                attackRange: 2.0,
+                attackRange: monsterData.attackRange,
                 difficulty: monsterData.difficulty,
                 experience: monsterData.experience,
                 respawn: monsterData.respawn
@@ -623,6 +623,7 @@ export class Krakovia extends Room<KrakoviaState> {
         const dzSpawn = monster.z - monster.spawn_z;
         const distanceToSpawn = Math.sqrt(dxSpawn * dxSpawn + dzSpawn * dzSpawn);        
         if (distanceToSpawn > 40) {
+          monster.isAttacking = false
           monster.isAggroed = false;
           monster.targetId = "";
           monster.isTargeting = false;
@@ -650,16 +651,25 @@ export class Krakovia extends Room<KrakoviaState> {
           monster.x += moveX;
           monster.z += moveZ;
           monster.animation = "Running"
+          monster.isAttacking = false
         }
         
         const attackRange = monster.attackRange;
         if (monster.attackTimer <= 0 && distance <= attackRange && monster.isAggroed && !monster.isDead) {
+          if (monster.attackTimer >= 0) {
+            monster.animation = "Idle"
+          }
           if (!target.isDead) {
             monster.isTargeting = true
             monster.animation = "Attack"
+            const targetClient = this.clients.find(c => c.sessionId === target.id);
+            monster.isAttacking = true
+            if (monster.attackRange > 5){
+              targetClient.send("rangedAttack");
+            }
             const finalDamage = calculateMonsterDamage(monster, target);
+            
             if (finalDamage === 0) {
-              const targetClient = this.clients.find(c => c.sessionId === target.id);
               targetClient.send("resistDamage")
               return
             }
@@ -678,7 +688,6 @@ export class Krakovia extends Room<KrakoviaState> {
               const party = partyLeader._party[partyId];
               party.forEach(member => {
                 const memberClient = this.clients.find(c => c.sessionId === member.id);
-                
                 if (memberClient) {
                   memberClient.send("partyHealthUpdate", { member: target.id, health: target.health });
                 }
@@ -687,6 +696,7 @@ export class Krakovia extends Room<KrakoviaState> {
             if (target.health <= 0) {
               target.isDead = true;
               target.health = 0;
+              monster.isAttacking = false
               // Remove player from threat table and retarget to new highest threat player
               this.state.monsters.forEach(monster => {
                 delete monster._threatTable?.[target.id];
@@ -706,13 +716,13 @@ export class Krakovia extends Room<KrakoviaState> {
                     monster.isTargeting = true;
                     monster.animation = "Idle"
                   } else {
+                    monster.isAttacking = false
                     monster.targetId = "";
                     monster.animation = "Running"
                     monster.isTargeting = false;
                   }
                 }
               });
-
             }
           }
           monster.attackTimer = monster.attackCooldown;

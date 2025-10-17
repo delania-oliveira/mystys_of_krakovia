@@ -73,7 +73,7 @@ func _on_players_add(target, value, key):
 	var characterSceneLocation = "res://tests/players/Player.tscn"
 	var Char = load(characterSceneLocation)
 	var ch = Char.instantiate()
-	var model_scene = load("res://assets/character/" + value.character_class + ".glb")
+	var model_scene = load("res://assets/character/" + value.character_class.replace(" ", "_") + ".glb")
 	var model_instance = model_scene.instantiate()
 	model_instance.transform = Transform3D.IDENTITY
 	ch.get_node("Pivot").add_child(model_instance)

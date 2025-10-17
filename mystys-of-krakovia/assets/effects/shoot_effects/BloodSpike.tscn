@@ -1,0 +1,75 @@
+[gd_scene load_steps=16 format=3 uid="uid://bc11j16rrehk5"]
+
+[ext_resource type="Script" uid="uid://eckma11srdl0" path="res://assets/effects/shoot_effects/blood_spike.gd" id="1_4nslq"]
+[ext_resource type="Shader" uid="uid://fv7upp4ro6vn" path="res://addons/GPUTrail/shaders/trail.gdshader" id="2_aigsn"]
+[ext_resource type="Shader" uid="uid://dl0633pbe50gw" path="res://assets/effects/shoot_effects/BloodSpike.gdshader" id="2_b0rrh"]
+[ext_resource type="Shader" uid="uid://dbw8fda6ugyct" path="res://addons/GPUTrail/shaders/trail_draw_pass.gdshader" id="3_b0rrh"]
+[ext_resource type="Texture2D" uid="uid://b4sikicp53j7n" path="res://assets/effects/shoot_effects/FlameTexture.png" id="4_al3ki"]
+[ext_resource type="Script" uid="uid://wu5qrdxr1m62" path="res://addons/GPUTrail/GPUTrail3D.gd" id="5_rrm4u"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aigsn"]
+render_priority = 0
+shader = ExtResource("2_b0rrh")
+shader_parameter/time = 0.0
+shader_parameter/frame_scope = 1.00000004424012
+shader_parameter/use_system_time = false
+shader_parameter/time_accel = 2.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_b0rrh"]
+material = SubResource("ShaderMaterial_aigsn")
+top_radius = 0.05
+bottom_radius = 0.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4nslq"]
+shader = ExtResource("2_aigsn")
+
+[sub_resource type="Gradient" id="Gradient_aigsn"]
+colors = PackedColorArray(1, 0.19215687, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_b0rrh"]
+gradient = SubResource("Gradient_aigsn")
+
+[sub_resource type="Curve" id="Curve_al3ki"]
+bake_resolution = 16
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_rrm4u"]
+curve = SubResource("Curve_al3ki")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oqcrg"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("3_b0rrh")
+shader_parameter/tex = ExtResource("4_al3ki")
+shader_parameter/uv_offset = Vector2(0, 0)
+shader_parameter/color_ramp = SubResource("GradientTexture1D_b0rrh")
+shader_parameter/curve = SubResource("CurveTexture_rrm4u")
+shader_parameter/emmission_transform = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+shader_parameter/flags = 40
+
+[sub_resource type="QuadMesh" id="QuadMesh_x6xr2"]
+material = SubResource("ShaderMaterial_oqcrg")
+
+[node name="BloodSpike" type="Node3D"]
+script = ExtResource("1_4nslq")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15081024, 0)
+mesh = SubResource("CylinderMesh_b0rrh")
+
+[node name="GPUTrail3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0.1, 0)
+amount = 100
+lifetime = 100.0
+explosiveness = 1.0
+fixed_fps = 75
+process_material = SubResource("ShaderMaterial_4nslq")
+draw_pass_1 = SubResource("QuadMesh_x6xr2")
+script = ExtResource("5_rrm4u")
+length_seconds = 1.3333333333333333
+texture = ExtResource("4_al3ki")
+color_ramp = SubResource("GradientTexture1D_b0rrh")
+curve = SubResource("CurveTexture_rrm4u")
+_defaults_have_been_set = true
+metadata/_custom_type_script = "uid://wu5qrdxr1m62"

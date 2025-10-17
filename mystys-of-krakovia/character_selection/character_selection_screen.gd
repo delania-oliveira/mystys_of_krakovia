@@ -56,7 +56,7 @@ func prepare_preview() -> void:
 	var light = preview.get_node("DirectionalLight3D")
 	light.rotation_degrees = Vector3(-45, 45, 0)
 	
-	var char_scene = load("res://assets/character/" + character_selected.class + ".glb").instantiate()
+	var char_scene = load("res://assets/character/" + character_selected.class.replace(" ", "_") + ".glb").instantiate()
 	char_scene.position = Vector3(0, 0, 0)   # moves model to origin
 	char_scene.rotation_degrees = Vector3.ZERO
 	char_scene.scale = Vector3.ONE

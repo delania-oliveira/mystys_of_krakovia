@@ -1,25 +1,33 @@
 extends Control
 
-@onready var char_select = $CharacterSelectList
+const CharacterButtonScene = preload("res://assets/theme/CharacterButton.tscn")
+var class_avatars = {
+	"Warrior": preload("res://assets/avatars/100x100/warriorAvatar.png"),
+	"Mage": preload("res://assets/avatars/100x100/mageAvatar.png"),
+	"Assassin": preload("res://assets/avatars/100x100/assassimAvatar.png"),
+	"Blood Mage": preload("res://assets/avatars/100x100/bloodmageAvatar.png"),
+	"Archer": preload("res://assets/avatars/100x100/archerAvatar.png"),
+}
+
+@onready var character_list_container = $MarginContainer/Layout/Panels/LeftPanel/Characteres
 @onready var delete_character_request = $DeleteCharacterRequest
 @onready var get_character_list_request = $GetCharacterListRequest
-@onready var error_dialog = $ErrorDialog
-@onready var preview = $CharacterPreview3D
-@onready var exit_button = $ExitButton
-@onready var create_character_button = $CreateCharacterButton
-@onready var join_game_button = $JoinGameButton
+@onready var error_dialog = $WarningDialog
+@onready var preview = $MarginContainer/Layout/Panels/CenterPanel/CharacterPreview/CharacterPreview3D
+@onready var exit_button = $MarginContainer/Layout/Panels/RightPanel/ExitButton
+@onready var create_character_button = $MarginContainer/Layout/Panels/RightPanel/CreateCharacterButton
+@onready var join_game_button = $MarginContainer/Layout/Panels/CenterPanel/JoinGameButton
 @onready var loading_screen = $LoadingScreen
-@onready var character_name = $Label
 @onready var success_dialog = $SuccessDialog
-@onready var delete_character_button = $DeleteCharacterButton
+@onready var delete_character_button = $MarginContainer/Layout/Panels/LeftPanel/DeleteCharacterButton
 @onready var confirm_deletion_dialog = $ConfirmDeletionDialog
 @onready var confirm_deletion_input = $ConfirmDeletionDialog/ConfirmDeletionInput
-@onready var config_menu_button = $ConfigMenuButton
+@onready var config_menu_button = $MarginContainer/Layout/Panels/RightPanel/ConfigMenuButton
 
 var characters = []
 var character_selected = {}
-const SERVER_URL = "http://localhost:2567/api/user"
-var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiMzEzOGVkYWItYzViMC00OGYzLWExZjgtZWIzZjM4MWZiZjFkIiwiaWF0IjoxNzU5OTU5NTg5LCJleHAiOjE3NjI1NTE1ODl9.Gt1xnZtYg5trzCA2Jee9z1U5eGRWqEbasUf3RcjXfRs"
+const SERVER_URL = "http://week-characterized.gl.at.ply.gg:29821/api/user"
+var token = Globals.token
 var headers = ["Content-Type: application/json", "Authorization: Bearer " + token]
 
 func _ready():
@@ -28,7 +36,6 @@ func _ready():
 	success_dialog.hide()
 	confirm_deletion_dialog.hide()
 	get_character_list_request.request_completed.connect(_on_get_character_list_request_completed)
-	char_select.item_selected.connect(_on_class_selected)
 	get_character_list_request.request(SERVER_URL, headers, HTTPClient.METHOD_GET)
 	exit_button.pressed.connect(_on_exit_pressed)
 	delete_character_button.pressed.connect(_on_delete_character_pressed)
@@ -37,13 +44,23 @@ func _ready():
 	config_menu_button.pressed.connect(_on_config_menu_pressed)
 	join_game_button.pressed.connect(_on_join_game_pressed)
 	
-func _on_class_selected(index: int) -> void:
-	if characters.size() > 0:
-		character_name.text = characters[index].name
-		character_selected = characters[index]
-		clear_preview()
-		prepare_preview()
-		
+	# ConfirmationDialog force config
+	var new_panel_style = StyleBoxFlat.new()
+	new_panel_style.bg_color = Color("#180000")
+	new_panel_style.content_margin_top = 20.0
+	new_panel_style.content_margin_bottom = 20.0
+	new_panel_style.content_margin_left = 15.0
+	new_panel_style.content_margin_right = 15.0
+	confirm_deletion_dialog.add_theme_stylebox_override("panel", new_panel_style)
+	
+	_setup_dialog_layout(error_dialog)
+	_setup_dialog_layout(success_dialog)
+	
+func _on_character_button_selected(data: Dictionary):
+	character_selected = data
+	clear_preview()
+	prepare_preview()
+	
 func _on_config_menu_pressed():
 	var options_scene = load("res://ui/OptionsMenu.tscn").instantiate()
 	add_child(options_scene)
@@ -62,8 +79,10 @@ func prepare_preview() -> void:
 	char_scene.scale = Vector3.ONE
 	preview.add_child(char_scene)
 	
-	var anim_player = char_scene.get_node("AnimationPlayer")  # adjust path if needed
+	var anim_player = char_scene.get_node("AnimationPlayer") 
 	if anim_player:
+		var idle_animation = anim_player.get_animation("Idle")
+		idle_animation.set_loop_mode(Animation.LOOP_LINEAR)
 		anim_player.play("Idle")
 
 func clear_preview() -> void:
@@ -71,24 +90,58 @@ func clear_preview() -> void:
 		if child.name != "Camera3D" and child.name != "DirectionalLight3D":
 			child.queue_free()
 			
-func _on_get_character_list_request_completed(result, response_code, headers, body) -> void:
-	var json = JSON.new()
+func _setup_dialog_layout(dialog_node):
+	var label = dialog_node.get_label()
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	
+	var vbox = label.get_parent()
+	
+	var top_spacer = Control.new()
+	top_spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	
+	var bottom_spacer = Control.new()
+	bottom_spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	
+	vbox.add_child(top_spacer)
+	vbox.move_child(top_spacer, 0)
+	
+	vbox.add_child(bottom_spacer)
+	
+func _on_get_character_list_request_completed(_result, response_code, _headers, body) -> void:
+	var json = JSON.new()
 	json.parse(body.get_string_from_utf8())
 	var response = json.get_data()
+	
 	match response_code:
 		200: 
-			if response.characters.size() > 0:
-				for character in response.characters:
-					char_select.add_item("%s - %s Lv.%d" % 
-					[character.name, character.class, character.level])
-					characters.append(character)
-				char_select.select(0)
-				_on_class_selected(0)
+			if response.has("characters") and response.characters.size() > 0:
+				characters.clear()
+				for child in character_list_container.get_children():
+					child.queue_free()
+					
+				for character_data in response.characters:
+					if not class_avatars.has(character_data.class):
+						print("AVISO: Avatar não encontrado para a classe: ", character_data.class)
+						continue
+						
+					characters.append(character_data)
+					
+					var button_instance = CharacterButtonScene.instantiate()
+					var avatar_tex = class_avatars[character_data.class]
+					
+					button_instance.selected.connect(_on_character_button_selected)
+					character_list_container.add_child(button_instance)
+					button_instance.setup(character_data, avatar_tex)
+					
+				if characters.size() > 0:
+					_on_character_button_selected(characters[0])
 			else:
 				get_tree().change_scene_to_file("res://character_creation/CharacterCreationScreen.tscn")
 			loading_screen.hide()
 		_:
+			loading_screen.hide()
 			error_dialog.dialog_text = "Erro de conexão com o servidor."
 			error_dialog.popup_centered()
 			
@@ -98,6 +151,7 @@ func _on_delete_character_request_completed(result, response_code, headers, body
 			success_dialog.dialog_text = "Personagem removido com sucesso!"
 			success_dialog.popup_centered()
 		_:
+			loading_screen.hide()
 			error_dialog.dialog_text = "Erro de conexão com o servidor."
 			error_dialog.popup_centered()
 			

@@ -21,7 +21,7 @@ extends Control
 @onready var exit_button = $MarginContainer/LayoutCreation/Panels/ClassContainer/ExitButton
 
 
-const SERVER_URL = "http://localhost:2567/api/characters"
+const SERVER_URL = "http://week-characterized.gl.at.ply.gg:29821/api/characters"
 
 var selected_class = ""
 
@@ -81,7 +81,6 @@ func _on_class_button_pressed(character_name):
 
 func _on_create_pressed():
 	var char_name = name_input.text.strip_edges()
-	#var char_name = name_input.text.strip_edges()
 
 	if selected_class == "":
 		alert_panel.dialog_text = "Selecione uma classe!"

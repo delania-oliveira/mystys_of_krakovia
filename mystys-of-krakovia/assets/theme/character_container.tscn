@@ -1,0 +1,89 @@
+[gd_scene load_steps=13 format=3 uid="uid://c0jiexc1w72rr"]
+
+[ext_resource type="FontFile" uid="uid://celsc86a60tw6" path="res://assets/fonts/timesbd.ttf" id="1_6orjs"]
+[ext_resource type="Texture2D" uid="uid://bmpukqtk3ql15" path="res://assets/character_creation/input.png" id="2_lo23i"]
+[ext_resource type="Texture2D" uid="uid://f351sy2e1tcr" path="res://assets/character_creation/createCharButton.png" id="3_dnbeh"]
+
+[sub_resource type="Environment" id="Environment_r3q6x"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xf11f"]
+texture = ExtResource("2_lo23i")
+texture_margin_left = 6.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fj2ff"]
+texture = ExtResource("2_lo23i")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5iqvk"]
+texture = ExtResource("2_lo23i")
+texture_margin_left = 6.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6re3v"]
+texture = ExtResource("3_dnbeh")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7044q"]
+texture = ExtResource("3_dnbeh")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_putt4"]
+texture = ExtResource("3_dnbeh")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r3q6x"]
+texture = ExtResource("3_dnbeh")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_elt4a"]
+texture = ExtResource("3_dnbeh")
+
+[node name="CharacterContainer" type="VBoxContainer"]
+z_index = 10
+size_flags_horizontal = 6
+size_flags_stretch_ratio = 3.0
+theme_override_constants/separation = 50
+alignment = 2
+
+[node name="CharacterPreview" type="SubViewportContainer" parent="."]
+custom_minimum_size = Vector2(0, 512)
+layout_mode = 2
+size_flags_vertical = 10
+metadata/_edit_lock_ = true
+
+[node name="CharacterPreview3D" type="SubViewport" parent="CharacterPreview"]
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="CharacterPreview/CharacterPreview3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+fov = 32.8
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="CharacterPreview/CharacterPreview3D"]
+environment = SubResource("Environment_r3q6x")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="CharacterPreview/CharacterPreview3D"]
+light_energy = 3.0
+
+[node name="Namebox" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 10
+
+[node name="NameLineEdit" type="LineEdit" parent="Namebox"]
+custom_minimum_size = Vector2(300, 60)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_6orjs")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxTexture_xf11f")
+theme_override_styles/read_only = SubResource("StyleBoxTexture_fj2ff")
+theme_override_styles/focus = SubResource("StyleBoxTexture_5iqvk")
+placeholder_text = "Digite o nome do personagem"
+max_length = 14
+emoji_menu_enabled = false
+
+[node name="CreateButton" type="Button" parent="Namebox"]
+custom_minimum_size = Vector2(240, 70)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = SubResource("StyleBoxTexture_6re3v")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_7044q")
+theme_override_styles/hover = SubResource("StyleBoxTexture_putt4")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_r3q6x")
+theme_override_styles/focus = SubResource("StyleBoxTexture_elt4a")

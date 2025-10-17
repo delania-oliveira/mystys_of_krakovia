@@ -64,6 +64,7 @@ var ARROW_SCENE = preload("res://assets/effects/shoot_effects/Arrow.tscn")
 var ARCANEBALL_SCENE = preload("res://assets/effects/shoot_effects/Arcaneball.tscn")
 var DESINTEGRATE_SCENE = preload("res://assets/effects/shoot_effects/Desintegrate.tscn")
 var FLAME_ARROW_SCENE = preload("res://assets/effects/shoot_effects/FlameArrow.tscn")
+var BLOOD_SPIKE_SCENE = preload("res://assets/effects/shoot_effects/BloodSpike.tscn")
 var WARCRY_SCENE = preload("res://assets/effects/aoe_effects/Warcry.tscn")
 signal skills_updated(new_skills)
 var menu_instance = null
@@ -74,7 +75,7 @@ var skills: Array = []
 var attack_locked = false
 var action_slot
 var party_ui_instance = null
-
+var target
 func _ready() -> void:
 	var deathAnim = null
 	var shotAnim = null
@@ -170,10 +171,13 @@ func _physics_process(delta):
 			is_standing = false
 			target_velocity.y = jump_impulse
 			room.send("jumpPlayer")
+			
 func get_target_by_id(target_id):
-	if target_id:
+	if target_id and room.state.monsters.at(target_id):
 		return room.state.monsters.at(target_id)
-	
+	if target_id and room.state.players.at(target_id):
+		return room.state.players.at(target_id)
+		
 func get_user_by_id(user_id):
 	if user_id:
 		return room.state.players.at(user_id)
@@ -196,7 +200,7 @@ func _on_target_health_update(data):
 		set_target(null)
 		
 func _on_damage_dealt(data):
-	var target = get_target_by_id(data.targetId)
+	target = get_target_by_id(data.targetId)
 	if data.id == id:
 		show_floating_text(data.damage, false, target, "Damage")
 	
@@ -220,8 +224,7 @@ func update_player_health(data):
 		health_bar.value = current_health
 func update_player_mana(data):
 	# UPDATE OWN PLAYER MANA
-	if data.mana and data.mana != current_mana and data.mana < current_mana:
-		resisted = false
+	if data.mana and data.mana != current_mana:
 		current_mana = data.mana
 		mana_label.text = str(current_mana) + " / " + str(max_mana)
 		mana_bar.value = current_mana
@@ -230,10 +233,7 @@ func update_player_mana(data):
 		mana_bar.max_value = data.max_mana
 		mana_label.text = str(current_mana) + " / " + str(max_mana)
 		mana_bar.value = max_mana
-	elif data.mana and data.mana != current_mana and data.mana > current_mana and (data.mana - current_mana) > 10:
-		current_mana = data.mana
-		mana_label.text = str(current_mana) + " / " + str(max_mana)
-		mana_bar.value = current_mana
+	
 func _on_resist_damage(data):
 	if !resisted:
 		resisted = true
@@ -267,18 +267,21 @@ func _on_party_member_level_up(data):
 				
 func _on_player_attack(data):
 	if "skillEffect" in data and data.needTarget and data.targetId:
-		var target = get_target_by_id(data.targetId)
+		target = get_target_by_id(data.targetId)
+		
 		attack_locked = false
 		if data.skillEffect == "ArcaneBall":
-			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, ARCANEBALL_SCENE)
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, ARCANEBALL_SCENE, null)
 		elif data.skillEffect == "ArrowShot":
-			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, ARROW_SCENE)
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, ARROW_SCENE, null)
 		elif data.skillEffect == "ArrowMultiShot":
 			spawn_multi_shot(data, target)
 		elif data.skillEffect == "FlameArrow":
-			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, FLAME_ARROW_SCENE)
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, FLAME_ARROW_SCENE, null)
 		elif data.skillEffect == "Desintegrate":
-			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, DESINTEGRATE_SCENE)
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, DESINTEGRATE_SCENE, null)
+		elif data.skillEffect == "BloodSpike":
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, BLOOD_SPIKE_SCENE, target_id)
 		elif data.skillEffect == "DefaultAttackMelee":
 			if data.id == id:
 				if not is_instance_valid(target):
@@ -323,7 +326,7 @@ func spawn_multi_shot(data, target):
 	for result in results:
 		var body = result.collider
 		if body.is_in_group("monsters"):
-			spawn_ranged_skill(get_target_by_id(body.id), get_user_by_id(data.id), data.id, ARROW_SCENE)
+			spawn_ranged_skill(get_target_by_id(body.id), get_user_by_id(data.id), data.id, ARROW_SCENE, null)
 			
 func cleave_warrior(data, target):
 	var radius = data.area
@@ -590,7 +593,7 @@ func _unhandled_input(event):
 			if result and result.collider.is_in_group("monsters"):
 				if current_target != result.collider:
 					set_target(result.collider)
-				play_skill(result.collider, null, "default_skill_" + character_class.to_lower(), true)
+				play_skill(result.collider, null, "default_skill_" + character_class.to_lower().replace(" ", "_"), true)
 			if result and result.collider.has_method("toggle_loot_ui"):
 				var loot = result.collider
 				if global_position.distance_to(loot.global_position) <= 5:
@@ -618,18 +621,23 @@ func play_skill(target, action_slot, skillId, needTarget):
 	is_attacking = true
 	if action_slot:
 		self.action_slot = action_slot
-	room.send("playerStartedAttack", {"skillId": skillId, "targetId": target_id})
-	
-func spawn_ranged_skill(target_node, user, userId, scene):
+	if get_user_by_id(target_id):
+		room.send("playerStartedAttack", {"skillId": skillId, "targetId": target_id, "heal": true})
+	else:
+		room.send("playerStartedAttack", {"skillId": skillId, "targetId": target_id})
+		
+func spawn_ranged_skill(target_node, user, userId, scene, targetId):
 	var skill = scene.instantiate()
 	skill.target = target_node
+	if targetId:
+		skill.targetId = targetId
 	skill.userId = userId
 	skill.playerId = id
 	var spawn_position = Vector3(user.x, user.y, user.z)
 	get_tree().root.add_child(skill)
 	skill.global_position = spawn_position
 	skill.room = room
-	
+
 func set_target(new_target: Node3D):
 	if not is_local:
 		return
@@ -647,7 +655,23 @@ func set_target(new_target: Node3D):
 	else:
 		target_picture.texture = null
 		target_frame.hide()
-
+		
+func _on_set_party_target(data):
+	if not is_local:
+		return
+	target_id = data.id
+	var target_pos = Vector3(data.x, data.y, data.z)
+	if(get_node_at_position(target_pos)):
+		set_target(get_node_at_position(target_pos))
+	
+	
+func get_node_at_position(position: Vector3) -> Node3D:
+	# Iterate all nodes in the scene (or a specific group)
+	for node in get_tree().get_nodes_in_group("players"): 
+		if node.global_transform.origin.distance_to(position) < 0.1: # small threshold
+			return node
+	return null
+	
 func _on_invite_to_party_button_down() -> void:
 	room.send("partyInvite", {"playerInvitingId": id, "invitedPlayerId": current_target.id})
 	player_menu.hide()

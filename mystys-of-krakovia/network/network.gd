@@ -48,7 +48,7 @@ class Player extends colyseus.Schema:
 	static func define_fields():
 		return [
 			colyseus.Field.new("id", colyseus.STRING),
-			colyseus.Field.new("dbIwd", colyseus.STRING),
+			colyseus.Field.new("dbId", colyseus.STRING),
 			colyseus.Field.new("x", colyseus.NUMBER),
 			colyseus.Field.new("y", colyseus.NUMBER),
 			colyseus.Field.new("z", colyseus.NUMBER),

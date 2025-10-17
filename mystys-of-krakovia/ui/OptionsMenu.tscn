@@ -1,20 +1,32 @@
-[gd_scene load_steps=3 format=3 uid="uid://qbwuw6sdw6dr"]
+[gd_scene load_steps=9 format=3 uid="uid://qbwuw6sdw6dr"]
 
 [ext_resource type="Script" uid="uid://dx213itrdvbch" path="res://ui/options_menu.gd" id="1_876tf"]
-[ext_resource type="ButtonGroup" uid="uid://ck8s4rsbth75s" path="res://ui/ScreenModeButtons.tres" id="1_q2aw3"]
+[ext_resource type="Theme" uid="uid://yw4xkgj5qet6" path="res://assets/theme/button.tres" id="2_876tf"]
+[ext_resource type="FontFile" uid="uid://dh6r6rr3vgnv7" path="res://assets/fonts/Cinzel-Bold.ttf" id="2_fqj3q"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_876tf"]
+bg_color = Color(0.17254902, 0, 0, 0.79607844)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fqj3q"]
+bg_color = Color(0.17254902, 0, 0, 0.79607844)
+
+[sub_resource type="Theme" id="Theme_5k8le"]
+Panel/styles/panel = SubResource("StyleBoxFlat_fqj3q")
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_fqj3q"]
+color = Color(0.47397572, 0.47397572, 0.47397572, 0.9137255)
+vertical = true
+
+[sub_resource type="Theme" id="Theme_q2aw3"]
+OptionButton/icons/icon = null
 
 [node name="Control" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 375.0
-offset_top = 84.0
-offset_right = -333.0
-offset_bottom = -31.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 4
 script = ExtResource("1_876tf")
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -24,113 +36,133 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.41918218, 0.41709635, 0.3989993, 1)
+color = Color(0, 0, 0, 0.5882353)
 
-[node name="ConfigLabel" type="Label" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -69.0
-offset_right = 69.0
-offset_bottom = 28.0
-grow_horizontal = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 20
-text = "Configurações"
-
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -125.5
-offset_top = -256.5
-offset_right = 125.5
-offset_bottom = 256.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_top = 46
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
-custom_minimum_size = Vector2(240, 0)
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
 layout_mode = 2
-theme_override_constants/separation = 13
+theme_override_styles/panel = SubResource("StyleBoxFlat_876tf")
 
-[node name="VolumeSection" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer"]
+layout_mode = 2
+theme = SubResource("Theme_5k8le")
+theme_override_constants/margin_left = 45
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 45
+theme_override_constants/margin_bottom = 45
+
+[node name="Layout" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 60
+
+[node name="ConfigLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/Layout"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_fonts/font = ExtResource("2_fqj3q")
+theme_override_font_sizes/font_size = 26
+text = "Configurações"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/Layout"]
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="VolumeSection" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="VolumeSectionLabel" type="Label" parent="MarginContainer/VBoxContainer/VolumeSection"]
+[node name="VolumeSectionLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/VolumeSection"]
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 0
+theme_override_fonts/font = ExtResource("2_fqj3q")
 theme_override_font_sizes/font_size = 18
 text = "Volume"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VolumeSection"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/VolumeSection"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VolumeSection/VBoxContainer"]
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/VolumeSection/VBoxContainer"]
 layout_mode = 2
 text = "Global"
 
-[node name="MasterVolumeSlider" type="HSlider" parent="MarginContainer/VBoxContainer/VolumeSection/VBoxContainer"]
+[node name="MasterVolumeSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/VolumeSection/VBoxContainer"]
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 max_value = 1.0
 step = 0.01
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VolumeSection"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/VolumeSection"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VolumeSection/VBoxContainer2"]
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/VolumeSection/VBoxContainer2"]
 layout_mode = 2
 text = "Efeitos Sonoros"
 
-[node name="SoundEffectsVolumeSlider" type="HSlider" parent="MarginContainer/VBoxContainer/VolumeSection/VBoxContainer2"]
+[node name="SoundEffectsVolumeSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/VolumeSection/VBoxContainer2"]
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 max_value = 1.0
 step = 0.01
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VolumeSection"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/VolumeSection"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VolumeSection/VBoxContainer3"]
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/VolumeSection/VBoxContainer3"]
 layout_mode = 2
 text = "Ambiente"
 
-[node name="AmbientVolumeSlider" type="HSlider" parent="MarginContainer/VBoxContainer/VolumeSection/VBoxContainer3"]
+[node name="AmbientVolumeSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/VolumeSection/VBoxContainer3"]
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 max_value = 1.0
 step = 0.01
 
-[node name="GraphicsSection" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_fqj3q")
+
+[node name="GraphicsSection" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 26
 
-[node name="GraphicsSectionLabel" type="Label" parent="MarginContainer/VBoxContainer/GraphicsSection"]
+[node name="GraphicsSectionLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/GraphicsSection"]
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 0
+theme_override_fonts/font = ExtResource("2_fqj3q")
 theme_override_font_sizes/font_size = 18
 text = "Gráficos"
 
-[node name="ResolutionSection" type="VBoxContainer" parent="MarginContainer/VBoxContainer/GraphicsSection"]
+[node name="GridContainer" type="GridContainer" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/GraphicsSection"]
 layout_mode = 2
-size_flags_horizontal = 4
+theme_override_constants/h_separation = 19
+theme_override_constants/v_separation = 30
+columns = 2
 
-[node name="ResolutionLabel" type="Label" parent="MarginContainer/VBoxContainer/GraphicsSection/ResolutionSection"]
+[node name="ModeSectionLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/GraphicsSection/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
+text = "Modo da janela"
+
+[node name="SelectWindow" type="OptionButton" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/GraphicsSection/GridContainer"]
+layout_mode = 2
+theme = SubResource("Theme_q2aw3")
+
+[node name="ResolutionLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/GraphicsSection/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
 text = "Resolução"
 
-[node name="SelectResolution" type="OptionButton" parent="MarginContainer/VBoxContainer/GraphicsSection/ResolutionSection"]
+[node name="SelectResolution" type="OptionButton" parent="CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/GraphicsSection/GridContainer"]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -143,82 +175,18 @@ popup/item_1/id = 1
 popup/item_2/text = "1280x720"
 popup/item_2/id = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/GraphicsSection"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 24
-
-[node name="ModeSectionLabel" type="Label" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Modo da janela"
-
-[node name="ModeSection" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-theme_override_constants/separation = 80
-
-[node name="WindowedFullscreen" type="CheckBox" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection"]
-layout_mode = 2
-button_group = ExtResource("1_q2aw3")
-
-[node name="WindowedFullscreenLabel" type="Label" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection/WindowedFullscreen"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = -34.0
-offset_top = -18.0
-offset_right = 34.0
-offset_bottom = 5.0
-grow_horizontal = 2
-text = "Sem bordas"
-
-[node name="Fullscreen" type="CheckBox" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection"]
-layout_mode = 2
-button_group = ExtResource("1_q2aw3")
-
-[node name="FullscreenLabel" type="Label" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection/Fullscreen"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = -27.0
-offset_top = -18.0
-offset_right = 27.0
-offset_bottom = 5.0
-grow_horizontal = 2
-text = "Tela cheia"
-
-[node name="Windowed" type="CheckBox" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection"]
-layout_mode = 2
-button_group = ExtResource("1_q2aw3")
-
-[node name="WindowedLabel" type="Label" parent="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection/Windowed"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = -12.0
-offset_top = -18.0
-offset_right = 12.0
-offset_bottom = 5.0
-grow_horizontal = 2
-text = "Janela"
-horizontal_alignment = 1
-
-[node name="ButtonsSection" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="ButtonsSection" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/Layout"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 39
 
-[node name="SaveButton" type="Button" parent="MarginContainer/VBoxContainer/ButtonsSection"]
+[node name="SaveButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/Layout/ButtonsSection"]
 layout_mode = 2
-text = "Salvar"
+theme = ExtResource("2_876tf")
+text = "SALVAR"
 
-[node name="ReturnButton" type="Button" parent="MarginContainer/VBoxContainer/ButtonsSection"]
+[node name="ReturnButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/Layout/ButtonsSection"]
 layout_mode = 2
 size_flags_vertical = 8
-text = "Voltar"
-
-[connection signal="toggled" from="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection/WindowedFullscreen" to="." method="_on_windowed_fullscreen_toggled"]
-[connection signal="toggled" from="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection/Fullscreen" to="." method="_on_fullscreen_toggled"]
-[connection signal="toggled" from="MarginContainer/VBoxContainer/GraphicsSection/VBoxContainer/ModeSection/Windowed" to="." method="_on_windowed_toggled"]
+theme = ExtResource("2_876tf")
+text = "VOLTAR"

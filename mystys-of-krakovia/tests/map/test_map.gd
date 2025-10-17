@@ -73,7 +73,7 @@ func _on_players_add(target, value, key):
 	var characterSceneLocation = "res://tests/players/Player.tscn"
 	var Char = load(characterSceneLocation)
 	var ch = Char.instantiate()
-	var model_scene = load("res://assets/character/" + value.character_class + ".glb")
+	var model_scene = load("res://assets/character/" + value.character_class.replace(" ", "_") + ".glb")
 	var model_instance = model_scene.instantiate()
 	model_instance.transform = Transform3D.IDENTITY
 	ch.get_node("Pivot").add_child(model_instance)
@@ -84,6 +84,7 @@ func _on_players_add(target, value, key):
 	value.node = ch
 	ch.room = room
 	ch.id = key
+	ch.name = key
 	ch.character_name = value.name
 	ch.current_health = value.health
 	ch.current_mana = value.mana
@@ -106,6 +107,7 @@ func _on_players_add(target, value, key):
 		room.on_message("experienceGained").on(Callable(ch, "_on_experience_gained"))
 		room.on_message("partyMemberLevelUp").on(Callable(ch, "_on_party_member_level_up"))
 		room.on_message("partyInvite").on(Callable(ch, "_on_party_invite"))
+		room.on_message("setPartyTarget").on(Callable(ch, "_on_set_party_target"))
 		room.on_message("partyJoined").on(Callable(ch, "_on_party_joined"))
 		room.on_message("inviteFail").on(Callable(ch, "_on_invite_fail"))
 		room.on_message("partyHealthUpdate").on(Callable(ch, "_on_party_health_update"))

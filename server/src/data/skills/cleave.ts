@@ -10,7 +10,7 @@ export const CleaveAttackWarrior: Skill = {
   animation: "Ataque Pesado",
   effect: "CleaveAttackMelee",
   characterClass: "Warrior",
-  description: "Cleave",
+  description: "Executa um ataque em arco que causa dano a todos os inimigos em uma área frontal.",
   needTarget: true,
   cooldown: 0,
   manaCost: 5

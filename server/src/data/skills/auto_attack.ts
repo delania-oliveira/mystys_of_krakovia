@@ -43,8 +43,26 @@ export const DefaultSkillWarrior: Skill = {
   animation: "Ataque Leve",
   effect: "DefaultAttackMelee",
   characterClass: "Warrior",
-  description: "Espadada",
+  description: "Um ataque simples e direto com a lâmina.",
   needTarget: true,
   cooldown: 0,
   manaCost: 0
+}
+
+export const DefaultSkillBloodMage: Skill = {
+  id: "default_skill_blood_mage",
+  name: "Espinho de Sangue",
+  level: 1,
+  baseDamage: 5,
+  range: 25,
+  area: 0,
+  animation: "DefaultCast",
+  effect: "BloodSpike",
+  characterClass: "Blood Mage",
+  description: "Converte parte de sua própria vida em energia, causando dano nos inimigos ou restaurando a saúde dos aliados ao custo do próprio sangue.",
+  needTarget: true,
+  cooldown: 0,
+  castTime: 1.0,
+  manaCost: 5,
+  healing: 10
 }

@@ -170,6 +170,7 @@ func _physics_process(delta):
 			is_standing = false
 			target_velocity.y = jump_impulse
 			room.send("jumpPlayer")
+			
 func get_target_by_id(target_id):
 	if target_id:
 		return room.state.monsters.at(target_id)

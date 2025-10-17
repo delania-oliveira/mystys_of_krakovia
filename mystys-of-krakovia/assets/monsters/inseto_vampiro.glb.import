@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bgiacl7wo4aso"
-path="res://.godot/imported/goblin.glb-234bb91ffe16f05cdd082efcb1e61ece.scn"
+uid="uid://bspout2hqa28v"
+path="res://.godot/imported/inseto_vampiro.glb-df594f4df6b2c4b7485483c280d79069.scn"
 
 [deps]
 
-source_file="res://assets/monsters/goblin.glb"
-dest_files=["res://.godot/imported/goblin.glb-234bb91ffe16f05cdd082efcb1e61ece.scn"]
+source_file="res://assets/monsters/inseto_vampiro.glb"
+dest_files=["res://.godot/imported/inseto_vampiro.glb-df594f4df6b2c4b7485483c280d79069.scn"]
 
 [params]
 

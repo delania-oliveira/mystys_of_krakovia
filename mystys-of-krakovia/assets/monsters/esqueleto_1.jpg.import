@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdhxjpyxektbm"
-path.s3tc="res://.godot/imported/esqueleto_0.jpg-f0232ad1f0d6269dd6b5c508c8ababfe.s3tc.ctex"
+uid="uid://cl157come5rlc"
+path.s3tc="res://.godot/imported/esqueleto_1.jpg-65ddecbb30b2a6040e1a2c8b9d6ae34a.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "bde39ffc8d7c3e9d1b396c6edb7f08d1"
+"md5": "49a884784c50a5667c8da9422da04407"
 }
 
 [deps]
 
-source_file="res://assets/monsters/esqueleto_0.jpg"
-dest_files=["res://.godot/imported/esqueleto_0.jpg-f0232ad1f0d6269dd6b5c508c8ababfe.s3tc.ctex"]
+source_file="res://assets/monsters/esqueleto_1.jpg"
+dest_files=["res://.godot/imported/esqueleto_1.jpg-65ddecbb30b2a6040e1a2c8b9d6ae34a.s3tc.ctex"]
 
 [params]
 

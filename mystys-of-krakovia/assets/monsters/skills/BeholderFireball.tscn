@@ -1,0 +1,36 @@
+[gd_scene load_steps=7 format=3 uid="uid://bf54cji1hgd2x"]
+
+[ext_resource type="Script" uid="uid://ft7ycjkwxl2w" path="res://assets/monsters/skills/beholder_fireball.gd" id="1_1qpqf"]
+[ext_resource type="Shader" uid="uid://dhskhvme3hduy" path="res://assets/effects/shoot_effects/Fireball.gdshader" id="2_1qpqf"]
+[ext_resource type="Texture2D" uid="uid://b4sikicp53j7n" path="res://assets/effects/shoot_effects/FlameTexture.png" id="3_bnmn1"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_25vlv"]
+render_priority = 0
+shader = ExtResource("2_1qpqf")
+shader_parameter/time = 0.0
+shader_parameter/frame_scope = 1.1590000517926202
+shader_parameter/use_system_time = true
+shader_parameter/time_accel = 5.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dkquj"]
+albedo_color = Color(0.5229233, 0.67611974, 0.08564959, 1)
+albedo_texture = ExtResource("3_bnmn1")
+albedo_texture_force_srgb = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_25vlv"]
+material = SubResource("StandardMaterial3D_dkquj")
+radius = 1.0
+height = 2.0
+
+[node name="Arcaneball" type="Node3D"]
+script = ExtResource("1_1qpqf")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+light_color = Color(1, 0.41568628, 0, 1)
+light_energy = 2.0
+omni_range = 4.0
+
+[node name="Core" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.9999998, 0, 0, 0, 1.0000001, 0, 0, 0, 0.99999994, 0, 0, 0.0073883533)
+material_overlay = SubResource("ShaderMaterial_25vlv")
+mesh = SubResource("SphereMesh_25vlv")

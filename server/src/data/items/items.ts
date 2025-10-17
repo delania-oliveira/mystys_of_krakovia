@@ -5,7 +5,8 @@ export const items: Record<string, Item> = {
     id: 1,
     name: "Ouro",
     description: "",
-    type: "Currency"
+    type: "Currency",
+    rarity: "Comum"
   },
   "2": {
     id: 2,
@@ -14,6 +15,7 @@ export const items: Record<string, Item> = {
     description: "Uma jaqueta de pano básica.",
     type: "Armor",
     limitedClasses: ["Todas"],
+    rarity: "Comum"
   },
   "3": {
     id: 3,
@@ -22,6 +24,7 @@ export const items: Record<string, Item> = {
     description: "Uma jaqueta de couro básica.",
     type: "Armor",
     limitedClasses: ["Archer", "Assassin", "Warrior"],
+    rarity: "Comum"
   },
   "4": {
     id: 4,
@@ -30,6 +33,7 @@ export const items: Record<string, Item> = {
     description: "Uma armadura pesada feita de correntes utilizada pelos guerreiros.",
     type: "Armor",
     limitedClasses: ["Warrior"],
+    rarity: "Comum"
   },
   "5": {
     id: 5,
@@ -38,6 +42,7 @@ export const items: Record<string, Item> = {
     description: "Uma jaqueta de seda utilizada por magos.",
     type: "Armor",
     limitedClasses: ["Todas"],
+    rarity: "Comum"
   },
   "6": {
     id: 6,
@@ -46,6 +51,7 @@ export const items: Record<string, Item> = {
     description: "Um capuz de seda utilizada por magos.",
     type: "Helmet",
     limitedClasses: ["Todas"],
+    rarity: "Incomum"
   },
   "7": {
     id: 7,
@@ -54,6 +60,7 @@ export const items: Record<string, Item> = {
     description: "Um capuz de couro utilizado por assassinos e arqueiros.",
     type: "Helmet",
     limitedClasses: ["Archer", "Assassin", "Warrior"],
+    rarity: "Incomum"
   },
   "8": {
     id: 8,
@@ -62,6 +69,7 @@ export const items: Record<string, Item> = {
     description: "Um capuz de malha utilizado por guerreiros.",
     type: "Helmet",
     limitedClasses: ["Warrior"],
+    rarity: "Incomum"
   },
   "9": {
     id: 9,
@@ -70,6 +78,7 @@ export const items: Record<string, Item> = {
     description: "Uma lâmina curva e afiada, leve o bastante para golpes rápidos e precisos.",
     type: "Weapon",
     limitedClasses: ["Warrior"],
+    rarity: "Comum"
   },
   "10": {
     id: 10,
@@ -78,6 +87,7 @@ export const items: Record<string, Item> = {
     description: "Pesada e mortal, esta lâmina larga impõe respeito em qualquer campo de batalha.",
     type: "Weapon",
     limitedClasses: ["Warrior"],
+    rarity: "Incomum"
   },
   "11": {
     id: 11,
@@ -86,6 +96,7 @@ export const items: Record<string, Item> = {
     description: "Forjada para comandar exércitos, esta lâmina colossal carrega o peso de incontáveis batalhas vencidas.",
     type: "Weapon",
     limitedClasses: ["Warrior"],
+    rarity: "Lendário"
   },
   "12": {
     id: 12,
@@ -94,6 +105,7 @@ export const items: Record<string, Item> = {
     description: "Cajado de madeira simples, utilizado por magos iniciantes.",
     type: "Weapon",
     limitedClasses: ["Mage"],
+    rarity: "Comum"
   },
   "13": {
     id: 13,
@@ -102,6 +114,7 @@ export const items: Record<string, Item> = {
     description: "O cristal em seu topo brilha com energia arcana, canalizando o poder dos elementos.",
     type: "Weapon",
     limitedClasses: ["Mage"],
+    rarity: "Épico"
   },
   "14": {
     id: 14,
@@ -110,5 +123,6 @@ export const items: Record<string, Item> = {
     description: "No topo do cajado brilha um cristal vermelho como sangue, fonte de um poder ancestral e incontrolável.",
     type: "Weapon",
     limitedClasses: ["Mage"],
+    rarity: "Lendário"
   },
 }

@@ -249,14 +249,25 @@ export class Krakovia extends Room<KrakoviaState> {
     this.onMessage("equipItem", (client, data) =>{
       const player = this.state.players.get(client.sessionId)
       if (player) {
-        const equippedItem = items[data.itemId]
-        if ((equippedItem.limitedClasses.includes(player.character_class) || equippedItem.limitedClasses.includes("Todas")) && equippedItem.defense){
-          player.defense += equippedItem.defense
+        const equippedItem = items[data.newItemId]
+        let defenseRaise = 0
+        let atkRaise = 0
+        if (data.oldItemId) {
+          const oldItem = items[data.oldItemId]
+          defenseRaise = oldItem.defense - equippedItem.defense
+          atkRaise = oldItem.attack - equippedItem.attack
         } else {
-          player.attack += equippedItem.attack
+          defenseRaise = equippedItem.defense
+          atkRaise = equippedItem.attack
+        }
+        if ((equippedItem.limitedClasses.includes(player.character_class) || equippedItem.limitedClasses.includes("Todas")) && equippedItem.defense){
+          player.defense += defenseRaise
+        } else {
+          player.attack += atkRaise
         }
       }
     })
+
     this.onMessage("looted", (client, data) => {
       const player = this.state.players.get(data.playerId);
       // Loot Gold
@@ -270,7 +281,8 @@ export class Krakovia extends Room<KrakoviaState> {
           quantity: data.itemQuantity,
           description: lootedItem.description,
           type: lootedItem.type,
-          limitedClasses: lootedItem.limitedClasses
+          limitedClasses: lootedItem.limitedClasses,
+          rarity: lootedItem.rarity
         };
         if (lootedItem.type === "Armor" || lootedItem.type === "Helmet") {
           payload.attack = 0

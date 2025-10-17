@@ -34,4 +34,14 @@ export const LootTable: Record<string, PossibleItems[]> = {
     { id: 5, name: "Jaqueta de Seda", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 15 },
     { id: 8, name: "Capuz de Malha", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 15 },
   ],
+  Wolf: [
+    { id: 9, name: "Cimitarra", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 50 },
+    { id: 10, name: "Espada Larga", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 50 },
+    { id: 11, name: "Espada do Senhor da Guerra", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 50 },
+  ],
+  Slime: [
+    { id: 12, name: "Cajado Simples", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 50 },
+    { id: 13, name: "Cajado de Cristal", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 50 },
+    { id: 14, name: "Sangue de Krakovia", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 50 },
+  ],
 };

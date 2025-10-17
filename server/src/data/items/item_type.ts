@@ -21,4 +21,5 @@ export interface Item {
   attack?: number,
   type: string
   limitedClasses?: string[]
+  rarity: string
 }

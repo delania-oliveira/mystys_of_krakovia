@@ -10,7 +10,7 @@ export const WarcryWarrior: Skill = {
   animation: "Buff",
   effect: "WarcryWarrior",
   characterClass: "Warrior",
-  description: "Warcry",
+  description: "O rugido do guerreiro ecoa pelo campo de batalha, fortalecendo sua força e resistência.",
   needTarget: false,
   cooldown: 30,
   buffDef: 5,

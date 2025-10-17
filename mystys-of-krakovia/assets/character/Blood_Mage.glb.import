@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dg30ewfw14te0"
-path="res://.godot/imported/Warrior.glb-437fbd55489c723b851af4dfb1209b92.scn"
+uid="uid://v366dwu7kkvk"
+path="res://.godot/imported/Blood_Mage.glb-d7c788acc0d26d1f319582d32f01d21a.scn"
 
 [deps]
 
-source_file="res://assets/character/Warrior.glb"
-dest_files=["res://.godot/imported/Warrior.glb-437fbd55489c723b851af4dfb1209b92.scn"]
+source_file="res://assets/character/Blood_Mage.glb"
+dest_files=["res://.godot/imported/Blood_Mage.glb-d7c788acc0d26d1f319582d32f01d21a.scn"]
 
 [params]
 
@@ -17,7 +17,7 @@ nodes/root_type=""
 nodes/root_name="AuxScene"
 nodes/root_script=null
 nodes/apply_root_scale=true
-nodes/root_scale=0.018000000000000002
+nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
 nodes/use_name_suffixes=true
 nodes/use_node_type_suffixes=true

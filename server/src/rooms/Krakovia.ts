@@ -25,7 +25,37 @@ export class Krakovia extends Room<KrakoviaState> {
   manaRegenTimer = 0
   private monsterSpawns = new Map<string, Monster>();
   private damagedTargets: Monster[] = []
+  leaveParty(player: Player) {
+    if (player && player.partyId) {
+      const partyId = player.partyId;
+      const partyLeader = this.state.players.get(partyId);
+      const party = partyLeader._party[partyId];
 
+      party.forEach(member => {
+        const memberClient = this.clients.find(c => c.sessionId === member.id);
+        if (memberClient) {
+          memberClient.send("leaveParty", { leavingMember: player.id });
+        }
+      });
+
+      const updatedParty = party.filter(member => member.id !== player.id);
+      partyLeader._party[partyId] = updatedParty;
+
+      player.partyId = "";
+
+      if (updatedParty.length <= 1) {
+        const lastMember = updatedParty[0];
+        if (lastMember) {
+          const memberClient = this.clients.find(c => c.sessionId === lastMember.id);
+          if (memberClient) {
+            memberClient.send("leaveParty", { leavingMember: lastMember.id });
+          }
+          lastMember.partyId = "";
+        }
+        delete partyLeader._party[partyId];
+      }
+    }
+  }
   onCreate(options: any) {
     this.state = new KrakoviaState();
     const monsters = loadMonsters()
@@ -137,37 +167,37 @@ export class Krakovia extends Room<KrakoviaState> {
     });
 
    this.onMessage("leaveParty", (client, data) => {
-    const player = this.state.players.get(client.sessionId);
-    if (player && player.partyId) {
-      const partyId = player.partyId;
-      const partyLeader = this.state.players.get(partyId);
-      const party = partyLeader._party[partyId];
-
-      party.forEach(member => {
-        const memberClient = this.clients.find(c => c.sessionId === member.id);
-        if (memberClient) {
-          memberClient.send("leaveParty", { leavingMember: player.id });
-        }
-      });
-
-      const updatedParty = party.filter(member => member.id !== player.id);
-      partyLeader._party[partyId] = updatedParty;
-
-      player.partyId = "";
-
-      if (updatedParty.length <= 1) {
-        const lastMember = updatedParty[0];
-        if (lastMember) {
-          const memberClient = this.clients.find(c => c.sessionId === lastMember.id);
-          if (memberClient) {
-            memberClient.send("leaveParty", { leavingMember: lastMember.id });
-          }
-          lastMember.partyId = "";
-        }
-        delete partyLeader._party[partyId];
-        }
+      const player = this.state.players.get(client.sessionId);
+      if (player){
+        this.leaveParty(player)  
       }
     });
+
+    this.onMessage("healTarget", (client, data) => {
+      const player = this.state.players.get(client.sessionId);
+      if (player){
+        const target = this.state.players.get(data.targetId)
+        if (target) {
+          const skill = skills.get(data.skillId)
+          target.health = Math.min(target.health + skill.healing + player.attack, target.max_health);
+          this.broadcast("playerTargetHealthUpdate", {
+            id: client.sessionId,
+            targetId: target.id,
+            health: target.health,
+          });
+          if (target.partyId){
+            const partyLeader = this.state.players.get(target.partyId)
+            const party = partyLeader._party[target.partyId]
+            party.forEach(member => {
+             const memberClient = this.clients.find(c => c.sessionId === member.id);
+             if (memberClient) {
+               memberClient.send("partyHealthUpdate", { member: target.id, health: target.health });
+             }
+           });
+          }
+        }
+      }
+    })
 
     this.onMessage("playerAttack", (client, data) => {
       const player = this.state.players.get(client.sessionId);
@@ -177,7 +207,11 @@ export class Krakovia extends Room<KrakoviaState> {
         player.animation = "Idle"
         const skill = skills.get(data.skillId)
         player.skillEffect = skill.effect
-        player.mana = Math.max(player.mana - skill.manaCost, 0);
+        if (player.character_class === "Blood Mage") {
+          player.health = Math.max(player.health - skill.manaCost, 0);
+        } else {
+          player.mana = Math.max(player.mana - skill.manaCost, 0);
+        }
         const payload: any = {
           id: client.sessionId,
           skillId: skill.id,
@@ -222,18 +256,23 @@ export class Krakovia extends Room<KrakoviaState> {
           client.send("skillFail", {"text": "Level muito baixo para usar a skill!"})
           return
         }
-        if (skill.manaCost > player.mana) {
+        if (skill.manaCost > player.mana && player.character_class !== "Blood Mage") {
           client.send("skillFail", {"text": "Não possui mana suficiente!"})
           return
         }
         if (skill.needTarget) {
-          const target = this.state.monsters.get(data.targetId)
+          let target
+          if (data.heal){
+            target = this.state.players.get(data.targetId)
+          } else {
+            target = this.state.monsters.get(data.targetId)
+          }
           if (!target) return
           const dx = target.x  - player.x
           const dz = target.z - player.z
           const distance = Math.sqrt(dx * dx + dz * dz)
           if (distance > skill.range) {
-            client.send("skillFail", {"text": "Inimigo muito distante!"})
+            client.send("skillFail", {"text": "Alvo muito distante!"})
           } else {
             player.isAttacking = true
             player.animation = skill.animation;
@@ -491,6 +530,16 @@ export class Krakovia extends Room<KrakoviaState> {
         player.isDead = false
         player.health = player.max_health
         player.animation = "Idle"
+        if (player.partyId){
+          const partyLeader = this.state.players.get(player.partyId)
+          const party = partyLeader._party[player.partyId]
+          party.forEach(member => {
+            const memberClient = this.clients.find(c => c.sessionId === member.id);
+            if (memberClient) {
+              memberClient.send("partyHealthUpdate", { member: player.id, health: player.health });
+            }
+          });
+        }
       }
     })
 
@@ -529,6 +578,10 @@ export class Krakovia extends Room<KrakoviaState> {
       if (player) {
         const target = this.state.players.get(data.targetId)
         const targetData = {
+          id: target.id,
+          x: target.x,
+          y: target.y,
+          z: target.z,
           character_name: target.name,
           max_health: target.max_health,
           current_health: target.health,
@@ -573,6 +626,8 @@ export class Krakovia extends Room<KrakoviaState> {
           case "Archer":
             player.health = Math.min(player.health + 3, player.max_health);
             break;
+          case "Blood Mage":
+            player.health = Math.min(player.health + 5, player.max_health);
           default:
             break;
         }
@@ -829,7 +884,9 @@ export class Krakovia extends Room<KrakoviaState> {
     } catch (error) {
       console.log(error)
     }
-
+    if (player.partyId){
+      this.leaveParty(player)
+    }
     this.state.players.delete(client.sessionId);
   }
 

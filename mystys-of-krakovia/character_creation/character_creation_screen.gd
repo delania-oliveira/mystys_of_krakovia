@@ -60,7 +60,7 @@ func _ready():
 	#assassin_button.pressed.connect(_on_class_button_pressed.bind("Assassin"))
 	archer_button.pressed.connect(_on_class_button_pressed.bind("Archer"))
 	mage_button.pressed.connect(_on_class_button_pressed.bind("Mage"))
-	#bloodmage_button.pressed.connect(_on_class_button_pressed.bind("Blood Mage"))
+	bloodmage_button.pressed.connect(_on_class_button_pressed.bind("Blood Mage"))
 
 	_on_class_button_pressed("Warrior")
 	
@@ -109,9 +109,12 @@ func prepare_preview(character_name: String) -> void:
 	var light = preview.get_node("DirectionalLight3D")
 	light.rotation_degrees = Vector3(-45, 45, 0)
 
-	var char_scene_path = "res://assets/character/" + character_name.replace(" ", "") + ".glb"
+	var char_scene_path = "res://assets/character/" + character_name.replace(" ", "_") + ".glb"
 	var char_scene = load(char_scene_path).instantiate()
-	char_scene.position = Vector3(0, 0, 0)
+	if character_name == "Blood Mage":
+		char_scene.position = Vector3(0, -1.5, 0)
+	else:
+		char_scene.position = Vector3(0, 0, 0)
 	char_scene.rotation_degrees = Vector3.ZERO
 	char_scene.scale = Vector3.ONE
 	preview.add_child(char_scene)

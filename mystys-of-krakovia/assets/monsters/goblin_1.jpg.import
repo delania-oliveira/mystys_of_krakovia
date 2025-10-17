@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdhxjpyxektbm"
-path.s3tc="res://.godot/imported/esqueleto_0.jpg-f0232ad1f0d6269dd6b5c508c8ababfe.s3tc.ctex"
+uid="uid://ddymp0cqcbp3s"
+path.s3tc="res://.godot/imported/goblin_1.jpg-cf684362501858fee5678f3fd9c8bfc5.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "bde39ffc8d7c3e9d1b396c6edb7f08d1"
+"md5": "8ec1998a424cd3a84258c866a73603e6"
 }
 
 [deps]
 
-source_file="res://assets/monsters/esqueleto_0.jpg"
-dest_files=["res://.godot/imported/esqueleto_0.jpg-f0232ad1f0d6269dd6b5c508c8ababfe.s3tc.ctex"]
+source_file="res://assets/monsters/goblin_1.jpg"
+dest_files=["res://.godot/imported/goblin_1.jpg-cf684362501858fee5678f3fd9c8bfc5.s3tc.ctex"]
 
 [params]
 

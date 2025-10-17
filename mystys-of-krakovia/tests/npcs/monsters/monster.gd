@@ -20,12 +20,19 @@ var loot: Dictionary
 var lootPosition
 var network_animation
 @onready var MOVEMENT_TRESHOLD = 0.1
+var BEHOLDER_FIREBALL_SCENE = preload("res://assets/monsters/skills/BeholderFireball.tscn")
 var rotation_model = -PI/2
 var anim_player
 var library
+@onready var attack_range = 2.0
+@onready var is_attacking = false
+@onready var time_since_last_attack = 2.0
 func _ready() -> void:
 	var path = "Pivot/Sketchfab_Scene/AnimationPlayer"
 	if get_node(path):
+		anim_player = get_node(path)
+	elif get_node("Pivot/AuxScene/AnimationPlayer"):
+		path = "Pivot/AuxScene/AnimationPlayer"
 		anim_player = get_node(path)
 	else:
 		anim_player = null
@@ -55,50 +62,39 @@ func _ready() -> void:
 			library.add_animation("Attack", atkAnim)
 			library.add_animation("Idle", atkAnim)
 			library.add_animation("Running", atkAnim)
-		elif library.has_animation("Run_Fwd"):
-			runAnim = library.get_animation("Run_Fwd")
-			atkAnim = library.get_animation("Primary_Attack_C_Medium")
-			library.add_animation("Running", runAnim)
-			library.add_animation("Attack", atkAnim)
-			library.remove_animation("Run_Fwd")
-			library.remove_animation("Primary_Attack_C_Medium")
-		elif library.has_animation("Walking_Skeleton"):
-			runAnim = library.get_animation("Walking_Skeleton")
+		elif character_name == "Beholder":
+			runAnim = library.get_animation("Idle")
 			library.add_animation("Attack", runAnim)
-			library.add_animation("Idle", runAnim)
 			library.add_animation("Running", runAnim)
-			library.remove_animation("Walking_Skeleton")
-		elif library.has_animation("IdleAnimation"):
-			runAnim = library.get_animation("RunAnimation")
-			atkAnim = library.get_animation("WalkAnimation")
-			idleAnim = library.get_animation("IdleAnimation")
-			library.add_animation("Attack", atkAnim)
-			library.add_animation("Idle", idleAnim)
-			library.add_animation("Running", atkAnim)
-			library.remove_animation("IdleAnimation")
-			library.remove_animation("RunAnimation")
-			library.remove_animation("WalkAnimation")
-		elif library.has_animation("Stand1"):
-			runAnim = library.get_animation("Run")
-			idleAnim = library.get_animation("Stand1")
-			library.add_animation("Idle", idleAnim)
-			library.add_animation("Running", runAnim)
-			library.remove_animation("Run")
-			library.remove_animation("Stand1")
 func _process(delta):
 	position = position.lerp(network_position, LERP_SPEED * delta)
+	time_since_last_attack += delta
 	if position.distance_squared_to(network_position) > 0.1:
-		if target_id:
+		if target_id or is_attacking:
 			$Pivot.look_at(network_position, Vector3.UP)
 			$Pivot.rotate_y(rotation_model)
 		else:
 			$Pivot.look_at(spawn_position, Vector3.UP)
 			$Pivot.rotate_y(rotation_model)
-	if anim_player:
-		var updated_library = anim_player.get_animation_library("")
-		if updated_library and updated_library.get_animation(network_animation):
-			anim_player.play(network_animation)
-			
+	if anim_player and anim_player.has_animation(network_animation):
+		anim_player.play(network_animation)
+	if character_name == "Beholder" and is_attacking and target_id:
+		if time_since_last_attack >= 2:
+			var target = _get_target_by_id(target_id)
+			if target:
+				spawn_ranged_skill(target, BEHOLDER_FIREBALL_SCENE)
+				time_since_last_attack = 0.0
+				
+func _get_target_by_id(target_id):
+	return room.state.players.at(target_id)
+	
+func spawn_ranged_skill(target_node, scene):
+	var skill = scene.instantiate()
+	skill.target = target_node
+	var spawn_position = global_position
+	get_tree().root.add_child(skill)
+	skill.global_position = spawn_position
+	
 func _on_set_monster_loot(data):
 	var current_loot = data.loot
 	var loot_scene = load("res://tests/npcs/monsters/Loot.tscn")

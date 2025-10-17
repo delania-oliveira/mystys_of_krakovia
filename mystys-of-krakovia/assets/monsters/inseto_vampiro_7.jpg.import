@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdhxjpyxektbm"
-path.s3tc="res://.godot/imported/esqueleto_0.jpg-f0232ad1f0d6269dd6b5c508c8ababfe.s3tc.ctex"
+uid="uid://cldtfpdtb48iy"
+path.s3tc="res://.godot/imported/inseto_vampiro_7.jpg-d4248908d485cf5a1cafd529b81206a7.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "bde39ffc8d7c3e9d1b396c6edb7f08d1"
+"md5": "2142a7637f8d597176cdc6dd3dba3291"
 }
 
 [deps]
 
-source_file="res://assets/monsters/esqueleto_0.jpg"
-dest_files=["res://.godot/imported/esqueleto_0.jpg-f0232ad1f0d6269dd6b5c508c8ababfe.s3tc.ctex"]
+source_file="res://assets/monsters/inseto_vampiro_7.jpg"
+dest_files=["res://.godot/imported/inseto_vampiro_7.jpg-d4248908d485cf5a1cafd529b81206a7.s3tc.ctex"]
 
 [params]
 
@@ -29,8 +29,8 @@ compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=0
-roughness/src_normal=""
+roughness/mode=8
+roughness/src_normal="res://assets/monsters/inseto_vampiro_8.jpg"
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2

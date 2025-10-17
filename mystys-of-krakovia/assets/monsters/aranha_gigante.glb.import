@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bgiacl7wo4aso"
-path="res://.godot/imported/goblin.glb-234bb91ffe16f05cdd082efcb1e61ece.scn"
+uid="uid://d1l4x2ncdiip1"
+path="res://.godot/imported/aranha_gigante.glb-bc597610c6a14e4205a6b20143539fad.scn"
 
 [deps]
 
-source_file="res://assets/monsters/goblin.glb"
-dest_files=["res://.godot/imported/goblin.glb-234bb91ffe16f05cdd082efcb1e61ece.scn"]
+source_file="res://assets/monsters/aranha_gigante.glb"
+dest_files=["res://.godot/imported/aranha_gigante.glb-bc597610c6a14e4205a6b20143539fad.scn"]
 
 [params]
 
@@ -17,7 +17,7 @@ nodes/root_type=""
 nodes/root_name=""
 nodes/root_script=null
 nodes/apply_root_scale=true
-nodes/root_scale=1.0
+nodes/root_scale=3.0
 nodes/import_as_skeleton_bones=false
 nodes/use_name_suffixes=true
 nodes/use_node_type_suffixes=true

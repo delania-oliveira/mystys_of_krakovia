@@ -44,11 +44,12 @@ func _spawn_monster(value, key):
 	monster.spawn_position = Vector3(value.x, value.y, value.z)
 	monster.network_position = Vector3(value.x, value.y, value.z)
 	monster.network_animation = "Idle"
-	
+	monster.attack_range = value.attackRange
 	add_child(monster)
 	monster.model = monster_model_instance
 	value.listen(":change").on(Callable(self, "_on_monster").bind(monster))
 	room.on_message("set_monster_loot").on(Callable(monster, "_on_set_monster_loot"))
+	room.on_message("rangedAttack").on(Callable(monster, "_on_ranged_attack"))
 	
 func _on_monster(changes, monster_instance):
 	if not is_instance_valid(monster_instance):
@@ -56,6 +57,7 @@ func _on_monster(changes, monster_instance):
 	monster_instance.network_position = Vector3(changes.x, 2, changes.z)
 	monster_instance.is_targeting = changes.isTargeting
 	monster_instance.target_id = changes.targetId
+	monster_instance.is_attacking = changes.isAttacking
 	monster_instance.current_health = changes.health
 	if changes.animation:
 		monster_instance.network_animation = changes.animation

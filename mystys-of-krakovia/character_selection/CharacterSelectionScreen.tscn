@@ -1,6 +1,123 @@
-[gd_scene load_steps=2 format=3 uid="uid://bkh7eitherq8e"]
+[gd_scene load_steps=40 format=3 uid="uid://bkh7eitherq8e"]
 
 [ext_resource type="Script" uid="uid://c1bmd3awydutt" path="res://character_selection/character_selection_screen.gd" id="1_c8f5h"]
+[ext_resource type="VideoStream" uid="uid://cnx1fua52d2ms" path="res://assets/character_selection/backgroundVideo.ogv" id="2_qb8bs"]
+[ext_resource type="Texture2D" uid="uid://dyqtr3bm66q08" path="res://assets/character_selection/removeCharButton.png" id="3_buga8"]
+[ext_resource type="Texture2D" uid="uid://dha510ccrue85" path="res://assets/character_selection/playButton.png" id="4_ox4at"]
+[ext_resource type="Texture2D" uid="uid://cy41ye1upkg3q" path="res://assets/character_selection/newCharButton.png" id="5_w7b8k"]
+[ext_resource type="Texture2D" uid="uid://vkisp81nyx5y" path="res://assets/character_selection/configButton.png" id="6_ox4at"]
+[ext_resource type="Texture2D" uid="uid://dffsjt3lb4l3w" path="res://assets/character_selection/exitButton.png" id="6_ry05s"]
+[ext_resource type="FontFile" uid="uid://celsc86a60tw6" path="res://assets/fonts/timesbd.ttf" id="8_ui1dk"]
+[ext_resource type="PackedScene" uid="uid://cii3hn7evsqsu" path="res://assets/theme/AlertModal.tscn" id="8_w7b8k"]
+[ext_resource type="Texture2D" uid="uid://cgucqqxy3tpxw" path="res://assets/character_selection/button.png" id="9_4a8h7"]
+[ext_resource type="Texture2D" uid="uid://dvc2s24i4dn74" path="res://assets/character_selection/input.png" id="10_yr1nd"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_68mja"]
+texture = ExtResource("3_buga8")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ui1dk"]
+bg_color = Color(0.9529412, 0.34117648, 0.62352943, 0)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ui1dk"]
+texture = ExtResource("3_buga8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4a8h7"]
+texture = ExtResource("3_buga8")
+
+[sub_resource type="Environment" id="Environment_c8f5h"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yr1nd"]
+texture = ExtResource("4_ox4at")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4yjle"]
+texture = ExtResource("4_ox4at")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7d26n"]
+texture = ExtResource("4_ox4at")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fqa43"]
+texture = ExtResource("5_w7b8k")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5b7w5"]
+bg_color = Color(0.9529412, 0.34117648, 0.62352943, 0)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_40k8q"]
+texture = ExtResource("5_w7b8k")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ak10d"]
+texture = ExtResource("5_w7b8k")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w7b8k"]
+texture = ExtResource("6_ox4at")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4a8h7"]
+bg_color = Color(0.9529412, 0.34117648, 0.62352943, 0)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ry05s"]
+texture = ExtResource("6_ox4at")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_32ps4"]
+texture = ExtResource("6_ox4at")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bufuq"]
+texture = ExtResource("6_ry05s")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sfoql"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mh886"]
+texture = ExtResource("6_ry05s")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ney0d"]
+texture = ExtResource("6_ry05s")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7kdup"]
+texture = ExtResource("9_4a8h7")
+texture_margin_left = 85.0
+texture_margin_top = 22.0
+texture_margin_right = 85.0
+texture_margin_bottom = 22.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7av4e"]
+texture = ExtResource("9_4a8h7")
+texture_margin_left = 85.0
+texture_margin_top = 22.0
+texture_margin_right = 85.0
+texture_margin_bottom = 22.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_45t15"]
+texture = ExtResource("9_4a8h7")
+texture_margin_left = 85.0
+texture_margin_top = 22.0
+texture_margin_right = 85.0
+texture_margin_bottom = 22.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7mpn5"]
+texture = ExtResource("9_4a8h7")
+texture_margin_left = 85.0
+texture_margin_top = 22.0
+texture_margin_right = 85.0
+texture_margin_bottom = 22.0
+
+[sub_resource type="Theme" id="Theme_hkbq1"]
+Button/font_sizes/font_size = 20
+Button/fonts/font = ExtResource("8_ui1dk")
+Button/styles/focus = SubResource("StyleBoxTexture_7kdup")
+Button/styles/hover = SubResource("StyleBoxTexture_7av4e")
+Button/styles/normal = SubResource("StyleBoxTexture_45t15")
+Button/styles/pressed = SubResource("StyleBoxTexture_7mpn5")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5b7w5"]
+texture = ExtResource("10_yr1nd")
+texture_margin_left = 15.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kkxo8"]
+texture = ExtResource("10_yr1nd")
+texture_margin_left = 15.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uevoh"]
+texture = ExtResource("10_yr1nd")
+texture_margin_left = 15.0
 
 [node name="CharacterSelectionScreen" type="Control"]
 layout_mode = 3
@@ -11,80 +128,124 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_c8f5h")
 
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("2_qb8bs")
+autoplay = true
+loop = true
+metadata/_edit_lock_ = true
+
 [node name="GetCharacterListRequest" type="HTTPRequest" parent="."]
 
-[node name="CharacterSelectList" type="ItemList" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 0
-offset_left = 910.0
-offset_top = 203.0
-offset_right = 950.0
-offset_bottom = 243.0
-auto_width = true
-auto_height = true
+offset_right = 1920.0
+offset_bottom = 1080.0
+theme_override_constants/margin_left = 110
+theme_override_constants/margin_top = 200
+theme_override_constants/margin_right = 110
+theme_override_constants/margin_bottom = 50
 
-[node name="CharacterSelectLabel" type="Label" parent="CharacterSelectList"]
-layout_mode = 0
-offset_left = 16.0
-offset_top = -55.0
-offset_right = 162.0
-offset_bottom = -32.0
-text = "Meus Personagens"
+[node name="Layout" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
 
-[node name="ErrorDialog" type="AcceptDialog" parent="."]
-oversampling_override = 1.0
-position = Vector2i(0, 36)
-visible = true
+[node name="Panels" type="HBoxContainer" parent="MarginContainer/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
 
-[node name="CharacterPreview3D" type="Node3D" parent="."]
+[node name="LeftPanel" type="VBoxContainer" parent="MarginContainer/Layout/Panels"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 4
 
-[node name="Camera3D" type="Camera3D" parent="CharacterPreview3D"]
+[node name="Characteres" type="VBoxContainer" parent="MarginContainer/Layout/Panels/LeftPanel"]
+layout_mode = 2
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="CharacterPreview3D"]
+[node name="DeleteCharacterButton" type="Button" parent="MarginContainer/Layout/Panels/LeftPanel"]
+custom_minimum_size = Vector2(240, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+theme_override_styles/normal = SubResource("StyleBoxTexture_68mja")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ui1dk")
+theme_override_styles/hover = SubResource("StyleBoxTexture_ui1dk")
+theme_override_styles/focus = SubResource("StyleBoxTexture_4a8h7")
 
-[node name="JoinGameButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 381.0
-offset_top = 496.0
-offset_right = 499.0
-offset_bottom = 527.0
-text = "Entrar no Jogo"
+[node name="CenterPanel" type="VBoxContainer" parent="MarginContainer/Layout/Panels"]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+theme_override_constants/separation = -30
 
-[node name="Label" type="Label" parent="."]
-layout_mode = 0
-offset_left = 622.0
-offset_top = 214.0
-offset_right = 662.0
-offset_bottom = 237.0
+[node name="CharacterPreview" type="SubViewportContainer" parent="MarginContainer/Layout/Panels/CenterPanel"]
+custom_minimum_size = Vector2(520, 700)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
 
-[node name="ExitButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 160.0
-offset_top = 494.0
-offset_right = 198.0
-offset_bottom = 525.0
-text = "Sair"
+[node name="CharacterPreview3D" type="SubViewport" parent="MarginContainer/Layout/Panels/CenterPanel/CharacterPreview"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(520, 700)
+render_target_update_mode = 4
 
-[node name="DeleteCharacterButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 851.0
-offset_top = 627.0
-offset_right = 1029.0
-offset_bottom = 658.0
-text = "Remover Personagem"
+[node name="Camera3D" type="Camera3D" parent="MarginContainer/Layout/Panels/CenterPanel/CharacterPreview/CharacterPreview3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+fov = 38.7
 
-[node name="CreateCharacterButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 736.0
-offset_top = 497.0
-offset_right = 883.0
-offset_bottom = 528.0
-text = "Criar Personagem"
+[node name="WorldEnvironment" type="WorldEnvironment" parent="MarginContainer/Layout/Panels/CenterPanel/CharacterPreview/CharacterPreview3D"]
+environment = SubResource("Environment_c8f5h")
 
-[node name="ConfigMenuButton" type="Button" parent="."]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
-text = "Configurações"
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="MarginContainer/Layout/Panels/CenterPanel/CharacterPreview/CharacterPreview3D"]
+light_energy = 2.993
+light_angular_distance = 5.6
+
+[node name="JoinGameButton" type="Button" parent="MarginContainer/Layout/Panels/CenterPanel"]
+custom_minimum_size = Vector2(240, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = SubResource("StyleBoxTexture_yr1nd")
+theme_override_styles/hover = SubResource("StyleBoxTexture_4yjle")
+theme_override_styles/focus = SubResource("StyleBoxTexture_7d26n")
+
+[node name="RightPanel" type="VBoxContainer" parent="MarginContainer/Layout/Panels"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+alignment = 2
+
+[node name="CreateCharacterButton" type="Button" parent="MarginContainer/Layout/Panels/RightPanel"]
+custom_minimum_size = Vector2(240, 60)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_fqa43")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_5b7w5")
+theme_override_styles/hover = SubResource("StyleBoxTexture_40k8q")
+theme_override_styles/focus = SubResource("StyleBoxTexture_ak10d")
+
+[node name="ConfigMenuButton" type="Button" parent="MarginContainer/Layout/Panels/RightPanel"]
+custom_minimum_size = Vector2(240, 60)
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_styles/normal = SubResource("StyleBoxTexture_w7b8k")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_4a8h7")
+theme_override_styles/hover = SubResource("StyleBoxTexture_ry05s")
+theme_override_styles/focus = SubResource("StyleBoxTexture_32ps4")
+
+[node name="ExitButton" type="Button" parent="MarginContainer/Layout/Panels/RightPanel"]
+custom_minimum_size = Vector2(240, 60)
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_styles/normal = SubResource("StyleBoxTexture_bufuq")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_sfoql")
+theme_override_styles/hover = SubResource("StyleBoxTexture_mh886")
+theme_override_styles/focus = SubResource("StyleBoxTexture_ney0d")
 
 [node name="LoadingScreen" type="Panel" parent="."]
 visible = false
@@ -96,6 +257,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ColorRect" type="ColorRect" parent="LoadingScreen"]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -105,6 +267,7 @@ grow_vertical = 2
 color = Color(0.08468992, 0.08468992, 0.08468992, 1)
 
 [node name="Label" type="Label" parent="LoadingScreen"]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -121,16 +284,45 @@ text = "Carregando..."
 
 [node name="DeleteCharacterRequest" type="HTTPRequest" parent="."]
 
-[node name="SuccessDialog" type="AcceptDialog" parent="."]
+[node name="SuccessDialog" parent="." instance=ExtResource("8_w7b8k")]
 
 [node name="ConfirmDeletionDialog" type="ConfirmationDialog" parent="."]
-title = "Confirmar Remoção"
-size = Vector2i(400, 100)
+oversampling_override = 1.0
+title = ""
+initial_position = 1
+size = Vector2i(600, 180)
+borderless = true
+max_size = Vector2i(600, 300)
+keep_title_visible = false
+theme = SubResource("Theme_hkbq1")
+cancel_button_text = "CANCEL"
 
 [node name="ConfirmDeletionInput" type="LineEdit" parent="ConfirmDeletionDialog"]
-offset_right = 68.5625
-offset_bottom = 31.0
-placeholder_text = "Digite o nome do personagem para confirmar"
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 8.0
+offset_top = -91.5
+offset_right = -8.0
+offset_bottom = 14.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_5b7w5")
+theme_override_styles/read_only = SubResource("StyleBoxTexture_kkxo8")
+theme_override_styles/focus = SubResource("StyleBoxTexture_uevoh")
+placeholder_text = "Digite o nome do personagem para confirmar remoção"
+emoji_menu_enabled = false
+middle_mouse_paste_enabled = false
+selecting_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="WarningDialog" parent="." instance=ExtResource("8_w7b8k")]
+
+[node name="ErrorDialog" type="AcceptDialog" parent="."]
+oversampling_override = 1.0
+position = Vector2i(0, 36)
 
 [connection signal="confirmed" from="SuccessDialog" to="." method="_on_success_dialog_confirmed"]
 [connection signal="confirmed" from="ConfirmDeletionDialog" to="." method="_on_confirm_deletion_dialog_confirmed"]

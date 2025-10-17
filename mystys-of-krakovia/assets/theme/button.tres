@@ -31,12 +31,8 @@ texture_margin_top = 22.0
 texture_margin_right = 85.0
 texture_margin_bottom = 22.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2o3qn"]
-texture = ExtResource("2_5o2o1")
-texture_margin_left = 85.0
-texture_margin_top = 22.0
-texture_margin_right = 85.0
-texture_margin_bottom = 22.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0qj7w"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [resource]
 Button/colors/font_color = Color(0.875, 0.875, 0.875, 1)
@@ -62,4 +58,4 @@ Button/styles/disabled = SubResource("StyleBoxTexture_3msxh")
 Button/styles/focus = SubResource("StyleBoxTexture_gubj4")
 Button/styles/hover = SubResource("StyleBoxTexture_mbp1g")
 Button/styles/normal = SubResource("StyleBoxTexture_juu8r")
-Button/styles/pressed = SubResource("StyleBoxTexture_2o3qn")
+Button/styles/pressed = SubResource("StyleBoxFlat_0qj7w")

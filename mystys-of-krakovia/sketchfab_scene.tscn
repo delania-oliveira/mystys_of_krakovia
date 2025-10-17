@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dbrcvv4irx04a"]
+
+[ext_resource type="PackedScene" uid="uid://xsmdritff3kt" path="res://assets/construcoes/trees.glb" id="1_r57si"]
+
+[node name="Sketchfab_Scene" instance=ExtResource("1_r57si")]
+
+[node name="tree3" parent="Sketchfab_model/4b2abb44f4a14d37b01ec7f10e041ccc_fbx/RootNode/Null" index="2"]
+transform = Transform3D(0.5186654, 0, -0.8549773, 0, 1, 0, 0.8549773, 0, 0.5186654, 64.97163, -3.0028107, -281.8946)

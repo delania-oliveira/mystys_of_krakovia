@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://dmgw2qrb5gapi"]
+[gd_scene load_steps=56 format=3 uid="uid://dmgw2qrb5gapi"]
 
 [ext_resource type="Texture2D" uid="uid://e7tb7eq8e7tg" path="res://assets/terrain_textures/Grass002_1K-JPG_Color.jpg" id="2_so66j"]
 [ext_resource type="Texture2D" uid="uid://ciyh7i4l7enaq" path="res://assets/terrain_textures/Grass002_1K-JPG_NormalGL.jpg" id="3_tr1x6"]
@@ -19,15 +19,58 @@
 [ext_resource type="Texture2D" uid="uid://clgcydcarb73v" path="res://assets/terrain_textures/PavingStones148_1K-JPG_Color.jpg" id="18_tdlki"]
 [ext_resource type="Texture2D" uid="uid://1j5qel786i8x" path="res://assets/terrain_textures/PavingStones148_1K-JPG_NormalGL.jpg" id="19_v8pws"]
 [ext_resource type="Texture2D" uid="uid://c67b7v6mxfexe" path="res://assets/terrain_textures/Bricks076C_1K-JPG_Color.jpg" id="20_rscm6"]
-[ext_resource type="PackedScene" uid="uid://cgowrcml3jow" path="res://FOREST2.glb" id="21_tr1x6"]
+[ext_resource type="PackedScene" uid="uid://cbde01wgrrm5w" path="res://assets/construcoes/FOREST2.glb" id="21_tr1x6"]
 [ext_resource type="Texture2D" uid="uid://cgykip405s0qy" path="res://assets/terrain_textures/Bricks076C_1K-JPG_NormalGL.jpg" id="21_wom8k"]
-[ext_resource type="PackedScene" uid="uid://ncuy5vvws0ak" path="res://medieval_sceneray.glb" id="22_d5akn"]
+[ext_resource type="PackedScene" uid="uid://ccx042vv7sflh" path="res://assets/construcoes/ancient_tree.glb" id="23_d5akn"]
+[ext_resource type="PackedScene" uid="uid://bddxlrnl33n04" path="res://assets/construcoes/pine_forest_high-poly_tree_pack.glb" id="23_wbtxt"]
+[ext_resource type="PackedScene" uid="uid://xsmdritff3kt" path="res://assets/construcoes/trees.glb" id="24_wbtxt"]
+[ext_resource type="PackedScene" uid="uid://b2ukj253qhlab" path="res://assets/construcoes/war_damaged__church.glb" id="24_x2fux"]
+[ext_resource type="PackedScene" uid="uid://lam83dulsy53" path="res://assets/character/Mage.glb" id="25_s7g0b"]
+[ext_resource type="PackedScene" uid="uid://byjok0knf6xna" path="res://assets/construcoes/free_cliff_rock.glb" id="26_mmfjm"]
+[ext_resource type="PackedScene" uid="uid://c7j3srpco25qy" path="res://assets/construcoes/ruined_rock_fence.glb" id="27_k8ld0"]
+[ext_resource type="PackedScene" uid="uid://c1jpajoak28hn" path="res://assets/construcoes/withe_fence.glb" id="28_k8ld0"]
+[ext_resource type="PackedScene" uid="uid://bv0p8ajk0578s" path="res://assets/construcoes/oak_trees.glb" id="31_hnsmf"]
+[ext_resource type="PackedScene" uid="uid://cja5fustooojy" path="res://assets/construcoes/stair_stone.glb" id="32_nossa"]
+[ext_resource type="PackedScene" uid="uid://bxvieemivrmua" path="res://assets/construcoes/medieval_sceneray2.glb" id="33_hjqri"]
+[ext_resource type="PackedScene" uid="uid://c1308m48fmkvc" path="res://assets/construcoes/Cerca.glb" id="34_hg84p"]
+[ext_resource type="PackedScene" uid="uid://s1m65050o1nw" path="res://assets/construcoes/medieval_market_tent_prop_01.glb" id="35_q0ron"]
+[ext_resource type="PackedScene" uid="uid://2cadx22rxw2t" path="res://assets/construcoes/medieval_crane.glb" id="36_tdlki"]
 
-[sub_resource type="Gradient" id="Gradient_a202f"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mmfjm"]
+sky_top_color = Color(0.34229124, 0.21581075, 0.16515246, 1)
+sky_horizon_color = Color(0.5758396, 0.5088243, 0, 1)
+sky_curve = 0.04459519
+ground_curve = 0.06727172
+sun_angle_max = 90.0
+
+[sub_resource type="Sky" id="Sky_k8ld0"]
+sky_material = SubResource("ProceduralSkyMaterial_mmfjm")
+
+[sub_resource type="Environment" id="Environment_tr1x6"]
+background_mode = 2
+sky = SubResource("Sky_k8ld0")
+tonemap_mode = 2
+fog_mode = 1
+fog_light_color = Color(0.8403268, 0.6654969, 0.51250875, 1)
+fog_light_energy = 0.7
+fog_sun_scatter = 0.43
+fog_density = 0.4528
+fog_aerial_perspective = 0.547
+fog_sky_affect = 0.344
+fog_depth_curve = 0.37892917
+fog_depth_end = 1886.4
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.7575
+volumetric_fog_emission_energy = 392.25
+volumetric_fog_gi_inject = 2.89
+volumetric_fog_anisotropy = 0.0
+volumetric_fog_length = 389.37
+
+[sub_resource type="Gradient" id="Gradient_gkh53"]
 offsets = PackedFloat32Array(0.2, 1)
 colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_noarx"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_014kd"]
 noise_type = 2
 frequency = 0.03
 cellular_jitter = 3.0
@@ -39,36 +82,36 @@ domain_warp_fractal_type = 2
 domain_warp_fractal_lacunarity = 1.5
 domain_warp_fractal_gain = 1.0
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_a0tk4"]
-noise = SubResource("FastNoiseLite_noarx")
-color_ramp = SubResource("Gradient_a202f")
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_bswci"]
+noise = SubResource("FastNoiseLite_014kd")
+color_ramp = SubResource("Gradient_gkh53")
 seamless = true
 
-[sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_r3fl7"]
+[sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_rus8k"]
 _shader_parameters = {
 &"bias_distance": 512.0,
-&"blend_sharpness": 0.8010000380475,
-&"depth_blur": 0.0,
+&"blend_sharpness": 0.7550000358625,
+&"depth_blur": 3.20000004768384,
 &"enable_macro_variation": true,
 &"enable_projection": true,
 &"height_blending": true,
-&"macro_variation1": Color(1, 1, 1, 1),
-&"macro_variation2": Color(1, 1, 1, 1),
-&"macro_variation_slope": 0.333,
-&"mipmap_bias": 1.0,
-&"noise1_angle": 0.0,
+&"macro_variation1": Color(0.52906674, 0.5290667, 0.5290667, 1),
+&"macro_variation2": Color(0.68371344, 0.60353273, 0.44915164, 1),
+&"macro_variation_slope": 0.2410000114475,
+&"mipmap_bias": 0.93999999016512,
+&"noise1_angle": 1.470000069825,
 &"noise1_offset": Vector2(0.5, 0.5),
-&"noise1_scale": 0.04,
-&"noise2_scale": 0.076,
-&"noise3_scale": 0.225,
-&"noise_texture": SubResource("NoiseTexture2D_a0tk4"),
-&"projection_angular_division": 2.0,
-&"projection_threshold": 0.8,
+&"noise1_scale": 0.214000010165,
+&"noise2_scale": 0.2630000124925,
+&"noise3_scale": 0.1470000069825,
+&"noise_texture": SubResource("NoiseTexture2D_bswci"),
+&"projection_angular_division": 3.858000135755,
+&"projection_threshold": 0.27999999374144,
 &"world_space_normal_blend": true
 }
 world_background = 0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jka67"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5xbjy"]
 transparency = 4
 cull_mode = 2
 vertex_color_use_as_albedo = true
@@ -78,92 +121,275 @@ distance_fade_mode = 1
 distance_fade_min_distance = 128.0
 distance_fade_max_distance = 96.0
 
-[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_i5arm"]
+[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_4nkto"]
 generated_type = 1
 height_offset = 0.5
-material_override = SubResource("StandardMaterial3D_jka67")
+material_override = SubResource("StandardMaterial3D_5xbjy")
 last_lod = 0
 last_shadow_lod = 0
 lod0_range = 128.0
 
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_wa552"]
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_isj1j"]
 name = "Grass002_1K-JPG_Color"
+albedo_color = Color(0.92030954, 0.8471657, 0.66010123, 1)
 albedo_texture = ExtResource("2_so66j")
 normal_texture = ExtResource("3_tr1x6")
+normal_depth = 0.465
+uv_scale = 0.17
+detiling_rotation = 0.298
+detiling_shift = 0.268
 
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_v0i6o"]
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_so66j"]
 name = "Ground068_1K-JPG_Color"
 id = 1
 albedo_texture = ExtResource("4_d5akn")
 normal_texture = ExtResource("5_wbtxt")
 
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_bamb7"]
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_tr1x6"]
 name = "Ground050_1K-JPG_Color"
 id = 2
 albedo_texture = ExtResource("6_x2fux")
 normal_texture = ExtResource("7_s7g0b")
+uv_scale = 1.5
 
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_8jqp6"]
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_d5akn"]
 name = "Moss001_1K-JPG_Color"
 id = 3
+albedo_color = Color(0.44398957, 0.4674456, 0.2587744, 1)
 albedo_texture = ExtResource("8_mmfjm")
 normal_texture = ExtResource("9_k8ld0")
-uv_scale = 0.205
+uv_scale = 0.8
 
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_jscgt"]
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_wbtxt"]
 name = "Gravel020_1K-JPG_Color"
 id = 4
 albedo_texture = ExtResource("10_mbb35")
 normal_texture = ExtResource("11_iw4em")
+uv_scale = 1.0
 
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_0bysi"]
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_x2fux"]
 name = "Rock030_1K-JPG_Color"
 id = 5
 albedo_texture = ExtResource("12_hnsmf")
 normal_texture = ExtResource("13_nossa")
-uv_scale = 0.179
 
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_y0ove"]
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_s7g0b"]
 name = "Rock061_1K-JPG_Color"
 id = 6
 albedo_texture = ExtResource("14_hjqri")
 normal_texture = ExtResource("15_hg84p")
-uv_scale = 0.33
 
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_awarj"]
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_mmfjm"]
 name = "Tiles089_1K-JPG_Color"
 id = 7
 albedo_texture = ExtResource("16_1aans")
 normal_texture = ExtResource("17_q0ron")
 
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_uuj1x"]
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_k8ld0"]
 name = "PavingStones148_1K-JPG_Color"
 id = 8
 albedo_texture = ExtResource("18_tdlki")
 normal_texture = ExtResource("19_v8pws")
 
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_3x5jj"]
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_mbb35"]
 name = "Bricks076C_1K-JPG_Color"
 id = 9
 albedo_texture = ExtResource("20_rscm6")
 normal_texture = ExtResource("21_wom8k")
+uv_scale = 1.0
 
-[sub_resource type="Terrain3DAssets" id="Terrain3DAssets_wc5p8"]
-mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_i5arm")])
-texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_wa552"), SubResource("Terrain3DTextureAsset_v0i6o"), SubResource("Terrain3DTextureAsset_bamb7"), SubResource("Terrain3DTextureAsset_8jqp6"), SubResource("Terrain3DTextureAsset_jscgt"), SubResource("Terrain3DTextureAsset_0bysi"), SubResource("Terrain3DTextureAsset_y0ove"), SubResource("Terrain3DTextureAsset_awarj"), SubResource("Terrain3DTextureAsset_uuj1x"), SubResource("Terrain3DTextureAsset_3x5jj")])
+[sub_resource type="Terrain3DAssets" id="Terrain3DAssets_fcfvj"]
+mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_4nkto")])
+texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_isj1j"), SubResource("Terrain3DTextureAsset_so66j"), SubResource("Terrain3DTextureAsset_tr1x6"), SubResource("Terrain3DTextureAsset_d5akn"), SubResource("Terrain3DTextureAsset_wbtxt"), SubResource("Terrain3DTextureAsset_x2fux"), SubResource("Terrain3DTextureAsset_s7g0b"), SubResource("Terrain3DTextureAsset_mmfjm"), SubResource("Terrain3DTextureAsset_k8ld0"), SubResource("Terrain3DTextureAsset_mbb35")])
 
 [node name="Level_1" type="Node3D"]
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tr1x6")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
 [node name="Terrain3D" type="Terrain3D" parent="."]
 data_directory = "res://scenes/Level_1_data"
-material = SubResource("Terrain3DMaterial_r3fl7")
-assets = SubResource("Terrain3DAssets_wc5p8")
-collision_layer = 5
+material = SubResource("Terrain3DMaterial_rus8k")
+assets = SubResource("Terrain3DAssets_fcfvj")
 top_level = true
 metadata/_edit_lock_ = true
 
 [node name="FOREST2" parent="." instance=ExtResource("21_tr1x6")]
-transform = Transform3D(-7.816335, 0, 1.7043793, 0, 8, 0, -1.7043793, 0, -7.816335, 191.97064, -0.05164981, 171.39166)
+transform = Transform3D(-0.61715233, 0, -8.978816, 0, 10, 0, 8.978816, 0, -0.61715233, 108.22236, -0.032242775, -131.79208)
 
-[node name="Sketchfab_Scene" parent="." instance=ExtResource("22_d5akn")]
-transform = Transform3D(0.008611482, 0, -0.018051105, 0, 0.02, 0, 0.018051105, 0, 0.008611482, 162.90881, -0.39336157, 28.111607)
+[node name="FOREST5" parent="." instance=ExtResource("21_tr1x6")]
+transform = Transform3D(10.32491, 0, 7.899131, 0, 14.444001, 0, -7.899131, 0, 10.32491, -86.520226, -0.03225422, -8.552074)
+
+[node name="FOREST6" parent="." instance=ExtResource("21_tr1x6")]
+transform = Transform3D(-11.599009, 0, -5.8705215, 0, 14.444001, 0, 5.8705215, 0, -11.599009, 24.543137, -0.03225422, 158.7912)
+
+[node name="FOREST3" parent="." instance=ExtResource("21_tr1x6")]
+transform = Transform3D(-8.5446825, 0, -2.8263803, 0, 9.999999, 0, 2.8263803, 0, -8.5446825, 155.09958, -0.032250404, -15.458706)
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("23_d5akn")]
+transform = Transform3D(0.0010522173, 0, -0.02998154, 0, 0.03, 0, 0.02998154, 0, 0.0010522173, 126.84223, 0.20865107, -59.37612)
+
+[node name="Sketchfab_Scene10" parent="." instance=ExtResource("23_d5akn")]
+transform = Transform3D(-0.026433654, 0, -0.014186674, 0, 0.029999997, 0, 0.014186674, 0, -0.026433654, -19.010185, 50.287594, -170.80066)
+
+[node name="Sketchfab_Scene2" parent="." instance=ExtResource("23_wbtxt")]
+transform = Transform3D(0.70103616, 0, -1.8731122, 0, 2, 0, 1.8731122, 0, 0.70103616, 180.517, -0.805233, -126.7331)
+
+[node name="Sketchfab_Scene3" parent="." instance=ExtResource("24_x2fux")]
+transform = Transform3D(-2.5197124, 0, -1.6282046, 0, 3, 0, 1.6282046, 0, -2.5197124, 103.815216, -0.92520905, -27.872776)
+
+[node name="AuxScene" parent="." instance=ExtResource("25_s7g0b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 92.62696, 1.5521343, -45.53608)
+
+[node name="Sketchfab_Scene4" parent="." instance=ExtResource("26_mmfjm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 196.49539, -1.6875362, -13.405497)
+
+[node name="Sketchfab_Scene5" parent="." instance=ExtResource("23_wbtxt")]
+transform = Transform3D(-1.3170636, 0, 1.5051057, 0, 2, 0, -1.5051057, 0, -1.3170636, 60.152817, 0, -3.9708595)
+
+[node name="Sketchfab_Scene19" parent="." instance=ExtResource("23_wbtxt")]
+transform = Transform3D(-1.5755486, 0, -1.2319276, 0, 2, 0, 1.2319276, 0, -1.5755486, 62.589085, 0, 29.290325)
+
+[node name="Sketchfab_Scene13" parent="." instance=ExtResource("23_wbtxt")]
+transform = Transform3D(1.5302249, 0, 1.2877932, 0, 2, 0, -1.2877932, 0, 1.5302249, -131.53284, 46.429924, -93.64646)
+
+[node name="CERCA" type="Node" parent="."]
+
+[node name="Sketchfab_Scene6" parent="CERCA" instance=ExtResource("27_k8ld0")]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 79.0768, 2.3841858e-07, -31.11808)
+
+[node name="Sketchfab_Scene7" parent="CERCA" instance=ExtResource("27_k8ld0")]
+transform = Transform3D(0.009812758, 0, -0.0019260759, 0, 0.01, 0, 0.0019260759, 0, 0.009812758, 75.20602, 2.3841858e-07, -31.610508)
+
+[node name="Sketchfab_Scene10" parent="CERCA" instance=ExtResource("27_k8ld0")]
+transform = Transform3D(0.008401787, 0, -0.005423095, 0, 0.01, 0, 0.005423095, 0, 0.008401787, 72.13111, 2.3841858e-07, -33.114292)
+
+[node name="Sketchfab_Scene11" parent="CERCA" instance=ExtResource("27_k8ld0")]
+transform = Transform3D(0.0026764201, 0, -0.009635183, 0, 0.009999999, 0, 0.009635183, 0, 0.0026764201, 71.36019, 7.1525574e-07, -34.50014)
+
+[node name="Sketchfab_Scene8" parent="CERCA" instance=ExtResource("27_k8ld0")]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 83.32472, 2.3841858e-07, -31.11808)
+
+[node name="Sketchfab_Scene9" parent="CERCA" instance=ExtResource("27_k8ld0")]
+transform = Transform3D(0.009533119, 0, 0.0030198724, 0, 0.01, 0, -0.0030198724, 0, 0.009533119, 87.085, 2.3841858e-07, -31.8846)
+
+[node name="Sketchfab_Scene12" parent="CERCA" instance=ExtResource("27_k8ld0")]
+transform = Transform3D(0.002381605, 0, -0.009712257, 0, 0.009999999, 0, 0.009712257, 0, 0.002381605, -44.134075, 2.3841858e-07, 71.45341)
+
+[node name="Sketchfab_Scene13" parent="CERCA" instance=ExtResource("27_k8ld0")]
+transform = Transform3D(0.0004663568, 0, -0.009989117, 0, 0.009999999, 0, 0.009989117, 0, 0.0004663568, -44.577686, 2.3841858e-07, 67.57673)
+
+[node name="Sketchfab_Scene14" parent="CERCA" instance=ExtResource("27_k8ld0")]
+transform = Transform3D(-0.003266077, 0, -0.009451599, 0, 0.009999999, 0, 0.009451599, 0, -0.003266077, -43.84949, 2.3841858e-07, 64.232155)
+
+[node name="Sketchfab_Scene15" parent="CERCA" instance=ExtResource("27_k8ld0")]
+transform = Transform3D(-0.008720521, 0, -0.004894128, 0, 0.009999998, 0, 0.004894128, 0, -0.008720521, -42.687122, 7.1525574e-07, 63.153366)
+
+[node name="Sketchfab_Scene16" parent="CERCA" instance=ExtResource("27_k8ld0")]
+transform = Transform3D(0.002381605, 0, -0.009712257, 0, 0.009999999, 0, 0.009712257, 0, 0.002381605, -43.122387, 2.3841858e-07, 75.5791)
+
+[node name="Sketchfab_Scene17" parent="CERCA" instance=ExtResource("27_k8ld0")]
+transform = Transform3D(0.0052033905, 0, -0.008539597, 0, 0.01, 0, 0.008539597, 0, 0.0052033905, -41.482376, 2.3841858e-07, 79.04863)
+
+[node name="Sketchfab_Scene6" parent="." instance=ExtResource("28_k8ld0")]
+transform = Transform3D(2.4207654, 0, -4.3749166, 0, 5, 0, 4.3749166, 0, 2.4207654, 100.85912, 0.45377624, -44.45446)
+
+[node name="Sketchfab_Scene7" parent="." instance=ExtResource("28_k8ld0")]
+transform = Transform3D(-2.9795127, 0, 4.015284, 0, 5, 0, -4.015284, 0, -2.9795127, 103.72057, 0.45377624, -46.02856)
+
+[node name="Sketchfab_Scene8" parent="." instance=ExtResource("28_k8ld0")]
+transform = Transform3D(3.3785298, 0, -3.6858566, 0, 5, 0, 3.6858566, 0, 3.3785298, 106.20165, 0.45377636, -48.086376)
+
+[node name="Sketchfab_Scene9" parent="." instance=ExtResource("26_mmfjm")]
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 107.575714, 2.3841858e-07, -49.070408)
+
+[node name="Sketchfab_Scene11" parent="." instance=ExtResource("24_wbtxt")]
+transform = Transform3D(-0.019729842, 0, 0.00327616, 0, 0.019999998, 0, -0.00327616, 0, -0.019729842, 55.379585, 2.861023e-06, -129.54677)
+
+[node name="Sketchfab_Scene14" parent="." instance=ExtResource("24_wbtxt")]
+transform = Transform3D(-0.009718166, 0, 0.017480193, 0, 0.019999998, 0, -0.017480193, 0, -0.009718166, 52.871834, 2.861023e-06, -142.25616)
+
+[node name="Sketchfab_Scene15" parent="." instance=ExtResource("24_wbtxt")]
+transform = Transform3D(-0.009584865, 0, -0.017553637, 0, 0.019999994, 0, 0.017553637, 0, -0.009584865, 38.98889, 2.861023e-06, -126.32985)
+
+[node name="Sketchfab_Scene20" parent="." instance=ExtResource("24_wbtxt")]
+transform = Transform3D(-0.019906273, 0, -0.0019339416, 0, 0.019999996, 0, 0.0019339416, 0, -0.019906273, 83.460045, -4.7683716e-06, 15.862775)
+
+[node name="Sketchfab_Scene21" parent="." instance=ExtResource("24_wbtxt")]
+transform = Transform3D(0.012269445, 0, -0.015794318, 0, 0.019999994, 0, 0.015794318, 0, 0.012269445, 92.521965, -4.7683716e-06, 34.94851)
+
+[node name="Sketchfab_Scene16" parent="." instance=ExtResource("31_hnsmf")]
+transform = Transform3D(6.8845854, 0, -4.0746145, 0, 8, 0, 4.0746145, 0, 6.8845854, 31.848564, -9.536743e-07, -133.62207)
+
+[node name="Sketchfab_Scene17" parent="." instance=ExtResource("31_hnsmf")]
+transform = Transform3D(-7.598118, 0, -2.5037186, 0, 8, 0, 2.5037186, 0, -7.598118, 69.7218, -9.536743e-07, -106.30449)
+
+[node name="Sketchfab_Scene18" parent="." instance=ExtResource("24_wbtxt")]
+transform = Transform3D(0.89066553, 0, -0.45465907, 0, 1, 0, 0.45465907, 0, 0.89066553, 441.56302, -41.128235, -391.7716)
+
+[node name="Sketchfab_Scene22" parent="." instance=ExtResource("32_nossa")]
+transform = Transform3D(0.006380812, 0.0006383561, 0.0076731844, 9.3310024e-05, 0.009958429, -0.00090606697, -0.0076991245, 0.0006497426, 0.00634833, -17.263525, -0.023398995, -85.1555)
+
+[node name="Sketchfab_Scene23" parent="." instance=ExtResource("32_nossa")]
+transform = Transform3D(0.006170607, 0.002828327, 0.0073433067, -1.4486601e-05, 0.009335822, -0.0035835875, -0.007869137, 0.0022006528, 0.0057648686, -18.546043, 1.6078247, -86.30619)
+
+[node name="Sketchfab_Scene24" parent="." instance=ExtResource("26_mmfjm")]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -24.901476, -1.8087368, -85.435616)
+
+[node name="Sketchfab_Scene26" parent="." instance=ExtResource("26_mmfjm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -49.111374, 0.57219505, -90.42125)
+
+[node name="Sketchfab_Scene27" parent="." instance=ExtResource("26_mmfjm")]
+transform = Transform3D(0.42522654, 0, -0.90508693, 0, 1, 0, 0.90508693, 0, 0.42522654, -41.55792, -5.710991, -95.48298)
+
+[node name="Sketchfab_Scene28" parent="." instance=ExtResource("26_mmfjm")]
+transform = Transform3D(-0.74398506, 0, -0.6681964, 0, 1, 0, 0.6681964, 0, -0.74398506, -34.146423, -9.973379, -97.72)
+
+[node name="Sketchfab_Scene29" parent="." instance=ExtResource("26_mmfjm")]
+transform = Transform3D(-0.9908637, 0, -0.1348682, 0, 1, 0, 0.1348682, 0, -0.9908637, 12.279268, 8.586788, -144.76003)
+
+[node name="Sketchfab_Scene30" parent="." instance=ExtResource("26_mmfjm")]
+transform = Transform3D(-0.543409, 0, 0.8394681, 0, 1, 0, -0.8394681, 0, -0.543409, 5.4774904, 2.3036022, -138.72581)
+
+[node name="Sketchfab_Scene31" parent="." instance=ExtResource("26_mmfjm")]
+transform = Transform3D(0.6470691, 0, 0.76243126, 0, 1, 0, -0.76243126, 0, 0.6470691, -1.5645876, -1.958786, -135.50964)
+
+[node name="Sketchfab_Scene25" parent="." instance=ExtResource("27_k8ld0")]
+transform = Transform3D(0.040882725, 0.024479775, 0.015144074, -0.022955453, 0.043597482, -0.008503324, -0.01736806, 0, 0.046886567, -17.195744, 4.6640244, -97.70173)
+
+[node name="medieval_sceneray2" parent="." instance=ExtResource("33_hjqri")]
+transform = Transform3D(-0.08763823, 0, 0.04816159, 0, 0.099999994, 0, -0.04816159, 0, -0.08763823, -28.010708, -0.24708354, 89.52793)
+
+[node name="Cerca" parent="." instance=ExtResource("34_hg84p")]
+transform = Transform3D(0.30313513, 0, 0.9529476, 0, 1, 0, -0.9529476, 0, 0.30313513, 1.4460394, 0, 79.1488)
+
+[node name="Cerca2" parent="." instance=ExtResource("34_hg84p")]
+transform = Transform3D(0.30313513, 0, 0.9529476, 0, 1, 0, -0.9529476, 0, 0.30313513, 0.28556156, 0, 82.78926)
+
+[node name="Cerca3" parent="." instance=ExtResource("34_hg84p")]
+transform = Transform3D(0.30313513, 0, 0.9529476, 0, 1, 0, -0.9529476, 0, 0.30313513, -0.85853696, -2.3841858e-07, 86.39427)
+
+[node name="Sketchfab_Scene32" parent="." instance=ExtResource("26_mmfjm")]
+transform = Transform3D(-0.17110357, 0, -0.103554636, 0, 0.19999999, 0, 0.103554636, 0, -0.17110357, 0.04457563, -3.8537014, 86.30991)
+
+[node name="Sketchfab_Scene33" parent="." instance=ExtResource("35_q0ron")]
+transform = Transform3D(-0.14426987, 0, 0.9895384, 0, 1, 0, -0.9895384, 0, -0.14426987, -38.5901, 0, 72.42069)
+
+[node name="Sketchfab_Scene34" parent="." instance=ExtResource("36_tdlki")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -35.15852, 0, 58.7053)
+
+[node name="Sketchfab_Scene35" parent="." instance=ExtResource("31_hnsmf")]
+transform = Transform3D(4.281065, 0, -2.5831149, 0, 5, 0, 2.5831149, 0, 4.281065, -38.97737, -4.7683716e-07, 63.497787)
+
+[node name="Cerca4" parent="." instance=ExtResource("34_hg84p")]
+transform = Transform3D(-0.8687266, 0, -0.495292, 0, 1, 0, 0.495292, 0, -0.8687266, -35.074993, -3.5762787e-07, 60.12673)
+
+[node name="Sketchfab_Scene36" parent="." instance=ExtResource("26_mmfjm")]
+transform = Transform3D(-0.036810532, 0.3738105, -0.13751632, -0.39807457, -0.03919991, -2.9658866e-09, -0.013476571, 0.13685438, 0.37561855, -24.553165, -0.5562372, 107.68351)
+
+[node name="Sketchfab_Scene37" parent="." instance=ExtResource("23_d5akn")]
+transform = Transform3D(0.008510402, 0, 0.0052510034, 0, 0.01, 0, -0.0052510034, 0, 0.008510402, -49.029125, 0, 90.5032)

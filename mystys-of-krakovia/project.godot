@@ -13,7 +13,6 @@ config_version=5
 config/name="Mystys Of Krakovia"
 run/main_scene="uid://dqws0gwxk1adc"
 config/features=PackedStringArray("4.5", "Forward Plus")
-config/icon="res://icon.svg"
 
 [autoload]
 

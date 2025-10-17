@@ -4,4 +4,5 @@ extends Button
 
 func _on_button_down() -> void:
 	var options_menu = options_scene.instantiate()
-	add_child(options_menu)
+	
+	get_tree().root.add_child(options_menu)

@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://domhm87hbhbg1"]
+[gd_scene load_steps=6 format=3 uid="uid://domhm87hbhbg1"]
 
 [ext_resource type="Script" uid="uid://db722wu1c4uko" path="res://demo/src/Player.gd" id="1_nm1yx"]
 [ext_resource type="Script" uid="uid://ivayyh742vda" path="res://demo/src/CameraManager.gd" id="2_loos7"]
-[ext_resource type="PackedScene" uid="uid://2iy04eh05ui5" path="res://assets/character/cac-1758665492797.gltf" id="3_sgnwv"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_smq6u"]
 
@@ -37,5 +36,3 @@ shape = SubResource("CapsuleShape3D_lwhhq")
 [node name="CollisionShapeRay" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1, 0)
 shape = SubResource("SeparationRayShape3D_twc2s")
-
-[node name="AuxScene" parent="." instance=ExtResource("3_sgnwv")]

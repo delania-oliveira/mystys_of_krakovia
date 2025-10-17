@@ -26,7 +26,12 @@ func _spawn_monster(value, key):
 	var MonsterSceneLocation = "res://tests/npcs/monsters/monster.tscn"
 	var MonsterScene = load(MonsterSceneLocation)
 	var monster = MonsterScene.instantiate()
-	var monster_model_scene = load("res://tests/npcs/monsters/monster.glb")
+	var monster_model_scene
+	var path = "res://assets/monsters/" + value.name.to_lower().replace(" ", "_") + ".glb"
+	if ResourceLoader.exists(path):
+		monster_model_scene = load(path)
+	else:
+		monster_model_scene = load("res://tests/npcs/monsters/monster.glb")
 	var monster_model_instance = monster_model_scene.instantiate()
 	monster.get_node("Pivot").add_child(monster_model_instance)
 	monster.id = key
@@ -36,11 +41,15 @@ func _spawn_monster(value, key):
 	if value.detectionRange != 0:
 		monster.is_aggressive = true
 	monster.position = Vector3(value.x, value.y, value.z)
+	monster.spawn_position = Vector3(value.x, value.y, value.z)
 	monster.network_position = Vector3(value.x, value.y, value.z)
+	monster.network_animation = "Idle"
+	monster.attack_range = value.attackRange
 	add_child(monster)
 	monster.model = monster_model_instance
 	value.listen(":change").on(Callable(self, "_on_monster").bind(monster))
 	room.on_message("set_monster_loot").on(Callable(monster, "_on_set_monster_loot"))
+	room.on_message("rangedAttack").on(Callable(monster, "_on_ranged_attack"))
 	
 func _on_monster(changes, monster_instance):
 	if not is_instance_valid(monster_instance):
@@ -48,7 +57,10 @@ func _on_monster(changes, monster_instance):
 	monster_instance.network_position = Vector3(changes.x, 2, changes.z)
 	monster_instance.is_targeting = changes.isTargeting
 	monster_instance.target_id = changes.targetId
+	monster_instance.is_attacking = changes.isAttacking
 	monster_instance.current_health = changes.health
+	if changes.animation:
+		monster_instance.network_animation = changes.animation
 	if changes.isDead:
 		var timer = Timer.new()
 		timer.wait_time = 0.25
@@ -61,7 +73,7 @@ func _on_players_add(target, value, key):
 	var characterSceneLocation = "res://tests/players/Player.tscn"
 	var Char = load(characterSceneLocation)
 	var ch = Char.instantiate()
-	var model_scene = load("res://assets/character/" + value.character_class + ".glb")
+	var model_scene = load("res://assets/character/" + value.character_class.replace(" ", "_") + ".glb")
 	var model_instance = model_scene.instantiate()
 	model_instance.transform = Transform3D.IDENTITY
 	ch.get_node("Pivot").add_child(model_instance)
@@ -72,8 +84,11 @@ func _on_players_add(target, value, key):
 	value.node = ch
 	ch.room = room
 	ch.id = key
+	ch.name = key
 	ch.character_name = value.name
 	ch.current_health = value.health
+	ch.current_mana = value.mana
+	ch.max_mana = value.max_mana
 	ch.current_gold = 0
 	ch.defense = value.defense
 	ch.attack = value.attack
@@ -90,7 +105,9 @@ func _on_players_add(target, value, key):
 		room.on_message("resistDamage").on(Callable(ch, "_on_resist_damage"))
 		room.on_message("damageDealt").on(Callable(ch, "_on_damage_dealt"))
 		room.on_message("experienceGained").on(Callable(ch, "_on_experience_gained"))
+		room.on_message("partyMemberLevelUp").on(Callable(ch, "_on_party_member_level_up"))
 		room.on_message("partyInvite").on(Callable(ch, "_on_party_invite"))
+		room.on_message("setPartyTarget").on(Callable(ch, "_on_set_party_target"))
 		room.on_message("partyJoined").on(Callable(ch, "_on_party_joined"))
 		room.on_message("inviteFail").on(Callable(ch, "_on_invite_fail"))
 		room.on_message("partyHealthUpdate").on(Callable(ch, "_on_party_health_update"))

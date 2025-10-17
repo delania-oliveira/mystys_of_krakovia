@@ -21,9 +21,41 @@ const PLAYER_SPEED = 14
 export class Krakovia extends Room<KrakoviaState> {
   maxClients = 4;
   hasProcessedAttack = false
+  lifeRegenTimer = 0
+  manaRegenTimer = 0
   private monsterSpawns = new Map<string, Monster>();
   private damagedTargets: Monster[] = []
+  leaveParty(player: Player) {
+    if (player && player.partyId) {
+      const partyId = player.partyId;
+      const partyLeader = this.state.players.get(partyId);
+      const party = partyLeader._party[partyId];
 
+      party.forEach(member => {
+        const memberClient = this.clients.find(c => c.sessionId === member.id);
+        if (memberClient) {
+          memberClient.send("leaveParty", { leavingMember: player.id });
+        }
+      });
+
+      const updatedParty = party.filter(member => member.id !== player.id);
+      partyLeader._party[partyId] = updatedParty;
+
+      player.partyId = "";
+
+      if (updatedParty.length <= 1) {
+        const lastMember = updatedParty[0];
+        if (lastMember) {
+          const memberClient = this.clients.find(c => c.sessionId === lastMember.id);
+          if (memberClient) {
+            memberClient.send("leaveParty", { leavingMember: lastMember.id });
+          }
+          lastMember.partyId = "";
+        }
+        delete partyLeader._party[partyId];
+      }
+    }
+  }
   onCreate(options: any) {
     this.state = new KrakoviaState();
     const monsters = loadMonsters()
@@ -45,7 +77,7 @@ export class Krakovia extends Room<KrakoviaState> {
         detectionRange: monster.detectionRange,
         attackCooldown: 2.0,
         attackTimer: 0.0,
-        attackRange: 2.0,
+        attackRange: monster.attack_range,
         difficulty: monster.difficulty,
         experience: monster.experience,
         respawn: monster.respawn
@@ -57,8 +89,8 @@ export class Krakovia extends Room<KrakoviaState> {
     this.onMessage("movePlayer", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
-        player.inputX = data.x ?? 0;
-        player.inputZ = data.z ?? 0;
+        player.inputX = data.x;
+        player.inputZ = data.z;
         const isMoving = Math.abs(data.x) >= 0.1 || Math.abs(data.z) >= 0.1;
         player.animation = isMoving ? "Running" : "Idle";
         player.isAttacking = false
@@ -135,37 +167,37 @@ export class Krakovia extends Room<KrakoviaState> {
     });
 
    this.onMessage("leaveParty", (client, data) => {
-    const player = this.state.players.get(client.sessionId);
-    if (player && player.partyId) {
-      const partyId = player.partyId;
-      const partyLeader = this.state.players.get(partyId);
-      const party = partyLeader._party[partyId];
-
-      party.forEach(member => {
-        const memberClient = this.clients.find(c => c.sessionId === member.id);
-        if (memberClient) {
-          memberClient.send("leaveParty", { leavingMember: player.id });
-        }
-      });
-
-      const updatedParty = party.filter(member => member.id !== player.id);
-      partyLeader._party[partyId] = updatedParty;
-
-      player.partyId = "";
-
-      if (updatedParty.length <= 1) {
-        const lastMember = updatedParty[0];
-        if (lastMember) {
-          const memberClient = this.clients.find(c => c.sessionId === lastMember.id);
-          if (memberClient) {
-            memberClient.send("leaveParty", { leavingMember: lastMember.id });
-          }
-          lastMember.partyId = "";
-        }
-        delete partyLeader._party[partyId];
-        }
+      const player = this.state.players.get(client.sessionId);
+      if (player){
+        this.leaveParty(player)  
       }
     });
+
+    this.onMessage("healTarget", (client, data) => {
+      const player = this.state.players.get(client.sessionId);
+      if (player){
+        const target = this.state.players.get(data.targetId)
+        if (target) {
+          const skill = skills.get(data.skillId)
+          target.health = Math.min(target.health + skill.healing + player.attack, target.max_health);
+          this.broadcast("playerTargetHealthUpdate", {
+            id: client.sessionId,
+            targetId: target.id,
+            health: target.health,
+          });
+          if (target.partyId){
+            const partyLeader = this.state.players.get(target.partyId)
+            const party = partyLeader._party[target.partyId]
+            party.forEach(member => {
+             const memberClient = this.clients.find(c => c.sessionId === member.id);
+             if (memberClient) {
+               memberClient.send("partyHealthUpdate", { member: target.id, health: target.health });
+             }
+           });
+          }
+        }
+      }
+    })
 
     this.onMessage("playerAttack", (client, data) => {
       const player = this.state.players.get(client.sessionId);
@@ -175,6 +207,11 @@ export class Krakovia extends Room<KrakoviaState> {
         player.animation = "Idle"
         const skill = skills.get(data.skillId)
         player.skillEffect = skill.effect
+        if (player.character_class === "Blood Mage") {
+          player.health = Math.max(player.health - skill.manaCost, 0);
+        } else {
+          player.mana = Math.max(player.mana - skill.manaCost, 0);
+        }
         const payload: any = {
           id: client.sessionId,
           skillId: skill.id,
@@ -219,14 +256,23 @@ export class Krakovia extends Room<KrakoviaState> {
           client.send("skillFail", {"text": "Level muito baixo para usar a skill!"})
           return
         }
+        if (skill.manaCost > player.mana && player.character_class !== "Blood Mage") {
+          client.send("skillFail", {"text": "Não possui mana suficiente!"})
+          return
+        }
         if (skill.needTarget) {
-          const target = this.state.monsters.get(data.targetId)
+          let target
+          if (data.heal){
+            target = this.state.players.get(data.targetId)
+          } else {
+            target = this.state.monsters.get(data.targetId)
+          }
           if (!target) return
           const dx = target.x  - player.x
           const dz = target.z - player.z
           const distance = Math.sqrt(dx * dx + dz * dz)
           if (distance > skill.range) {
-            client.send("skillFail", {"text": "Inimigo muito distante!"})
+            client.send("skillFail", {"text": "Alvo muito distante!"})
           } else {
             player.isAttacking = true
             player.animation = skill.animation;
@@ -249,13 +295,25 @@ export class Krakovia extends Room<KrakoviaState> {
     this.onMessage("equipItem", (client, data) =>{
       const player = this.state.players.get(client.sessionId)
       if (player) {
-        const equippedItem = items[data.itemId]
-        if (equippedItem.limitedClasses.includes(player.character_class) || equippedItem.limitedClasses.includes("Todas")){
-          player.defense += equippedItem.defense
-          player.attack += equippedItem.attack
+        const equippedItem = items[data.newItemId]
+        let defenseRaise = 0
+        let atkRaise = 0
+        if (data.oldItemId) {
+          const oldItem = items[data.oldItemId]
+          defenseRaise = oldItem.defense - equippedItem.defense
+          atkRaise = oldItem.attack - equippedItem.attack
+        } else {
+          defenseRaise = equippedItem.defense
+          atkRaise = equippedItem.attack
+        }
+        if ((equippedItem.limitedClasses.includes(player.character_class) || equippedItem.limitedClasses.includes("Todas")) && equippedItem.defense){
+          player.defense += defenseRaise
+        } else {
+          player.attack += atkRaise
         }
       }
     })
+
     this.onMessage("looted", (client, data) => {
       const player = this.state.players.get(data.playerId);
       // Loot Gold
@@ -269,7 +327,8 @@ export class Krakovia extends Room<KrakoviaState> {
           quantity: data.itemQuantity,
           description: lootedItem.description,
           type: lootedItem.type,
-          limitedClasses: lootedItem.limitedClasses
+          limitedClasses: lootedItem.limitedClasses,
+          rarity: lootedItem.rarity
         };
         if (lootedItem.type === "Armor" || lootedItem.type === "Helmet") {
           payload.attack = 0
@@ -363,7 +422,7 @@ export class Krakovia extends Room<KrakoviaState> {
                 detectionRange: monsterData.detectionRange,
                 attackCooldown: 2.0,
                 attackTimer: 0.0,
-                attackRange: 2.0,
+                attackRange: monsterData.attackRange,
                 difficulty: monsterData.difficulty,
                 experience: monsterData.experience,
                 respawn: monsterData.respawn
@@ -372,59 +431,127 @@ export class Krakovia extends Room<KrakoviaState> {
               this.state.monsters.set(respawnedMonster.monster_id, respawnedMonster);
             }
           }, monsterData.respawn * 1000);
-          let levelsGained = 0
           const killer = this.state.players.get(target.taggedPlayerId)
           const partyId = killer.partyId
           const killerClient = this.clients.find(c => c.sessionId === killer.id);
           if (killerClient && !partyId) {
-            killerClient.send("set_monster_loot", {"loot": loot, "loot_pos_x": target.x, "loot_pos_y": target.y, "loot_pos_z": target.z})
-            killer.experience += target.experience
+            let levelsGained = 0;
+
+            killerClient.send("set_monster_loot", {
+              loot,
+              loot_pos_x: target.x,
+              loot_pos_y: target.y,
+              loot_pos_z: target.z
+            });
+
+            killer.experience += target.experience;
+
             while (killer.experience >= ExperienceTable[killer.level]) {
-              const requiredExp = ExperienceTable[killer.level];
-              killer.experience -= requiredExp;
-              killer.max_exp = ExperienceTable[killer.level];
-              levelUp(player)
-              levelsGained += 1;
+              killer.experience -= ExperienceTable[killer.level];
+              levelUp(killer);
+              levelsGained++;
             }
-            this.broadcast("experienceGained", {
-              id: killer.id,
-              taggedPlayerId: target.taggedPlayerId,
+
+            killer.max_exp = ExperienceTable[killer.level];
+
+            killerClient.send("experienceGained", {
               experience: target.experience,
               maxExp: killer.max_exp,
-              levelsGained: levelsGained,
+              levelsGained,
               currentExperience: killer.experience
             });
-          } else {
-            const partyLeader = this.state.players.get(partyId)
-            const party = partyLeader._party[partyId]
-            const memberCount = party.length            
-            const bonusMultiplier = 1 + (0.25 * (memberCount - 1))
-            const share = Math.floor((target.experience * bonusMultiplier) / memberCount)
+
+          } else if (partyId) {
+            const partyLeader = this.state.players.get(partyId);
+            const party = partyLeader._party[partyId];
+            const memberCount = party.length;
+            const bonusMultiplier = 1 + (0.25 * (memberCount - 1));
+            const share = Math.floor((target.experience * bonusMultiplier) / memberCount);
+
+            const membersLeveledUp: any[] = []
+
             party.forEach(member => {
-              member.experience += share
-              while (member.experience >= ExperienceTable[member.level]) {
-                const requiredExp = ExperienceTable[member.level];
-                member.experience -= requiredExp;
-                member.level += 1;
-                member.max_exp = ExperienceTable[member.level];
-                levelsGained += 1;
-              }
-              this.broadcast("experienceGained", {
-                id: member.id,
-                partyId: member.partyId,
-                experience: share,
-                maxExp: member.max_exp,
-                levelsGained: levelsGained,
-                currentExperience: member.experience
-              });
+              let levelsGained = 0;
               const memberClient = this.clients.find(c => c.sessionId === member.id);
+
+              member.experience += share;
+
+              while (member.experience >= ExperienceTable[member.level]) {
+                member.experience -= ExperienceTable[member.level];
+                levelUp(member);
+                levelsGained++;
+              }
+
+              if (levelsGained != 0){
+                membersLeveledUp.push({
+                  id: member.id,
+                  name: member.name,
+                  level: member.level,
+                  character_class: member.character_class,
+                  partyId: member.partyId
+                })
+              }
+
+              if (membersLeveledUp.length > 0) {
+                this.broadcast("partyMemberLevelUp", { membersLeveledUp });
+              }
+
+              member.max_exp = ExperienceTable[member.level];
+              
               if (memberClient) {
-                memberClient.send("set_monster_loot", {"loot": loot, "loot_pos_x": target.x, "loot_pos_y": target.y, "loot_pos_z": target.z});
+                memberClient.send("experienceGained", {
+                  id: member.id,
+                  partyId: member.partyId,
+                  experience: share,
+                  maxExp: member.max_exp,
+                  levelsGained,
+                  currentExperience: member.experience,
+                  membersLeveledUp: membersLeveledUp
+                });
+                memberClient.send("set_monster_loot", {
+                  loot,
+                  loot_pos_x: target.x,
+                  loot_pos_y: target.y,
+                  loot_pos_z: target.z
+                });
               }
             });
           }
+
         }
       } 
+    })
+    this.onMessage("respawnPlayer", (client, data) => {
+      const player = this.state.players.get(client.sessionId)
+      if (player) {
+        player.x = 0
+        player.y = 3
+        player.z = 0
+        player.isDead = false
+        player.health = player.max_health
+        player.animation = "Idle"
+        if (player.partyId){
+          const partyLeader = this.state.players.get(player.partyId)
+          const party = partyLeader._party[player.partyId]
+          party.forEach(member => {
+            const memberClient = this.clients.find(c => c.sessionId === member.id);
+            if (memberClient) {
+              memberClient.send("partyHealthUpdate", { member: player.id, health: player.health });
+            }
+          });
+        }
+      }
+    })
+
+    this.onMessage("unstuck", (client, data) => {
+      const player = this.state.players.get(client.sessionId)
+      if (player) {
+        player.x = 0
+        player.y += 10
+        player.vy = 100;
+        player.z = 0
+        player.animation = "Idle"
+      }
     })
 
     this.onMessage("moveMonster", (client, data) => {
@@ -440,6 +567,26 @@ export class Krakovia extends Room<KrakoviaState> {
       const player = this.state.players.get(client.sessionId);
       if (player) {
         player.targetName = data.targetName
+        if (data.targetId) {
+          player.targetId = data.targetId
+        }
+      }
+    });
+
+    this.onMessage("setPartyTarget", (client, data) => {
+      const player = this.state.players.get(client.sessionId);
+      if (player) {
+        const target = this.state.players.get(data.targetId)
+        const targetData = {
+          id: target.id,
+          x: target.x,
+          y: target.y,
+          z: target.z,
+          character_name: target.name,
+          max_health: target.max_health,
+          current_health: target.health,
+        }
+        client.send("setPartyTarget", targetData)
       }
     });
 
@@ -462,12 +609,62 @@ export class Krakovia extends Room<KrakoviaState> {
     
     this.setSimulationInterval((dtMs) => this.update(dtMs), 25);
   }
-
+  
   update(dtMs: number) {
     const dt = dtMs / 1000; // convert to seconds
-
     this.state.players.forEach((player) => {
-      // apply gravity
+      this.lifeRegenTimer += dt
+      this.manaRegenTimer += dt
+      if (player.health < player.max_health && this.lifeRegenTimer >= 5) {
+        switch (player.character_class) {
+          case "Warrior":
+            player.health = Math.min(player.health + 5, player.max_health);
+            break;
+          case "Mage":
+            player.health = Math.min(player.health + 2, player.max_health);
+            break;
+          case "Archer":
+            player.health = Math.min(player.health + 3, player.max_health);
+            break;
+          case "Blood Mage":
+            player.health = Math.min(player.health + 5, player.max_health);
+          default:
+            break;
+        }
+        this.broadcast("playerTargetHealthUpdate", {
+          id: player.targetId,
+          targetId: player.id,
+          health: player.health,
+        });
+        if (player.partyId) {
+          const partyLeader = this.state.players.get(player.partyId)
+          const party = partyLeader._party[player.partyId];
+          party.forEach(member => {
+            const memberClient = this.clients.find(c => c.sessionId === member.id);
+            if (memberClient) {
+              memberClient.send("partyHealthUpdate", { member: player.id, health: player.health });
+            }
+          });
+        }
+        this.lifeRegenTimer = 0
+      }
+      if (player.mana < player.max_mana && this.manaRegenTimer >= 5) {
+        switch (player.character_class) {
+          case "Warrior":
+            player.mana = Math.min(player.mana + 3, player.max_mana);
+            break;
+          case "Mage":
+            player.mana = Math.min(player.mana + 10, player.max_mana);
+            break;
+          case "Archer":
+            player.mana = Math.min(player.mana + 5, player.max_mana);
+            break;
+          default:
+            break;
+        }
+        this.manaRegenTimer = 0
+      }
+      // Apply gravity
       player.vy -= GRAVITY * dt;
       const dx = player.inputX;
       const dz = player.inputZ;
@@ -499,7 +696,8 @@ export class Krakovia extends Room<KrakoviaState> {
         const dxSpawn = monster.x - monster.spawn_x;
         const dzSpawn = monster.z - monster.spawn_z;
         const distanceToSpawn = Math.sqrt(dxSpawn * dxSpawn + dzSpawn * dzSpawn);        
-        if (distanceToSpawn > 40) {
+        if (distanceToSpawn > 60) {
+          monster.isAttacking = false
           monster.isAggroed = false;
           monster.targetId = "";
           monster.isTargeting = false;
@@ -526,16 +724,28 @@ export class Krakovia extends Room<KrakoviaState> {
 
           monster.x += moveX;
           monster.z += moveZ;
+          monster.animation = "Running"
+          monster.isAttacking = false
         }
         
         const attackRange = monster.attackRange;
         if (monster.attackTimer <= 0 && distance <= attackRange && monster.isAggroed && !monster.isDead) {
+          if (monster.attackTimer >= 0) {
+            monster.animation = "Idle"
+          }
           if (!target.isDead) {
             monster.isTargeting = true
+            monster.animation = "Attack"
+            const targetClient = this.clients.find(c => c.sessionId === target.id);
+            monster.isAttacking = true
+            if (monster.attackRange > 5){
+              targetClient.send("rangedAttack");
+            }
             const finalDamage = calculateMonsterDamage(monster, target);
+            
             if (finalDamage === 0) {
-              const targetClient = this.clients.find(c => c.sessionId === target.id);
               targetClient.send("resistDamage")
+              return
             }
             target.health -= finalDamage;
             this.broadcast("playerTargetHealthUpdate", {
@@ -552,7 +762,6 @@ export class Krakovia extends Room<KrakoviaState> {
               const party = partyLeader._party[partyId];
               party.forEach(member => {
                 const memberClient = this.clients.find(c => c.sessionId === member.id);
-                
                 if (memberClient) {
                   memberClient.send("partyHealthUpdate", { member: target.id, health: target.health });
                 }
@@ -561,6 +770,7 @@ export class Krakovia extends Room<KrakoviaState> {
             if (target.health <= 0) {
               target.isDead = true;
               target.health = 0;
+              monster.isAttacking = false
               // Remove player from threat table and retarget to new highest threat player
               this.state.monsters.forEach(monster => {
                 delete monster._threatTable?.[target.id];
@@ -578,13 +788,15 @@ export class Krakovia extends Room<KrakoviaState> {
                   if (topThreatPlayerId) {
                     monster.targetId = topThreatPlayerId;
                     monster.isTargeting = true;
+                    monster.animation = "Idle"
                   } else {
+                    monster.isAttacking = false
                     monster.targetId = "";
+                    monster.animation = "Running"
                     monster.isTargeting = false;
                   }
                 }
               });
-
             }
           }
           monster.attackTimer = monster.attackCooldown;
@@ -603,10 +815,12 @@ export class Krakovia extends Room<KrakoviaState> {
 
           monster.x += moveX;
           monster.z += moveZ;
+          monster.animation = "Running"
+        } else {
+          monster.animation = "Idle"
         }
       }
     });
-
   }
   
   async onJoin(client: Client, options: { character_id: string }) {
@@ -619,6 +833,7 @@ export class Krakovia extends Room<KrakoviaState> {
         if (characterFound.length > 0) {
           const character = characterFound[0];
           player.id = client.sessionId;
+          player.dbId = options.character_id;
           player.name = character.name;
           player.character_class = character.class;
           player.health = character.health;
@@ -626,14 +841,17 @@ export class Krakovia extends Room<KrakoviaState> {
           player.mana = character.mana;
           player.max_mana = character.max_mana;
           player.experience = character.experience;
-          player.max_exp = ExperienceTable[player.level]
+          player.max_exp = ExperienceTable[character.level]
           player.level = character.level;
           player.attack = player.attack
           player.gold = player.gold
-          player.defense = player.defense
-          player.x = character.x_position;
-          player.y = character.y_position;
-          player.z = character.z_position;
+          player.defense = player.level
+          player.attack = player.level
+          player.x = character.spawn_x;
+          player.y = 3;
+          player.z = character.spawn_z;
+          player.spawn_x = character.spawn_x
+          player.spawn_z = character.spawn_z
           await db.update(schema.characters).set({
             lastLogin: sql`NOW()`
           })
@@ -648,8 +866,27 @@ export class Krakovia extends Room<KrakoviaState> {
     this.state.players.set(client.sessionId, player);
   }
 
-  onLeave(client: Client, consented: boolean) {
+  async onLeave(client: Client, consented: boolean) {
     console.log(client.sessionId, "left!");
+    const player = this.state.players.get(client.sessionId)
+    try {
+      await db.update(schema.characters).set({
+        health: player.health,
+        max_health: player.max_health,
+        mana: player.mana,
+        max_mana: player.max_mana,
+        experience: player.experience,
+        level: player.level,
+        gold: player.gold,
+        spawn_x: player.x,
+        spawn_z: player.z
+      }).where(eq(schema.characters.id, player.dbId));
+    } catch (error) {
+      console.log(error)
+    }
+    if (player.partyId){
+      this.leaveParty(player)
+    }
     this.state.players.delete(client.sessionId);
   }
 

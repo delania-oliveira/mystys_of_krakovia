@@ -50,6 +50,7 @@ sky_material = SubResource("ProceduralSkyMaterial_mmfjm")
 background_mode = 2
 sky = SubResource("Sky_k8ld0")
 tonemap_mode = 2
+fog_enabled = true
 fog_mode = 1
 fog_light_color = Color(0.8403268, 0.6654969, 0.51250875, 1)
 fog_light_energy = 0.7
@@ -59,7 +60,6 @@ fog_aerial_perspective = 0.547
 fog_sky_affect = 0.344
 fog_depth_curve = 0.37892917
 fog_depth_end = 1886.4
-volumetric_fog_enabled = true
 volumetric_fog_density = 0.7575
 volumetric_fog_emission_energy = 392.25
 volumetric_fog_gi_inject = 2.89
@@ -216,7 +216,6 @@ data_directory = "res://scenes/Level_1_data"
 material = SubResource("Terrain3DMaterial_rus8k")
 assets = SubResource("Terrain3DAssets_fcfvj")
 top_level = true
-metadata/_edit_lock_ = true
 
 [node name="FOREST2" parent="." instance=ExtResource("21_tr1x6")]
 transform = Transform3D(-0.61715233, 0, -8.978816, 0, 10, 0, 8.978816, 0, -0.61715233, 108.22236, -0.032242775, -131.79208)
@@ -332,10 +331,10 @@ transform = Transform3D(-7.598118, 0, -2.5037186, 0, 8, 0, 2.5037186, 0, -7.5981
 transform = Transform3D(0.89066553, 0, -0.45465907, 0, 1, 0, 0.45465907, 0, 0.89066553, 441.56302, -41.128235, -391.7716)
 
 [node name="Sketchfab_Scene22" parent="." instance=ExtResource("32_nossa")]
-transform = Transform3D(0.006380812, 0.0006383561, 0.0076731844, 9.3310024e-05, 0.009958429, -0.00090606697, -0.0076991245, 0.0006497426, 0.00634833, -17.263525, -0.023398995, -85.1555)
+transform = Transform3D(0.006380812, 0.0006383561, 0.0076731844, 9.3310024e-05, 0.009958429, -0.00090606697, -0.0076991245, 0.0006497426, 0.00634833, -17.263525, 0.4553758, -85.1555)
 
 [node name="Sketchfab_Scene23" parent="." instance=ExtResource("32_nossa")]
-transform = Transform3D(0.006170607, 0.002828327, 0.0073433067, -1.4486601e-05, 0.009335822, -0.0035835875, -0.007869137, 0.0022006528, 0.0057648686, -18.546043, 1.6078247, -86.30619)
+transform = Transform3D(0.007681431, 0.0031457345, 0.009482948, -1.8033528e-05, 0.01038353, -0.004627748, -0.009795832, 0.00244762, 0.007444596, -21.089354, 3.1844244, -89.18525)
 
 [node name="Sketchfab_Scene24" parent="." instance=ExtResource("26_mmfjm")]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -24.901476, -1.8087368, -85.435616)

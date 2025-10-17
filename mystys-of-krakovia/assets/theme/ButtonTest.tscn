@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://ogggmvnomhju"]
+
+[ext_resource type="PackedScene" uid="uid://ge1a2v4ippsd" path="res://assets/theme/CharacterButton.tscn" id="2_la52g"]
+
+[sub_resource type="GDScript" id="GDScript_bkcsw"]
+script/source = "extends Control
+@onready var character_button = $CharacterButton
+
+func _ready():
+	# 1. Crie dados FALSOS para o teste
+	var fake_character_data = {
+		\"name\": \"Siham\",
+		\"class\": \"Blood Mage\",
+		\"level\": 3
+	}
+	var fake_avatar = preload(\"res://assets/character_selection/archerAvatar.png\")
+
+	# 2. Chame a função setup manualmente
+	character_button.setup(fake_character_data, fake_avatar)
+"
+
+[node name="ButtonTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_bkcsw")
+
+[node name="CharacterButton" parent="." instance=ExtResource("2_la52g")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 8.0
+offset_bottom = 101.0
+grow_horizontal = 1
+grow_vertical = 1

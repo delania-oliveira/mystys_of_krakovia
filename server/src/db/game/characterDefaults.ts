@@ -3,5 +3,5 @@ export const classDefaults: Record<string, { health: number; mana: number }> = {
   Mage: { health: 80, mana: 200 },
   Archer: { health: 120, mana: 120 },
   Assassin: { health: 150, mana: 100 },
-  Priest: { health: 80, mana: 200 },
+  "Blood Mage": { health: 100, mana: 0 },
 }

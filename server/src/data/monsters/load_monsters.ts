@@ -24,6 +24,7 @@ export function loadMonsters() {
     detectionRange: Number(m.detection_range),
     difficulty: Number(m.difficulty),
     experience: Number(m.experience),
-    respawn: Number(m.respawn)
+    respawn: Number(m.respawn),
+    attack_range: Number(m.attack_range)
   }));
 }

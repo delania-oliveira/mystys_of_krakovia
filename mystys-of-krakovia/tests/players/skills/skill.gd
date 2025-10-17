@@ -9,9 +9,9 @@ func setup_skill(data: Dictionary, icon_texture: Texture2D):
 	skill_data = data
 	self.texture = icon_texture
 	name_label.text = data.name
-
+	name_label.add_theme_font_size_override("font_size", 14)
 	var description = data.get("description", "No description available.")
-	self.tooltip_text = "%s\nDano Base: %s\nNível Requirido: %s\nDescrição: %s" % [data.name, data.baseDamage, data.level, description]
+	self.tooltip_text = "%s\nDano Base: %s\nNível Requirido: %s\nCusto de Mana: %s\n%s" % [data.name, data.baseDamage, data.level, data.manaCost, description]
 
 func _get_drag_data(at_position: Vector2):
 	var data_to_drag = {
@@ -21,7 +21,8 @@ func _get_drag_data(at_position: Vector2):
 		"skill_full_data": skill_data,
 		"source_texture": self.texture,
 		"cooldown": skill_data.cooldown,
-		"need_target": skill_data.needTarget
+		"need_target": skill_data.needTarget,
+		"mana_cost": skill_data.manaCost
 	}
 	
 	var drag_preview = TextureRect.new()

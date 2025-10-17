@@ -14,7 +14,12 @@ export const LootTable: Record<string, PossibleItems[]> = {
     { id: 3, name: "Jaqueta de Pano", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 100 },
     { id: 6, name: "Capuz de Seda", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 100 },
   ],
-  Skeleton: [
+  "Esqueleto Mago": [
+    { id: 1, name: "Ouro", min_quantity: 25, max_quantity: 50, quantity: 0, chance: 100 },
+    { id: 2, name: "Jaqueta de Pano", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 25 },
+    { id: 5, name: "Jaqueta de Seda", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 25 },
+  ],
+  "Esqueleto Pirata": [
     { id: 1, name: "Ouro", min_quantity: 25, max_quantity: 50, quantity: 0, chance: 100 },
     { id: 2, name: "Jaqueta de Pano", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 25 },
     { id: 5, name: "Jaqueta de Seda", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 25 },
@@ -33,5 +38,15 @@ export const LootTable: Record<string, PossibleItems[]> = {
     { id: 1, name: "Ouro", min_quantity: 25, max_quantity: 50, quantity: 0, chance: 100 },
     { id: 5, name: "Jaqueta de Seda", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 15 },
     { id: 8, name: "Capuz de Malha", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 15 },
+  ],
+  Wolf: [
+    { id: 9, name: "Cimitarra", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 50 },
+    { id: 10, name: "Espada Larga", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 50 },
+    { id: 11, name: "Espada do Senhor da Guerra", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 50 },
+  ],
+  Slime: [
+    { id: 12, name: "Cajado Simples", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 50 },
+    { id: 13, name: "Cajado de Cristal", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 50 },
+    { id: 14, name: "Sangue de Krakovia", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 50 },
   ],
 };

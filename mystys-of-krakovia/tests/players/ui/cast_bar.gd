@@ -10,6 +10,7 @@ var player
 var cast_position
 var label_update_timer := 0.0
 var skill_id
+var action_slot
 
 func cast_skill(skillId, castDuration):
 	skill_id = skillId
@@ -23,8 +24,10 @@ func cast_skill(skillId, castDuration):
 	cast_bar.value = 0
 
 func _process(delta):
-	if player and player.global_position.distance_to(cast_position) > 0.05:
+	if player and player.global_position.distance_to(cast_position) > 0.5 and is_casting:
 		cancel_cast()
+		if action_slot:
+			action_slot._on_cooldown_finished()
 		return
 	if is_casting:
 		label_update_timer += delta

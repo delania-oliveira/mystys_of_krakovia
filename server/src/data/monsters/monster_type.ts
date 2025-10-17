@@ -13,6 +13,7 @@ export interface MonsterType {
   difficulty: number;
   experience: number;
   respawn: number;
+  attack_range: number
 }
 
 export interface MonstersXML {

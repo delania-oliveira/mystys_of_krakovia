@@ -58,6 +58,7 @@ func save_settings():
 	config.save(CONFIG_PATH)
 	
 func _on_return_pressed():
+	closed.emit()
 	queue_free()
 	
 func load_settings():

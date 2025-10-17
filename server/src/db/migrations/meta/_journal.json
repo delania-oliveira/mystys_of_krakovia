@@ -36,6 +36,20 @@
       "when": 1759692688005,
       "tag": "0004_tan_viper",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1760623418370,
+      "tag": "0005_lethal_barracuda",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1760623890213,
+      "tag": "0006_supreme_the_executioner",
+      "breakpoints": true
     }
   ]
 }

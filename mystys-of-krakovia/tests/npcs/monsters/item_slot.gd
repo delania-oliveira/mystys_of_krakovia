@@ -5,7 +5,7 @@ extends Button
 @onready var item_quantity
 @onready var item_tex
 @onready var room
-@onready var base_tex = preload("res://assets/icons/skills/action_bar_slot.png")
+@onready var base_tex = preload("res://assets/loot/loot_slot.png")
 
 func _on_pressed() -> void:
 	if item_id and item_name and item_quantity and item_tex:

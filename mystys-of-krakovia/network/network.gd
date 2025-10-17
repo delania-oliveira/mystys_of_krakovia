@@ -39,15 +39,21 @@ class Monster extends colyseus.Schema:
 			colyseus.Field.new("experience", colyseus.NUMBER),
 			colyseus.Field.new("isDead", colyseus.BOOLEAN),
 			colyseus.Field.new("isAggroed", colyseus.BOOLEAN),
-			colyseus.Field.new("taggedPlayerId", colyseus.STRING)
+			colyseus.Field.new("taggedPlayerId", colyseus.STRING),
+			colyseus.Field.new("respawn", colyseus.NUMBER),
+			colyseus.Field.new("animation", colyseus.STRING),
+			colyseus.Field.new("isAttacking", colyseus.BOOLEAN),
 		]
 class Player extends colyseus.Schema:
 	static func define_fields():
 		return [
 			colyseus.Field.new("id", colyseus.STRING),
+			colyseus.Field.new("dbIwd", colyseus.STRING),
 			colyseus.Field.new("x", colyseus.NUMBER),
 			colyseus.Field.new("y", colyseus.NUMBER),
 			colyseus.Field.new("z", colyseus.NUMBER),
+			colyseus.Field.new("spawn_x", colyseus.NUMBER),
+			colyseus.Field.new("spawn_z", colyseus.NUMBER),
 			colyseus.Field.new("vx", colyseus.NUMBER),
 			colyseus.Field.new("vy", colyseus.NUMBER),
 			colyseus.Field.new("vz", colyseus.NUMBER),
@@ -71,6 +77,7 @@ class Player extends colyseus.Schema:
 			colyseus.Field.new("targetHealth", colyseus.NUMBER),
 			colyseus.Field.new("targetName", colyseus.STRING),
 			colyseus.Field.new("defense", colyseus.NUMBER),
+			colyseus.Field.new("attack", colyseus.NUMBER),
 			colyseus.Field.new("skillEffect", colyseus.STRING),
 			colyseus.Field.new("isAttacking", colyseus.BOOLEAN),
 			colyseus.Field.new("max_exp", colyseus.NUMBER),
@@ -78,6 +85,7 @@ class Player extends colyseus.Schema:
 			colyseus.Field.new("gold", colyseus.NUMBER),
 			colyseus.Field.new("lootId", colyseus.NUMBER),
 			colyseus.Field.new("partyId", colyseus.STRING),
+			colyseus.Field.new("castTime", colyseus.NUMBER),
 		]
 	var node
 	

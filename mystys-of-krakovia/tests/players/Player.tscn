@@ -1,8 +1,11 @@
-[gd_scene load_steps=20 format=3 uid="uid://drsrs7v3ykkwq"]
+[gd_scene load_steps=23 format=3 uid="uid://drsrs7v3ykkwq"]
 
 [ext_resource type="Script" uid="uid://cq0rk5lox1lkw" path="res://tests/players/player.gd" id="1_g5nvm"]
+[ext_resource type="Script" uid="uid://c1dpwny38d0m0" path="res://tests/players/progress_mana_bar.gd" id="2_rel3d"]
 [ext_resource type="Script" uid="uid://cendqjf0d6vsl" path="res://tests/players/skills/action_bar.gd" id="3_g5nvm"]
 [ext_resource type="Script" uid="uid://bqu316xxkwfjg" path="res://tests/npcs/monsters/name.gd" id="3_qg6v4"]
+[ext_resource type="Script" uid="uid://bpq703i1bdgbw" path="res://tests/players/target.gd" id="3_ybssk"]
+[ext_resource type="Script" uid="uid://bfkbeaukejw0" path="res://tests/players/progress_health_bar.gd" id="3_ycfmw"]
 [ext_resource type="PackedScene" uid="uid://c01o1kr5nssku" path="res://tests/players/skills/ActionBarSlot.tscn" id="4_qg6v4"]
 [ext_resource type="Script" uid="uid://nbcbqlfilm3u" path="res://tests/players/ui/spell_book.gd" id="5_qg6v4"]
 [ext_resource type="Texture2D" uid="uid://c0l6npoqek6ph" path="res://assets/ui_textures/spellbook.png" id="6_r5luj"]
@@ -42,7 +45,7 @@ script = ExtResource("1_g5nvm")
 shape = SubResource("SphereShape3D_ibhvg")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.70710677, -0.4055798, 0.579228, 0, 0.81915206, 0.57357645, -0.70710677, -0.4055798, 0.579228, 5, 5, 5)
+transform = Transform3D(0.70710677, -0.4055798, 0.579228, 0, 0.81915206, 0.57357645, -0.70710677, -0.4055798, 0.579228, 7, 7, 7)
 
 [node name="ManaBar" type="Control" parent="."]
 layout_mode = 3
@@ -65,6 +68,7 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_mp81i")
 step = 1.0
 value = 100.0
 show_percentage = false
+script = ExtResource("2_rel3d")
 
 [node name="ManaLabel" type="Label" parent="ManaBar/ProgressManaBar"]
 layout_mode = 1
@@ -96,6 +100,7 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_g5nvm")
 step = 1.0
 value = 100.0
 show_percentage = false
+script = ExtResource("3_ycfmw")
 
 [node name="HealthLabel" type="Label" parent="HealthBar/ProgressHealthBar"]
 layout_mode = 1
@@ -119,10 +124,11 @@ script = ExtResource("3_qg6v4")
 [node name="Target" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 342.0
-offset_top = 108.0
-offset_right = 535.0
-offset_bottom = 239.0
+offset_left = 502.0
+offset_top = 356.0
+offset_right = 695.0
+offset_bottom = 487.0
+script = ExtResource("3_ybssk")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Target"]
 layout_mode = 1
@@ -285,13 +291,14 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -198.0
+offset_left = -140.0
 offset_top = 144.0
-offset_right = -158.0
+offset_right = -100.0
 offset_bottom = 184.0
 grow_horizontal = 2
-theme_override_constants/h_separation = 16
-theme_override_constants/v_separation = 24
+theme_override_constants/h_separation = 52
+theme_override_constants/v_separation = 42
+columns = 2
 
 [node name="TextureRect" type="TextureRect" parent="SpellBook"]
 show_behind_parent = true
@@ -359,16 +366,34 @@ grow_vertical = 2
 size_flags_horizontal = 4
 script = ExtResource("8_4o6cj")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Inventory"]
+[node name="PlayerStats" type="Label" parent="Inventory"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-theme_override_constants/separation = 44
+offset_left = -198.5
+offset_top = 87.5
+offset_right = -197.5
+offset_bottom = 110.5
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Inventory"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -70.0
+offset_top = -61.5
+offset_right = 70.0
+offset_bottom = 61.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 42
+alignment = 1
 
 [node name="PlayerEquipment" type="HBoxContainer" parent="Inventory/HBoxContainer"]
-custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-theme_override_constants/separation = 44
+theme_override_constants/separation = 42
 
 [node name="Weapon" type="Button" parent="Inventory/HBoxContainer/PlayerEquipment"]
 layout_mode = 2
@@ -409,10 +434,13 @@ grow_vertical = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="Inventory/HBoxContainer/PlayerEquipment"]
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_constants/separation = 44
+theme_override_constants/separation = 42
+alignment = 1
 
 [node name="Helmet" type="Button" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 script = ExtResource("9_j0ttc")
 
 [node name="TextureRect" type="TextureRect" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer/Helmet"]
@@ -438,6 +466,8 @@ offset_bottom = 23.0
 
 [node name="Body" type="Button" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 script = ExtResource("9_j0ttc")
 
 [node name="TextureRect" type="TextureRect" parent="Inventory/HBoxContainer/PlayerEquipment/VBoxContainer/Body"]

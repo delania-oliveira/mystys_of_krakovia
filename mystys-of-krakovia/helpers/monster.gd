@@ -2,11 +2,21 @@ extends Node
 
 func set_monster_stats(monster, value):
 	monster.speed = value.speed
-	monster.get_node("Name").set_text(value.name)
-	monster.position = Vector3(value.x, value.y, value.z)
-	monster.spawn_position = Vector3(value.x, value.y, value.z)
+	var name_label = monster.get_node("Name") 
+	if value.type == "boss":
+		name_label.text = "✪ " + value.name
+		name_label.modulate = Color(1, 0, 0)
+	else:
+		name_label.set_text(value.name)
+	if value.name == "Beholder":
+		name_label.position.y = 8
+	elif value.name == "Galdurg o Obliterador":
+		name_label.position.y = 4
+	elif value.name == "Esqueleto":
+		name_label.position.y = 4
 	monster.max_health = value.max_health
 	monster.current_health = value.health
 	monster.character_name = value.name
 	monster.defense = value.defense
 	monster.difficulty = value.difficulty
+	

@@ -2,9 +2,12 @@ import { Schema, type } from "@colyseus/schema";
 
 export class Player extends Schema {
     @type("string") id = "";
+    @type("string") dbId = "";
     @type("number") x = 0;
     @type("number") y = 0;
     @type("number") z = 0;
+    @type("number") spawn_x = 0;
+    @type("number") spawn_z = 0;
     @type("number") vx = 0;
     @type("number") vy = 0;
     @type("number") vz = 0;
@@ -27,7 +30,8 @@ export class Player extends Schema {
     @type("string") targetId = ""
     @type("number") targetHealth = 0
     @type("string") targetName = ""
-    @type("number") defense = 0
+    @type("number") defense = 1
+    @type("number") attack = 1
     @type("string") skillEffect = ""
     @type("boolean") isAttacking = false
     @type("number") max_exp = 0
@@ -35,5 +39,6 @@ export class Player extends Schema {
     @type("number") gold = 0
     @type("number") lootId = 0
     @type("string") partyId: string | null = null
+    @type("number") castTime: number
     _party?: Record<string, Player[]>;
 }

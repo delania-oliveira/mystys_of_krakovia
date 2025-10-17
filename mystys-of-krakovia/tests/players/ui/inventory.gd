@@ -2,25 +2,30 @@ extends Control
 
 # --- Node References ---
 @onready var container = $HBoxContainer/InventoryItems/InventoryContainer
+@onready var stats = $PlayerStats
 @onready var gold_label = $HBoxContainer/InventoryItems/Gold/TextureRect/GoldAmount
 @onready var helmet_equipment_slot = $HBoxContainer/PlayerEquipment/VBoxContainer/Helmet/TextureRect
 @onready var armor_equipment_slot = $HBoxContainer/PlayerEquipment/VBoxContainer/Body/TextureRect
+@onready var weapon_equipment_slot = $HBoxContainer/PlayerEquipment/Weapon/TextureRect
 var player
 const SLOT_COUNT := 60
 var equipment_slots = {}
 
-
+const RARITY_COLORS = {
+	"Comum": Color("#a9a9a9"),      # Dark Gray
+	"Incomum": Color("#2ecc71"),    # Green
+	"Raro": Color("#3498db"),        # Blue
+	"Épico": Color("#9b59b6"),        # Purple
+	"Lendário": Color("#f1c40f")     # Gold
+}
+const DEFAULT_SLOT_COLOR = Color("#333333")
 func _ready() -> void:
 	equipment_slots = {
 		"Helmet": helmet_equipment_slot,
-		"Armor": armor_equipment_slot
+		"Armor": armor_equipment_slot,
+		"Weapon": weapon_equipment_slot
 	}
 	
-	if player and player.current_gold:
-		gold_label.text = "Gold: " + str(player.current_gold)
-	else:
-		gold_label.text = "Gold: 0"
-		
 	for i in range(SLOT_COUNT):
 		var slot = Button.new()
 		slot.name = "Slot_%d" % i
@@ -54,27 +59,66 @@ func _on_slot_gui_input(event: InputEvent, slot):
 
 		if equipment_slots.has(data.type):
 			if data.limitedClasses.has(player.character_class) or data.limitedClasses.has("Todas"):
-				_equip_item(slot, data) # Single call to our new, clean function
+				_equip_item(slot, data)
 			else:
 				player.show_player_alert("Você não pode equipar esse item.")
 				
+func clear_slot(slot: Button):
+	slot.remove_meta("item_data")
+
+	var icon = slot.get_child(0)
+	var label = slot.get_child(1)
+
+	icon.texture = null
+	icon.tooltip_text = ""
+	label.text = ""
+
+	var default_stylebox = StyleBoxFlat.new()
+	default_stylebox.bg_color = DEFAULT_SLOT_COLOR
+	slot.add_theme_stylebox_override("normal", default_stylebox)
+	
 func _equip_item(inventory_slot, new_item_data):
 	var target_slot = equipment_slots[new_item_data.type]
-	if target_slot.get_meta("item_data"):
-		var old_item_data = target_slot.get_meta("item_data")
-		inventory_slot.set_meta("item_data", old_item_data)
-		inventory_slot.get_child(0).texture = target_slot.texture
-		inventory_slot.get_child(1).text = str(old_item_data.get("quantity", ""))
-		set_slot_tooltip(inventory_slot.get_child(0), old_item_data.type, old_item_data)
-	else:
-		empty_slot_data(inventory_slot)
+	var old_item_data = target_slot.get_meta("item_data", null)
+
 	target_slot.set_meta("item_data", new_item_data)
+	if old_item_data:
+		inventory_slot.set_meta("item_data", old_item_data)
+	else:
+		clear_slot(inventory_slot)
+
 	target_slot.texture = load("res://assets/icons/items/" + str(new_item_data.id) + ".png")
 	set_slot_tooltip(target_slot, new_item_data.type, new_item_data)
-	
-	player.room.send("equipItem", {"itemId": new_item_data.id})
+	_apply_rarity_style(target_slot, new_item_data) # <-- Update color
 
+	var inv_icon = inventory_slot.get_child(0)
+	var inv_label = inventory_slot.get_child(1)
 
+	if old_item_data:
+		inv_icon.texture = load("res://assets/icons/items/" + str(old_item_data.id) + ".png")
+		inv_label.text = str(old_item_data.get("quantity", ""))
+		set_slot_tooltip(inv_icon, old_item_data.type, old_item_data)
+	else:
+		inv_icon.texture = null
+		inv_label.text = ""
+		inv_icon.tooltip_text = ""
+
+	_apply_rarity_style(inventory_slot, old_item_data)
+	if old_item_data:
+		player.room.send("equipItem", {"newItemId": new_item_data.id, "oldItemId": old_item_data.id})
+	else:
+		player.room.send("equipItem", {"newItemId": new_item_data.id})
+func _apply_rarity_style(slot_node, item_data):
+	var color_to_apply = DEFAULT_SLOT_COLOR
+
+	if item_data and item_data.has("rarity"):
+		color_to_apply = RARITY_COLORS.get(item_data.rarity, DEFAULT_SLOT_COLOR)
+	var new_stylebox = StyleBoxFlat.new()
+	new_stylebox.bg_color = color_to_apply
+	if slot_node is Button:
+		slot_node.add_theme_stylebox_override("normal", new_stylebox)
+	elif slot_node is Panel or slot_node is TextureRect:
+		slot_node.add_theme_stylebox_override("panel", new_stylebox)
 
 func update_inventory(loot_data):
 	var index = 0
@@ -91,23 +135,27 @@ func update_inventory(loot_data):
 				"description": loot_data.description,
 				"type": loot_data.type,
 				"index": index,
-				"defense": loot_data.get("defense", null),
-				"attack": loot_data.get("attack", null),
-				"limitedClasses": loot_data.get("limitedClasses", null)
+				"defense": loot_data.get("defense", 0),
+				"attack": loot_data.get("attack", 0),
+				"limitedClasses": loot_data.get("limitedClasses", null),
+				"rarity": loot_data.get("rarity", "Comum")
 			}
 			
 			slot.set_meta("item_data", item_data)
-			
+			var rarity_color = RARITY_COLORS.get(item_data.rarity, RARITY_COLORS["Comum"])
+			var new_stylebox = StyleBoxFlat.new()
+			new_stylebox.bg_color = rarity_color
+			new_stylebox.border_width_left = 2
+			new_stylebox.border_width_top = 2
+			new_stylebox.border_width_right = 2
+			new_stylebox.border_width_bottom = 2
+			new_stylebox.border_color = Color(rarity_color.r * 0.7, rarity_color.g * 0.7, rarity_color.b * 0.7)
+			slot.add_theme_stylebox_override("normal", new_stylebox)
 			var texture_path = "res://assets/icons/items/%d.png" % loot_data.itemId
 			if ResourceLoader.exists(texture_path):
 				icon.texture = load(texture_path)
 			
-			if item_data.type == "Armor" or item_data.type == "Helmet":
-				set_slot_tooltip(icon, item_data.type, item_data)
-			elif item_data.attack != null:
-				icon.tooltip_text = "%s\nAtaque: %s\n%s" % [item_data.name, item_data.attack, item_data.description]
-			else:
-				icon.tooltip_text = "%s\n%s\n" % [item_data.name, item_data.description]
+			set_slot_tooltip(icon, item_data.type, item_data)
 
 			label.text = str(item_data.quantity)
 			return
@@ -121,13 +169,21 @@ func set_slot_tooltip(icon, itemType, data):
 		limited_classes_text = "\nClasses permitidas: " + ", ".join(data.limitedClasses)
 		
 	if itemType == "Armor" or itemType == "Helmet":
-		icon.tooltip_text = "%s\nDefesa: %s\n%s%s" % [
+		icon.tooltip_text = "%s\nDefesa: %s\n%s\n%s%s" % [
 			data.name,
 			data.defense,
 			data.description,
+			data.rarity,
 			limited_classes_text
 		]
-
+	elif itemType == "Weapon":
+		icon.tooltip_text = "%s\nAtaque: %s\n%s\n%s%s" % [
+			data.name,
+			data.attack,
+			data.description,
+			data.rarity,
+			limited_classes_text
+		]
 
 func empty_slot_data(slot):
 	slot.set_meta("item_data", null)

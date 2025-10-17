@@ -11,6 +11,9 @@ export const DefaultSkillArcher: Skill = {
   effect: "ArrowShot",
   characterClass: "Archer",
   description: "Atira uma flecha no alvo.",
+  needTarget: true,
+  cooldown: 0,
+  manaCost: 0
 }
 
 export const DefaultSkillMage: Skill = {
@@ -24,4 +27,24 @@ export const DefaultSkillMage: Skill = {
   effect: "ArcaneBall",
   characterClass: "Mage",
   description: "Lança uma bola arcana explosiva no alvo.",
+  castTime: 1.0,
+  needTarget: true,
+  cooldown: 0,
+  manaCost: 5
+}
+
+export const DefaultSkillWarrior: Skill = {
+  id: "default_skill_warrior",
+  name: "Ataque Leve",
+  level: 1,
+  baseDamage: 2,
+  range: 5,
+  area: 0,
+  animation: "Ataque Leve",
+  effect: "DefaultAttackMelee",
+  characterClass: "Warrior",
+  description: "Espadada",
+  needTarget: true,
+  cooldown: 0,
+  manaCost: 0
 }

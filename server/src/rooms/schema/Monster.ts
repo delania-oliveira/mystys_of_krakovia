@@ -28,5 +28,8 @@ export class Monster extends Schema {
   @type("boolean") isDead = false
   @type("boolean") isAggroed = false
   @type("string") taggedPlayerId = ""
+  @type("number") respawn = 0
+  @type("string") animation = "Idle"
+  @type("boolean") isAttacking = false
    _threatTable?: Record<string, number>;
 }

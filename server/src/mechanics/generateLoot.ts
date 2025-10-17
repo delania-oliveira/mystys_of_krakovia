@@ -9,12 +9,13 @@ export function generateLoot(monster: Monster){
     const quantity =
       Math.floor(Math.random() * (entry.max_quantity - entry.min_quantity + 1)) +
       entry.min_quantity;
-
-    loot.push({
-      id: entry.id,
-      name: entry.name,
-      quantity: quantity,
-    });
+    if (Math.floor(Math.random() * 100) <= entry.chance) {
+      loot.push({
+        id: entry.id,
+        name: entry.name,
+        quantity: quantity,
+      });
+    }
   }
   return loot
 }

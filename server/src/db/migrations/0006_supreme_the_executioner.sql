@@ -1,0 +1,1 @@
+ALTER TABLE "characters" ADD COLUMN "gold" double precision DEFAULT 0;

@@ -26,7 +26,12 @@ func _spawn_monster(value, key):
 	var MonsterSceneLocation = "res://tests/npcs/monsters/monster.tscn"
 	var MonsterScene = load(MonsterSceneLocation)
 	var monster = MonsterScene.instantiate()
-	var monster_model_scene = load("res://tests/npcs/monsters/monster.glb")
+	var monster_model_scene
+	var path = "res://assets/monsters/" + value.name.to_lower().replace(" ", "_") + ".glb"
+	if ResourceLoader.exists(path):
+		monster_model_scene = load(path)
+	else:
+		monster_model_scene = load("res://tests/npcs/monsters/monster.glb")
 	var monster_model_instance = monster_model_scene.instantiate()
 	monster.get_node("Pivot").add_child(monster_model_instance)
 	monster.id = key
@@ -35,20 +40,27 @@ func _spawn_monster(value, key):
 	monster.get_node("AggroArea/CollisionShape3D").shape.radius = value.detectionRange
 	if value.detectionRange != 0:
 		monster.is_aggressive = true
-	monster.position = Vector3(value.spawn_x, value.spawn_y, value.spawn_z)
-	monster.network_position = Vector3(value.spawn_x, value.spawn_y, value.spawn_z)
+	monster.position = Vector3(value.x, value.y, value.z)
+	monster.spawn_position = Vector3(value.x, value.y, value.z)
+	monster.network_position = Vector3(value.x, value.y, value.z)
+	monster.network_animation = "Idle"
+	monster.attack_range = value.attackRange
 	add_child(monster)
 	monster.model = monster_model_instance
 	value.listen(":change").on(Callable(self, "_on_monster").bind(monster))
 	room.on_message("set_monster_loot").on(Callable(monster, "_on_set_monster_loot"))
+	room.on_message("rangedAttack").on(Callable(monster, "_on_ranged_attack"))
 	
 func _on_monster(changes, monster_instance):
 	if not is_instance_valid(monster_instance):
 		return
-	monster_instance.network_position = Vector3(changes.x, changes.y, changes.z)
+	monster_instance.network_position = Vector3(changes.x, 2, changes.z)
 	monster_instance.is_targeting = changes.isTargeting
 	monster_instance.target_id = changes.targetId
+	monster_instance.is_attacking = changes.isAttacking
 	monster_instance.current_health = changes.health
+	if changes.animation:
+		monster_instance.network_animation = changes.animation
 	if changes.isDead:
 		var timer = Timer.new()
 		timer.wait_time = 0.25
@@ -72,27 +84,36 @@ func _on_players_add(target, value, key):
 	value.node = ch
 	ch.room = room
 	ch.id = key
+	ch.name = key
 	ch.character_name = value.name
 	ch.current_health = value.health
+	ch.current_mana = value.mana
+	ch.max_mana = value.max_mana
 	ch.current_gold = 0
+	ch.defense = value.defense
+	ch.attack = value.attack
 	ch.max_health = value.max_health
 	ch.character_class = value.character_class
-	ch.defense = value.defense
 	ch.get_node("Target").hide()
 	value.listen(":change").on(Callable(self, "_on_player"))
 	if key == room.session_id:
 		room.on_message("set_skills").on(Callable(ch, "_on_set_skills"))
 		room.on_message("looted_item").on(Callable(ch, "_on_looted_item"))
-		room.on_message("too_far_away").on(Callable(ch, "_on_too_far_away"))
+		room.on_message("skillFail").on(Callable(ch, "_on_skill_fail"))
 		room.on_message("playerTargetHealthUpdate").on(Callable(ch, "_on_target_health_update"))
 		room.on_message("playerAttack").on(Callable(ch, "_on_player_attack"))
+		room.on_message("resistDamage").on(Callable(ch, "_on_resist_damage"))
 		room.on_message("damageDealt").on(Callable(ch, "_on_damage_dealt"))
 		room.on_message("experienceGained").on(Callable(ch, "_on_experience_gained"))
+		room.on_message("partyMemberLevelUp").on(Callable(ch, "_on_party_member_level_up"))
 		room.on_message("partyInvite").on(Callable(ch, "_on_party_invite"))
+		room.on_message("setPartyTarget").on(Callable(ch, "_on_set_party_target"))
 		room.on_message("partyJoined").on(Callable(ch, "_on_party_joined"))
 		room.on_message("inviteFail").on(Callable(ch, "_on_invite_fail"))
 		room.on_message("partyHealthUpdate").on(Callable(ch, "_on_party_health_update"))
 		room.on_message("leaveParty").on(Callable(ch, "_on_party_leave"))
+		ch.get_node("Inventory/HBoxContainer/InventoryItems/Gold/TextureRect/GoldAmount").text = "Gold: " + str(value.gold)
+		ch.get_node("Inventory/PlayerStats").text = "⚔️ " + str(value.attack) + "🛡️ " + str(value.defense)
 		CharacterHelper.prepare_health_bar(ch, value.health, value.max_health)
 		CharacterHelper.prepare_mana_bar(ch, value.mana, value.max_mana)
 		CharacterHelper.prepare_experience_bar(ch, value.experience, value.level, value.max_exp)

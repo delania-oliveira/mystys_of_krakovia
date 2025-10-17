@@ -23,6 +23,8 @@ export function loadMonsters() {
     z: Number(m.z),
     detectionRange: Number(m.detection_range),
     difficulty: Number(m.difficulty),
-    experience: Number(m.experience)
+    experience: Number(m.experience),
+    respawn: Number(m.respawn),
+    attack_range: Number(m.attack_range)
   }));
 }

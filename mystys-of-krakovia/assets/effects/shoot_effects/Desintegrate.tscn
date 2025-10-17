@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://b8i0wt580vnyl"]
+
+[ext_resource type="Shader" uid="uid://bfjo8bm51yxtg" path="res://assets/effects/shoot_effects/beam.gdshader" id="1_e4e0b"]
+[ext_resource type="Script" uid="uid://bvppeakxdy8fy" path="res://assets/effects/shoot_effects/desintegrate.gd" id="1_u30gl"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_86jth"]
+render_priority = 0
+shader = ExtResource("1_e4e0b")
+shader_parameter/lightning_color = Color(0.5, 0.8, 1, 1)
+shader_parameter/jaggedness = 1.0
+shader_parameter/speed = 7.0000003325
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_u30gl"]
+material = SubResource("ShaderMaterial_86jth")
+top_radius = 0.05
+bottom_radius = 0.05
+height = 10.0
+radial_segments = 8
+
+[node name="Desintegrate" type="Node3D"]
+script = ExtResource("1_u30gl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_u30gl")

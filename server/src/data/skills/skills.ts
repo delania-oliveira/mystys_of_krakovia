@@ -9,6 +9,13 @@ export interface Skill {
   effect: string
   characterClass: string
   description: string
+  castTime?: number
+  needTarget: boolean
+  cooldown: number
+  buffDef?: number
+  buffAtk?: number
+  buffDuration?: number
+  manaCost: number
 }
 
 export const skills = new Map<string, Skill>();

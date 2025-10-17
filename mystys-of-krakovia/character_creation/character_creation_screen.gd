@@ -24,6 +24,7 @@ extends Control
 const SERVER_URL = "http://week-characterized.gl.at.ply.gg:29821/api/characters"
 
 var selected_class = ""
+var is_class_selectable = false
 
 var class_info = {
 	"Warrior": {
@@ -57,7 +58,7 @@ func _ready():
 	http_request.request_completed.connect(_on_http_request_completed)
 	
 	warrior_button.pressed.connect(_on_class_button_pressed.bind("Warrior"))
-	#assassin_button.pressed.connect(_on_class_button_pressed.bind("Assassin"))
+	assassin_button.pressed.connect(_on_class_button_pressed.bind("Assassin"))
 	archer_button.pressed.connect(_on_class_button_pressed.bind("Archer"))
 	mage_button.pressed.connect(_on_class_button_pressed.bind("Mage"))
 	bloodmage_button.pressed.connect(_on_class_button_pressed.bind("Blood Mage"))
@@ -69,7 +70,11 @@ func _on_class_button_pressed(character_name):
 	print("classe selecionada: ", selected_class)
 	
 	clear_preview()
-	prepare_preview(selected_class)
+	is_class_selectable = prepare_preview(selected_class)
+	
+	if not is_class_selectable:
+		alert_panel.dialog_text = "Esta classe ainda não está disponível nesta versão."
+		alert_panel.popup_centered()
 	
 	if class_info.has(character_name):
 		var info = class_info[character_name]
@@ -92,6 +97,11 @@ func _on_create_pressed():
 		alert_panel.popup_centered()
 		return
 	
+	if not is_class_selectable:
+		alert_panel.dialog_text = "Você não pode criar um personagem de uma classe indisponível."
+		alert_panel.popup_centered()
+		return
+	
 	var body = JSON.stringify({
 		"name": char_name,
 		"character_class": selected_class
@@ -101,7 +111,7 @@ func _on_create_pressed():
 
 	http_request.request(SERVER_URL, headers, HTTPClient.METHOD_POST, body)
 
-func prepare_preview(character_name: String) -> void:
+func prepare_preview(character_name: String) -> bool:
 	var camera = preview.get_node("Camera3D")
 	camera.position = Vector3(0, 2, 5)
 	camera.look_at(Vector3.ZERO, Vector3.UP)
@@ -110,6 +120,11 @@ func prepare_preview(character_name: String) -> void:
 	light.rotation_degrees = Vector3(-45, 45, 0)
 
 	var char_scene_path = "res://assets/character/" + character_name.replace(" ", "_") + ".glb"
+	
+	if not FileAccess.file_exists(char_scene_path):
+		print("AVISO: Preview não encontrado em: ", char_scene_path)
+		return false
+	
 	var char_scene = load(char_scene_path).instantiate()
 	if character_name == "Blood Mage":
 		char_scene.position = Vector3(0, -1.5, 0)
@@ -124,7 +139,9 @@ func prepare_preview(character_name: String) -> void:
 		var idle_animation = anim_player.get_animation("Idle")
 		idle_animation.set_loop_mode(Animation.LOOP_LINEAR)
 		anim_player.play("Idle")
-
+		
+	return true
+	
 func clear_preview():
 	for child in preview.get_children():
 		if child.name != "Camera3D" and child.name != "DirectionalLight3D":

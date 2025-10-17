@@ -3,9 +3,12 @@ extends VBoxContainer
 var room
 var local_player_id
 var current_party
+var dragging := false
+var drag_offset := Vector2.ZERO
 @onready var leave_party_container = $PanelContainer
 func _ready() -> void:
 	leave_party_container.hide()
+	
 func _create_party(members, leader):
 	for player in members:
 		_add_member(player, leader)
@@ -38,12 +41,19 @@ func _add_member(player, leader):
 	fill_style.bg_color = Color.SEA_GREEN
 	hp_bar.add_theme_stylebox_override("fill", fill_style)
 	hp_bar.custom_minimum_size = Vector2(240, 30)
+	hp_bar.connect("gui_input", Callable(self, "_on_member_box_gui_input").bind(player))
+	member_box.connect("gui_input", Callable(self, "_on_member_box_gui_input").bind(player))
 	member_box.add_child(name_label)
 	member_box.add_child(hp_bar)
 	
-	# Add to main PartyUI
 	add_child(member_box)
-		
+	
+func _on_member_box_gui_input(event: InputEvent, player):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		room.send("setPartyTarget", {"targetId": player.id})
+
+	return null
+	
 func _update_member_health(data):
 	var member_box = get_node_or_null(str(data.member))
 	if member_box:
@@ -91,3 +101,12 @@ func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.is_pressed():
 		toggle_party_leave_ui()
 		get_viewport().set_input_as_handled()
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				dragging = true
+				drag_offset = get_global_mouse_position() - global_position
+			else:
+				dragging = false
+	elif event is InputEventMouseMotion and dragging:
+		global_position = get_global_mouse_position() - drag_offset

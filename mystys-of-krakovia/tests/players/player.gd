@@ -220,8 +220,7 @@ func update_player_health(data):
 		health_bar.value = current_health
 func update_player_mana(data):
 	# UPDATE OWN PLAYER MANA
-	if data.mana and data.mana != current_mana and data.mana < current_mana:
-		resisted = false
+	if data.mana and data.mana != current_mana:
 		current_mana = data.mana
 		mana_label.text = str(current_mana) + " / " + str(max_mana)
 		mana_bar.value = current_mana
@@ -230,10 +229,7 @@ func update_player_mana(data):
 		mana_bar.max_value = data.max_mana
 		mana_label.text = str(current_mana) + " / " + str(max_mana)
 		mana_bar.value = max_mana
-	elif data.mana and data.mana != current_mana and data.mana > current_mana and (data.mana - current_mana) > 10:
-		current_mana = data.mana
-		mana_label.text = str(current_mana) + " / " + str(max_mana)
-		mana_bar.value = current_mana
+	
 func _on_resist_damage(data):
 	if !resisted:
 		resisted = true
@@ -629,7 +625,7 @@ func spawn_ranged_skill(target_node, user, userId, scene):
 	get_tree().root.add_child(skill)
 	skill.global_position = spawn_position
 	skill.room = room
-	
+
 func set_target(new_target: Node3D):
 	if not is_local:
 		return
@@ -647,7 +643,19 @@ func set_target(new_target: Node3D):
 	else:
 		target_picture.texture = null
 		target_frame.hide()
-
+		
+func _on_set_party_target(data):
+	if not is_local:
+		return
+	target_health_bar.show_percentage = false
+	target_name_label.text = data.character_name
+	target_health_bar.max_value = data.max_health
+	target_health_bar.value = data.current_health
+	target_health_label.text = str(data.current_health) + " / " + str(data.max_health)
+	target_picture.texture = load("res://icon.svg") as Texture2D
+	current_target_name = data.character_name
+	target_frame.show()
+	
 func _on_invite_to_party_button_down() -> void:
 	room.send("partyInvite", {"playerInvitingId": id, "invitedPlayerId": current_target.id})
 	player_menu.hide()

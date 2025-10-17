@@ -1,8 +1,11 @@
-[gd_scene load_steps=20 format=3 uid="uid://drsrs7v3ykkwq"]
+[gd_scene load_steps=23 format=3 uid="uid://drsrs7v3ykkwq"]
 
 [ext_resource type="Script" uid="uid://cq0rk5lox1lkw" path="res://tests/players/player.gd" id="1_g5nvm"]
+[ext_resource type="Script" uid="uid://c1dpwny38d0m0" path="res://tests/players/progress_mana_bar.gd" id="2_rel3d"]
 [ext_resource type="Script" uid="uid://cendqjf0d6vsl" path="res://tests/players/skills/action_bar.gd" id="3_g5nvm"]
 [ext_resource type="Script" uid="uid://bqu316xxkwfjg" path="res://tests/npcs/monsters/name.gd" id="3_qg6v4"]
+[ext_resource type="Script" uid="uid://bpq703i1bdgbw" path="res://tests/players/target.gd" id="3_ybssk"]
+[ext_resource type="Script" uid="uid://bfkbeaukejw0" path="res://tests/players/progress_health_bar.gd" id="3_ycfmw"]
 [ext_resource type="PackedScene" uid="uid://c01o1kr5nssku" path="res://tests/players/skills/ActionBarSlot.tscn" id="4_qg6v4"]
 [ext_resource type="Script" uid="uid://nbcbqlfilm3u" path="res://tests/players/ui/spell_book.gd" id="5_qg6v4"]
 [ext_resource type="Texture2D" uid="uid://c0l6npoqek6ph" path="res://assets/ui_textures/spellbook.png" id="6_r5luj"]
@@ -65,6 +68,7 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_mp81i")
 step = 1.0
 value = 100.0
 show_percentage = false
+script = ExtResource("2_rel3d")
 
 [node name="ManaLabel" type="Label" parent="ManaBar/ProgressManaBar"]
 layout_mode = 1
@@ -96,6 +100,7 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_g5nvm")
 step = 1.0
 value = 100.0
 show_percentage = false
+script = ExtResource("3_ycfmw")
 
 [node name="HealthLabel" type="Label" parent="HealthBar/ProgressHealthBar"]
 layout_mode = 1
@@ -119,10 +124,11 @@ script = ExtResource("3_qg6v4")
 [node name="Target" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 342.0
-offset_top = 108.0
-offset_right = 535.0
-offset_bottom = 239.0
+offset_left = 502.0
+offset_top = 356.0
+offset_right = 695.0
+offset_bottom = 487.0
+script = ExtResource("3_ybssk")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Target"]
 layout_mode = 1

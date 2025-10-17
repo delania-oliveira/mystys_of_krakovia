@@ -16,6 +16,8 @@ var current_health: int
 var max_exp: int
 var resisted = false
 var max_health: int
+var max_mana: int
+var current_mana: int
 var current_target: Node3D = null
 var target_velocity = Vector3.ZERO
 var network_position = Vector3.ZERO
@@ -33,6 +35,8 @@ var is_attacking = false
 @onready var current_level
 @onready var health_label = $HealthBar/ProgressHealthBar/HealthLabel
 @onready var health_bar = $HealthBar/ProgressHealthBar
+@onready var mana_label = $ManaBar/ProgressManaBar/ManaLabel
+@onready var mana_bar = $ManaBar/ProgressManaBar
 @onready var experience_label = $ExperienceBar/ProgressExperienceBar/ExperienceLabel
 @onready var experience_bar = $ExperienceBar/ProgressExperienceBar
 @onready var level_label = $ExperienceBar/ProgressExperienceBar/LevelLabel
@@ -209,11 +213,27 @@ func update_player_health(data):
 		health_bar.max_value = data.max_health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = max_health
-	elif data.health and data.health != current_health and data.health > current_health:
+	elif data.health and data.health != current_health and data.health > current_health and (data.health - current_health) > 10:
 		show_floating_text(data.health - current_health, true, null, "Healing")
 		current_health = data.health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = current_health
+func update_player_mana(data):
+	# UPDATE OWN PLAYER MANA
+	if data.mana and data.mana != current_mana and data.mana < current_mana:
+		resisted = false
+		current_mana = data.mana
+		mana_label.text = str(current_mana) + " / " + str(max_mana)
+		mana_bar.value = current_mana
+	elif data.max_mana and data.max_mana != max_mana:
+		max_mana = data.max_mana
+		mana_bar.max_value = data.max_mana
+		mana_label.text = str(current_mana) + " / " + str(max_mana)
+		mana_bar.value = max_mana
+	elif data.mana and data.mana != current_mana and data.mana > current_mana and (data.mana - current_mana) > 10:
+		current_mana = data.mana
+		mana_label.text = str(current_mana) + " / " + str(max_mana)
+		mana_bar.value = current_mana
 func _on_resist_damage(data):
 	if !resisted:
 		resisted = true
@@ -350,6 +370,7 @@ func on_network_data_received(data):
 		network_position = Vector3(data.x, data.y, data.z)
 		network_direction = Vector3(-data.dirX, 0, -data.dirZ)
 	update_player_health(data)
+	update_player_mana(data)
 	is_attacking = data.isAttacking
 	if data.gold != null and data.gold != 0:
 		update_gold(data.gold)
@@ -622,7 +643,7 @@ func set_target(new_target: Node3D):
 		target_picture.texture = load("res://icon.svg") as Texture2D
 		current_target_name = new_target.character_name
 		target_frame.show()
-		room.send("setTarget", {"targetName": new_target.character_name})
+		room.send("setTarget", {"targetName": new_target.character_name, "targetId": new_target.id})
 	else:
 		target_picture.texture = null
 		target_frame.hide()

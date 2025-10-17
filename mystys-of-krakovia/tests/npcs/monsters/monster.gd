@@ -22,6 +22,7 @@ var network_animation
 @onready var MOVEMENT_TRESHOLD = 0.1
 var rotation_model = -PI/2
 var anim_player
+var library
 func _ready() -> void:
 	var path = "Pivot/Sketchfab_Scene/AnimationPlayer"
 	if get_node(path):
@@ -30,14 +31,12 @@ func _ready() -> void:
 		anim_player = null
 		
 	match character_name:
-		"Wolf":
+		"Lobo":
 			rotation_model = -PI/2
-		"Galdurg the Obliterator":
-			rotation_model = PI
 		_:
 			rotation_model = PI
 	if anim_player:
-		var library = anim_player.get_animation_library("")
+		library = anim_player.get_animation_library("")
 		var runAnim = null
 		var atkAnim = null
 		var idleAnim = null
@@ -63,6 +62,29 @@ func _ready() -> void:
 			library.add_animation("Attack", atkAnim)
 			library.remove_animation("Run_Fwd")
 			library.remove_animation("Primary_Attack_C_Medium")
+		elif library.has_animation("Walking_Skeleton"):
+			runAnim = library.get_animation("Walking_Skeleton")
+			library.add_animation("Attack", runAnim)
+			library.add_animation("Idle", runAnim)
+			library.add_animation("Running", runAnim)
+			library.remove_animation("Walking_Skeleton")
+		elif library.has_animation("IdleAnimation"):
+			runAnim = library.get_animation("RunAnimation")
+			atkAnim = library.get_animation("WalkAnimation")
+			idleAnim = library.get_animation("IdleAnimation")
+			library.add_animation("Attack", atkAnim)
+			library.add_animation("Idle", idleAnim)
+			library.add_animation("Running", atkAnim)
+			library.remove_animation("IdleAnimation")
+			library.remove_animation("RunAnimation")
+			library.remove_animation("WalkAnimation")
+		elif library.has_animation("Stand1"):
+			runAnim = library.get_animation("Run")
+			idleAnim = library.get_animation("Stand1")
+			library.add_animation("Idle", idleAnim)
+			library.add_animation("Running", runAnim)
+			library.remove_animation("Run")
+			library.remove_animation("Stand1")
 func _process(delta):
 	position = position.lerp(network_position, LERP_SPEED * delta)
 	if position.distance_squared_to(network_position) > 0.1:
@@ -73,7 +95,9 @@ func _process(delta):
 			$Pivot.look_at(spawn_position, Vector3.UP)
 			$Pivot.rotate_y(rotation_model)
 	if anim_player:
-		anim_player.play(network_animation)
+		var updated_library = anim_player.get_animation_library("")
+		if updated_library and updated_library.get_animation(network_animation):
+			anim_player.play(network_animation)
 			
 func _on_set_monster_loot(data):
 	var current_loot = data.loot

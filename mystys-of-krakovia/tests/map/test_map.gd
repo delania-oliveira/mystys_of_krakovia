@@ -84,6 +84,8 @@ func _on_players_add(target, value, key):
 	ch.id = key
 	ch.character_name = value.name
 	ch.current_health = value.health
+	ch.current_mana = value.mana
+	ch.max_mana = value.max_mana
 	ch.current_gold = 0
 	ch.defense = value.defense
 	ch.attack = value.attack

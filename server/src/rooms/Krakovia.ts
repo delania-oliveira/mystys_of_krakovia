@@ -21,6 +21,7 @@ const PLAYER_SPEED = 14
 export class Krakovia extends Room<KrakoviaState> {
   maxClients = 4;
   hasProcessedAttack = false
+  regenTimer = 10
   private monsterSpawns = new Map<string, Monster>();
   private damagedTargets: Monster[] = []
 
@@ -175,6 +176,7 @@ export class Krakovia extends Room<KrakoviaState> {
         player.animation = "Idle"
         const skill = skills.get(data.skillId)
         player.skillEffect = skill.effect
+        player.mana -= skill.manaCost
         const payload: any = {
           id: client.sessionId,
           skillId: skill.id,
@@ -511,6 +513,9 @@ export class Krakovia extends Room<KrakoviaState> {
       const player = this.state.players.get(client.sessionId);
       if (player) {
         player.targetName = data.targetName
+        if (data.targetId) {
+          player.targetId = data.targetId
+        }
       }
     });
 
@@ -533,12 +538,59 @@ export class Krakovia extends Room<KrakoviaState> {
     
     this.setSimulationInterval((dtMs) => this.update(dtMs), 25);
   }
-
+  
   update(dtMs: number) {
     const dt = dtMs / 1000; // convert to seconds
-
     this.state.players.forEach((player) => {
       // apply gravity
+      this.regenTimer += dt
+      if (this.regenTimer >= 5) {
+        if (player.health < player.max_health) {
+          switch (player.character_class) {
+            case "Warrior":
+              player.health = Math.min(player.health + 7, player.max_health);
+              break;
+            case "Mage":
+              player.health = Math.min(player.health + 3, player.max_health);
+              break;
+            case "Archer":
+              player.health = Math.min(player.health + 5, player.max_health);
+              break;
+            default:
+              break;
+          }
+          this.broadcast("playerTargetHealthUpdate", {
+            id: player.targetId,
+            targetId: player.id,
+            health: player.health,
+          });
+          if (player.partyId) {
+            const partyLeader = this.state.players.get(player.partyId)
+            const party = partyLeader._party[player.partyId];
+            party.forEach(member => {
+              const memberClient = this.clients.find(c => c.sessionId === member.id);
+              if (memberClient) {
+                memberClient.send("partyHealthUpdate", { member: player.id, health: player.health });
+              }
+            });
+          }
+        } else if (player.mana < player.max_mana) {
+          switch (player.character_class) {
+            case "Warrior":
+              player.mana = Math.min(player.mana + 3, player.max_mana);
+              break;
+            case "Mage":
+              player.mana = Math.min(player.mana + 15, player.max_mana);
+              break;
+            case "Archer":
+              player.mana = Math.min(player.mana + 10, player.max_mana);
+              break;
+            default:
+              break;
+          }
+        }
+        this.regenTimer = 0
+      }
       player.vy -= GRAVITY * dt;
       const dx = player.inputX;
       const dz = player.inputZ;

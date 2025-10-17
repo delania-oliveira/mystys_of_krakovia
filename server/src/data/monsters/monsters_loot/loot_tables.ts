@@ -14,7 +14,12 @@ export const LootTable: Record<string, PossibleItems[]> = {
     { id: 3, name: "Jaqueta de Pano", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 100 },
     { id: 6, name: "Capuz de Seda", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 100 },
   ],
-  Skeleton: [
+  "Esqueleto Mago": [
+    { id: 1, name: "Ouro", min_quantity: 25, max_quantity: 50, quantity: 0, chance: 100 },
+    { id: 2, name: "Jaqueta de Pano", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 25 },
+    { id: 5, name: "Jaqueta de Seda", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 25 },
+  ],
+  "Esqueleto Pirata": [
     { id: 1, name: "Ouro", min_quantity: 25, max_quantity: 50, quantity: 0, chance: 100 },
     { id: 2, name: "Jaqueta de Pano", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 25 },
     { id: 5, name: "Jaqueta de Seda", min_quantity: 1, max_quantity: 1, quantity: 1, chance: 25 },

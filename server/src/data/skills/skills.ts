@@ -15,6 +15,7 @@ export interface Skill {
   buffDef?: number
   buffAtk?: number
   buffDuration?: number
+  manaCost: number
 }
 
 export const skills = new Map<string, Skill>();

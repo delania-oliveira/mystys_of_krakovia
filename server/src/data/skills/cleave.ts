@@ -12,5 +12,6 @@ export const CleaveAttackWarrior: Skill = {
   characterClass: "Warrior",
   description: "Cleave",
   needTarget: true,
-  cooldown: 0
+  cooldown: 0,
+  manaCost: 5
 }

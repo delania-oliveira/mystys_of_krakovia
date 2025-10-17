@@ -3,7 +3,7 @@ import { Skill } from "./skills"
 export const MultiShotArcher: Skill = {
   id: "multi_shot_archer",
   name: "Tiro Múltiplo",
-  level: 3,
+  level: 1,
   baseDamage: 2,
   range: 30,
   area: 10,
@@ -12,5 +12,6 @@ export const MultiShotArcher: Skill = {
   characterClass: "Archer",
   description: "Atira flechas em múltiplos alvos",
   needTarget: true,
-  cooldown: 3.0
+  cooldown: 3.0,
+  manaCost: 10
 }

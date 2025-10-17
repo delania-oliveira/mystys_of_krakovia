@@ -3,7 +3,7 @@ import { Skill } from "./skills"
 export const ArcaneExplosionMage: Skill = {
   id: "arcane_explosion_mage",
   name: "Explosão Arcana",
-  level: 1,
+  level: 3,
   baseDamage: 10,
   range: 0,
   area: 10,
@@ -13,5 +13,6 @@ export const ArcaneExplosionMage: Skill = {
   description: "Concentra pura energia arcana em um ponto e a libera em uma poderosa explosão mágica",
   castTime: 2.0,
   needTarget: false,
-  cooldown: 0
+  cooldown: 0,
+  manaCost: 20
 }

@@ -3,8 +3,8 @@
     <monster id="mob1" name="Rat" type="beast" health="20" attack="5" defense="2" speed="5" x="0" y="2" z="0" detection_range="0" difficulty="1" experience="15" respawn="10"/>
     <monster id="mob2" name="Galdurg o Obliterador" type="boss" health="200" attack="24" defense="12" speed="7" x="10" y="2" z="0" detection_range="10" difficulty="10" experience="25" respawn="30"/>
     <monster id="mob3" name="Goblin" type="humanoid" health="35" attack="8" defense="4" speed="5" x="20" y="2" z="0" detection_range="10" difficulty="1" experience="35" respawn="30"/>
-    <monster id="mob4" name="Esqueleto Mago" type="undead" health="45" attack="10" defense="5" speed="5" x="30" y="2" z="0" detection_range="10" difficulty="3" experience="50" respawn="30"/>
-    <monster id="mob6" name="Slime" type="ooze" health="25" attack="6" defense="3" speed="6" x="50" y="2" z="0" detection_range="10" difficulty="2" experience="200" respawn="30"/>
+    <monster id="mob4" name="Esqueleto" type="undead" health="45" attack="10" defense="5" speed="5" x="30" y="2" z="0" detection_range="10" difficulty="3" experience="50" respawn="30"/>
+    <monster id="mob6" name="Orc" type="humanoid" health="25" attack="6" defense="3" speed="6" x="50" y="2" z="0" detection_range="10" difficulty="2" experience="200" respawn="30"/>
     <monster id="mob7" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="6" x="60" y="2" z="0" detection_range="10" difficulty="1" experience="25" respawn="30"/>
     <monster id="mob8" name="Beholder" type="beast" health="55" attack="11" defense="5" speed="6" x="70" y="2" z="0" detection_range="10" difficulty="4" experience="500" respawn="30"/>
     <monster id="mob9" name="Ogre" type="giant" health="120" attack="20" defense="10" speed="6" x="80" y="2" z="0" detection_range="10" difficulty="5" experience="1000" respawn="30"/>

@@ -27,7 +27,7 @@ func _spawn_monster(value, key):
 	var MonsterScene = load(MonsterSceneLocation)
 	var monster = MonsterScene.instantiate()
 	var monster_model_scene
-	var path = "res://assets/monsters/" + value.name.to_lower().replace(" ", "_") + ".tscn"
+	var path = "res://assets/monsters/" + value.name.to_lower().replace(" ", "_") + ".glb"
 	if ResourceLoader.exists(path):
 		monster_model_scene = load(path)
 	else:
@@ -44,6 +44,7 @@ func _spawn_monster(value, key):
 	monster.spawn_position = Vector3(value.x, value.y, value.z)
 	monster.network_position = Vector3(value.x, value.y, value.z)
 	monster.network_animation = "Idle"
+	
 	add_child(monster)
 	monster.model = monster_model_instance
 	value.listen(":change").on(Callable(self, "_on_monster").bind(monster))

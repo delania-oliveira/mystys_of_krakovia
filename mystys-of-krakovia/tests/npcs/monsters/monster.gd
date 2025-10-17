@@ -20,9 +20,15 @@ var loot: Dictionary
 var lootPosition
 var network_animation
 @onready var MOVEMENT_TRESHOLD = 0.1
-@onready var anim_player = get_node("Pivot/" + character_name.to_lower().replace(" ", "_") + "/AnimationPlayer")
 var rotation_model = -PI/2
+var anim_player
 func _ready() -> void:
+	var path = "Pivot/" + character_name.to_lower().replace(" ", "_") + "/AnimationPlayer"
+	if get_node(path):
+		anim_player = get_node(path)
+	else:
+		anim_player = null
+		
 	match character_name:
 		"Wolf":
 			rotation_model = -PI/2

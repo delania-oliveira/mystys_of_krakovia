@@ -10,7 +10,7 @@ const CONFIG_PATH = "user://settings.cfg"
 @onready var sfx_slider = $CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/VolumeSection/VBoxContainer2/SoundEffectsVolumeSlider
 @onready var ambient_slider = $CenterContainer/PanelContainer/MarginContainer/Layout/HBoxContainer/VolumeSection/VBoxContainer3/AmbientVolumeSlider
 
-
+signal closed
 func _ready() -> void:
 	master_slider.value  = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Master")))
 	ambient_slider.value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Ambient")))
@@ -59,6 +59,7 @@ func save_settings():
 	
 func _on_return_pressed():
 	queue_free()
+	emit_signal("closed")
 	
 func load_settings():
 	var config = ConfigFile.new()

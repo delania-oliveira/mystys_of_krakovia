@@ -1,9 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://dqws0gwxk1adc"]
+[gd_scene load_steps=19 format=3 uid="uid://dqws0gwxk1adc"]
 
 [ext_resource type="Script" uid="uid://cae4cp1qclctt" path="res://character_creation/character_creation_screen.gd" id="1_tgqlm"]
 [ext_resource type="Texture2D" uid="uid://bbgfcuxb6u6c2" path="res://assets/character_creation/bg.png" id="2_d62kf"]
-[ext_resource type="FontFile" uid="uid://celsc86a60tw6" path="res://assets/fonts/timesbd.ttf" id="3_d62kf"]
+[ext_resource type="FontFile" uid="uid://dh6r6rr3vgnv7" path="res://assets/fonts/Cinzel-Bold.ttf" id="3_putt4"]
 [ext_resource type="Texture2D" uid="uid://cqln4tijtd2w7" path="res://assets/character_creation/warriorBadge.png" id="4_6lc12"]
+[ext_resource type="FontFile" uid="uid://b86ttbc0fm4vh" path="res://assets/fonts/Cinzel-Regular.ttf" id="4_r3q6x"]
 [ext_resource type="Texture2D" uid="uid://coh622eqgrd5w" path="res://assets/character_creation/assassinBadge.png" id="5_3poyr"]
 [ext_resource type="Texture2D" uid="uid://bo0e6bpdjm35o" path="res://assets/character_creation/archerBadge.png" id="6_7044q"]
 [ext_resource type="Texture2D" uid="uid://b0px5ekurtuc6" path="res://assets/character_creation/mageBadge.png" id="7_putt4"]
@@ -74,7 +75,7 @@ alignment = 1
 
 [node name="TitleContainer" type="Label" parent="MarginContainer/LayoutCreation/Panels/ClassContainer/Text"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("3_d62kf")
+theme_override_fonts/font = ExtResource("3_putt4")
 theme_override_font_sizes/font_size = 36
 text = "Classes"
 horizontal_alignment = 1
@@ -82,7 +83,7 @@ uppercase = true
 
 [node name="TextContainer" type="Label" parent="MarginContainer/LayoutCreation/Panels/ClassContainer/Text"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("3_d62kf")
+theme_override_fonts/font = ExtResource("4_r3q6x")
 theme_override_font_sizes/font_size = 18
 text = "Escolha uma classe para jogar"
 horizontal_alignment = 1
@@ -181,13 +182,15 @@ theme_override_constants/separation = 20
 
 [node name="TitleLabel" type="Label" parent="MarginContainer/LayoutCreation/Panels/InfoContainer/bgPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("3_d62kf")
+theme_override_fonts/font = ExtResource("3_putt4")
 theme_override_font_sizes/font_size = 40
 text = "Warrior"
 horizontal_alignment = 1
 
 [node name="DescriptionLabel" type="RichTextLabel" parent="MarginContainer/LayoutCreation/Panels/InfoContainer/bgPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("4_r3q6x")
+theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"
 fit_content = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=4 uid="uid://c0bjbv3u6kf8n"]
+[gd_scene load_steps=41 format=4 uid="uid://c0bjbv3u6kf8n"]
 
 [ext_resource type="Script" uid="uid://y361428p0gnf" path="res://login/LoginScreen.gd" id="1_5fley"]
 [ext_resource type="VideoStream" uid="uid://bjfe1dmns5smr" path="res://assets/login/background.ogv" id="2_4nbh0"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bji76j2dchu7u" path="res://assets/login/input.png" id="4_ipax5"]
 [ext_resource type="FontFile" uid="uid://celsc86a60tw6" path="res://assets/fonts/timesbd.ttf" id="5_ipax5"]
 [ext_resource type="Texture2D" uid="uid://detm05ilxu71f" path="res://assets/login/separator.png" id="6_jbl6y"]
+[ext_resource type="FontFile" uid="uid://dh6r6rr3vgnv7" path="res://assets/fonts/Cinzel-Bold.ttf" id="8_gubj4"]
 [ext_resource type="PackedScene" uid="uid://cii3hn7evsqsu" path="res://assets/theme/AlertModal.tscn" id="11_3msxh"]
 [ext_resource type="Texture2D" uid="uid://ck8r2uv7hxsvn" path="res://assets/login/loginButton.png" id="11_gubj4"]
 [ext_resource type="Texture2D" uid="uid://b6spytvs2ya21" path="res://assets/login/newAccountButton.png" id="12_mbp1g"]
@@ -7196,6 +7197,8 @@ size_flags_horizontal = 4
 size_flags_vertical = 0
 theme = SubResource("Theme_2ui6t")
 theme_type_variation = &"HeaderLarge"
+theme_override_fonts/font = ExtResource("8_gubj4")
+theme_override_font_sizes/font_size = 30
 text = "Acessar Conta"
 uppercase = true
 
@@ -7215,6 +7218,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 theme = SubResource("Theme_3msxh")
+theme_override_fonts/font = ExtResource("8_gubj4")
+theme_override_font_sizes/font_size = 27
 text = "Usuário"
 uppercase = true
 
@@ -7233,6 +7238,8 @@ theme_override_constants/separation = 0
 layout_mode = 2
 size_flags_horizontal = 4
 theme = SubResource("Theme_mbp1g")
+theme_override_fonts/font = ExtResource("8_gubj4")
+theme_override_font_sizes/font_size = 27
 text = "Senha"
 uppercase = true
 

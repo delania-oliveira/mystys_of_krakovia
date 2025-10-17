@@ -1,5 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://wvbbdphf5r0u"]
-
-[ext_resource type="PackedScene" uid="uid://c0qxe50peb2o4" path="res://assets/monsters/zeromus.glb" id="1_0y8in"]
-
-[node name="galdurg_the_obliterator" instance=ExtResource("1_0y8in")]

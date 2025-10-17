@@ -558,6 +558,7 @@ func _unhandled_input(event):
 		var to = from + get_viewport().get_camera_3d().project_ray_normal(event.position) * 1000
 		var space_state = get_world_3d().direct_space_state
 		var result = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(from, to))
+		
 		if result and result.collider.is_in_group("targetable"):
 			set_target(result.collider)
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:

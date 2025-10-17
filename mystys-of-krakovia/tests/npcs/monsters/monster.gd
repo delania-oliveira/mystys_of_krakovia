@@ -23,7 +23,7 @@ var network_animation
 var rotation_model = -PI/2
 var anim_player
 func _ready() -> void:
-	var path = "Pivot/" + character_name.to_lower().replace(" ", "_") + "/AnimationPlayer"
+	var path = "Pivot/Sketchfab_Scene/AnimationPlayer"
 	if get_node(path):
 		anim_player = get_node(path)
 	else:
@@ -34,7 +34,8 @@ func _ready() -> void:
 			rotation_model = -PI/2
 		"Galdurg the Obliterator":
 			rotation_model = PI
-		
+		_:
+			rotation_model = PI
 	if anim_player:
 		var library = anim_player.get_animation_library("")
 		var runAnim = null
@@ -55,6 +56,13 @@ func _ready() -> void:
 			library.add_animation("Attack", atkAnim)
 			library.add_animation("Idle", atkAnim)
 			library.add_animation("Running", atkAnim)
+		elif library.has_animation("Run_Fwd"):
+			runAnim = library.get_animation("Run_Fwd")
+			atkAnim = library.get_animation("Primary_Attack_C_Medium")
+			library.add_animation("Running", runAnim)
+			library.add_animation("Attack", atkAnim)
+			library.remove_animation("Run_Fwd")
+			library.remove_animation("Primary_Attack_C_Medium")
 func _process(delta):
 	position = position.lerp(network_position, LERP_SPEED * delta)
 	if position.distance_squared_to(network_position) > 0.1:

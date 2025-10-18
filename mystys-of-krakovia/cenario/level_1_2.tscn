@@ -1,5 +1,4 @@
 [gd_scene load_steps=26 format=3 uid="uid://ba4ukihssxqv3"]
-[gd_scene load_steps=25 format=3 uid="uid://ba4ukihssxqv3"]
 
 [ext_resource type="Script" uid="uid://usyd614rjvyp" path="res://cenario/level_1_2.gd" id="1_dxskw"]
 [ext_resource type="Terrain3DMaterial" uid="uid://oblulx2secpt" path="res://cenario/Level_1_data/Material_level_1_2.tres" id="1_pf2pk"]

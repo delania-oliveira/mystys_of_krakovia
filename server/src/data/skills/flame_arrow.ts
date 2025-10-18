@@ -3,7 +3,7 @@ import { Skill } from "./skills"
 export const FlameArrowArcher: Skill = {
   id: "flame_arrow_archer",
   name: "Flecha de Fogo",
-  level: 1,
+  level: 10,
   baseDamage: 20,
   range: 30,
   area: 0,

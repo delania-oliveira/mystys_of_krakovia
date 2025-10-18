@@ -104,7 +104,7 @@ export const items: Record<string, Item> = {
     attack: 3,
     description: "Cajado de madeira simples, utilizado por magos iniciantes.",
     type: "Weapon",
-    limitedClasses: ["Mage"],
+    limitedClasses: ["Mage", "Blood Mage"],
     rarity: "Comum"
   },
   "13": {
@@ -113,7 +113,7 @@ export const items: Record<string, Item> = {
     attack: 5,
     description: "O cristal em seu topo brilha com energia arcana, canalizando o poder dos elementos.",
     type: "Weapon",
-    limitedClasses: ["Mage"],
+    limitedClasses: ["Mage", "Blood Mage"],
     rarity: "Épico"
   },
   "14": {
@@ -122,7 +122,34 @@ export const items: Record<string, Item> = {
     attack: 10,
     description: "No topo do cajado brilha um cristal vermelho como sangue, fonte de um poder ancestral e incontrolável.",
     type: "Weapon",
-    limitedClasses: ["Mage"],
+    limitedClasses: ["Mage", "Blood Mage"],
+    rarity: "Lendário"
+  },
+  "15": {
+    id: 15,
+    name: "Arco Simples",
+    attack: 3,
+    description: "Arco de madeira, bastante frágil. Utilizado por arqueiros iniciantes.",
+    type: "Weapon",
+    limitedClasses: ["Archer"],
+    rarity: "Comum"
+  },
+  "16": {
+    id: 16,
+    name: "Arco Composto",
+    attack: 6,
+    description: "Arco de madeira, bastante frágil. Utilizado por arqueiros iniciantes.",
+    type: "Weapon",
+    limitedClasses: ["Archer"],
+    rarity: "Épico"
+  },
+  "17": {
+    id: 17,
+    name: "Luar de Ithil",
+    attack: 12,
+    description: "Forjado nas terras élficas sob a luz prateada da lua cheia, Luar de Ithil é uma arma silenciosa e etérea",
+    type: "Weapon",
+    limitedClasses: ["Archer"],
     rarity: "Lendário"
   },
 }

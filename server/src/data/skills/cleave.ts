@@ -3,7 +3,7 @@ import { Skill } from "./skills";
 export const CleaveAttackWarrior: Skill = {
   id: "cleave_attack_warrior",
   name: "Rachar",
-  level: 1,
+  level: 3,
   baseDamage: 5,
   range: 10,
   area: 5,

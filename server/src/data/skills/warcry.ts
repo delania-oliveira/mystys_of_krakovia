@@ -13,8 +13,8 @@ export const WarcryWarrior: Skill = {
   description: "O rugido do guerreiro ecoa pelo campo de batalha, fortalecendo sua força e resistência.",
   needTarget: false,
   cooldown: 30,
-  buffDef: 5,
-  buffAtk: 5,
+  buffDef: 2,
+  buffAtk: 2,
   buffDuration: 30,
   manaCost: 25
 }

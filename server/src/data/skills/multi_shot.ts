@@ -3,7 +3,7 @@ import { Skill } from "./skills"
 export const MultiShotArcher: Skill = {
   id: "multi_shot_archer",
   name: "Tiro Múltiplo",
-  level: 1,
+  level: 3,
   baseDamage: 2,
   range: 30,
   area: 10,

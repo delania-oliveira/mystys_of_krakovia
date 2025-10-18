@@ -16,7 +16,7 @@ import { levelUp } from "../mechanics/levelUp";
 const GRAVITY = 75
 const JUMP_STRENGTH = 20
 const GROUND_LEVEL = 0
-const PLAYER_SPEED = 14
+const PLAYER_SPEED = 10
 
 export class Krakovia extends Room<KrakoviaState> {
   maxClients = 4;
@@ -65,10 +65,10 @@ export class Krakovia extends Room<KrakoviaState> {
         type: monster.type,
         name: monster.name,
         x: monster.x,
-        y: GROUND_LEVEL,
+        y: monster.y,
         z: monster.z,
         spawn_x: monster.x,
-        spawn_y: GROUND_LEVEL,
+        spawn_y: monster.y,
         spawn_z: monster.z,
         speed: monster.speed,
         attack: monster.attack,
@@ -679,7 +679,7 @@ export class Krakovia extends Room<KrakoviaState> {
         player.z += (dz / len) * PLAYER_SPEED * dt;
       }
       // ground collision
-      if (player.y <= GROUND_LEVEL ) {
+      if (player.y <= GROUND_LEVEL) {
         player.y = GROUND_LEVEL;
         player.vy = 0;
         player.isGrounded = true;

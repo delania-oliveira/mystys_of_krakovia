@@ -835,7 +835,7 @@ export class Krakovia extends Room<KrakoviaState> {
         const characterFound = await db.select().from(schema.characters).where(eq(schema.characters.id, options.character_id));
         if (characterFound.length > 0) {
           const character = characterFound[0];
-          if (character.spawn_x == 0 && character.spawn_z == 0) {
+          if (character.spawn_x === 0 && character.spawn_z === 0) {
             character.spawn_x = 94
             character.spawn_z = -89
           }

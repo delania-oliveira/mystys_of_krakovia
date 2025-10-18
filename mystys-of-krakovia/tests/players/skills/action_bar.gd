@@ -47,10 +47,27 @@ func _unhandled_input(event):
 		if slots.size() > 2:
 			slots[2].activate_skill(player)
 			get_viewport().set_input_as_handled()
+			
 	if Input.is_action_just_pressed("action_4"):
 		if slots.size() > 3:
 			slots[3].activate_skill(player)
 			get_viewport().set_input_as_handled()
+	
+	if Input.is_action_just_pressed("action_5"):
+		if slots.size() > 4:
+			slots[4].activate_skill(player)
+			get_viewport().set_input_as_handled()
+			
+	if Input.is_action_just_pressed("action_6"):
+		if slots.size() > 5:
+			slots[5].activate_skill(player)
+			get_viewport().set_input_as_handled()
+			
+	if Input.is_action_just_pressed("action_7"):
+		if slots.size() > 6:
+			slots[6].activate_skill(player)
+			get_viewport().set_input_as_handled()
+			
 func check_cooldown_for_slot(slot: Panel):
 	var skill_id = slot.current_skill_id
 	

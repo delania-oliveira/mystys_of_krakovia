@@ -11,7 +11,7 @@ export function Download() {
   return (
     <Card className="w-full max-w-6xl bg-black/60 backdrop-blur-sm border-gray-700 text-white">
       <CardHeader className="border-b border-gray-700/50 pb-4">
-        <CardTitle className="text-3xl text-center">Dowload do Jogo</CardTitle>
+        <CardTitle className="text-3xl text-center">Download do Jogo</CardTitle>
       </CardHeader>
       <CardContent className="grid grid-cols-1 md:grid-cols-3 md:divide-x md:divide-gray-700/50 p-0">
 

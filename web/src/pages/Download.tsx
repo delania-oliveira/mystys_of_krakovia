@@ -37,7 +37,7 @@ export function Download() {
               <li>Processador: Intel Core i5-4460</li>
               <li>Memória RAM: 8 GB</li>
               <li>Placa de Vídeo: NVIDIA GTX 1050</li>
-              <li>Espaço em Disco: 10 GB</li>
+              <li>Espaço em Disco: 1.2 GB</li>
             </ul>
           </div>
         </div>
@@ -47,8 +47,7 @@ export function Download() {
           <ol className="list-decimal list-inside text-gray-300 space-y-2">
             <li>Baixe o arquivo compactado (.zip)</li>
             <li>Extraia o conteúdo para uma pasta</li>
-            <li>Execute o MystysOfKrakoviaInstaller.exe</li>
-            <li>Siga as instruções na tela para completar a instalação</li>
+            <li>Execute o MystysOfKrakovia.exe</li>
             <li>Inicie o jogo e divirta-se!</li>
           </ol>
         </div>

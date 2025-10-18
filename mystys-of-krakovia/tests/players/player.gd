@@ -84,13 +84,6 @@ func _ready() -> void:
 	var arcaneExplosionAnim = null
 	var desintegrateAnim = null
 	var library = anim_player.get_animation_library("")
-	if character_class == "Blood Mage":
-		var drain_life = library.get_animation("Standing2HMagicAttack04")
-		print(drain_life)
-		print("Oi")
-		library.add_animation("DrainLifeCast", drain_life)
-		print(library.get_animation("DrainLifeCast"))
-		library.remove_animation("Standing2HMagicAttack04")
 	if library.has_animation("StandingReactDeathBackward"):
 		# Mage.glb - Mage model
 		deathAnim = library.get_animation("StandingReactDeathBackward")
@@ -106,6 +99,11 @@ func _ready() -> void:
 		deathAnim = library.get_animation("StandingDeathForward02")
 		library.remove_animation("StandingDeathForward02")
 		library.remove_animation("StandingDrawArrow")
+	elif library.has_animation("AoEHeal1"):
+		# Blood_Mage.glb - Blood Mage model
+		castAnim = library.get_animation("Standing2HMagicAttack04")
+		library.add_animation("DrainLifeCast", castAnim)
+		library.remove_animation("Standing2HMagicAttack04")
 	if deathAnim:
 		library.add_animation("Death", deathAnim)
 		library.add_animation("DefaultAttack", shotAnim)
@@ -641,7 +639,7 @@ func play_skill(target, action_slot, skillId, needTarget):
 func spawn_ranged_skill(target_node, user, userId, scene, targetId, skillEffect):
 	var skill = scene.instantiate()
 	skill.target = target_node
-	var spawn_position = Vector3(user.x, user.y, user.z)
+	var spawn_position = Vector3(user.x, user.y + 2, user.z)
 	if targetId:
 		skill.targetId = targetId
 	if skillEffect:
@@ -649,6 +647,7 @@ func spawn_ranged_skill(target_node, user, userId, scene, targetId, skillEffect)
 			spawn_position = Vector3(target.x, target.y, target.z)
 	skill.userId = userId
 	skill.playerId = id
+	skill.player = self
 	get_tree().root.add_child(skill)
 	skill.global_position = spawn_position
 	skill.room = room

@@ -7,68 +7,68 @@
 [ext_resource type="Texture2D" uid="uid://b4sikicp53j7n" path="res://assets/effects/shoot_effects/FlameTexture.png" id="4_gmlej"]
 [ext_resource type="Script" uid="uid://wu5qrdxr1m62" path="res://addons/GPUTrail/GPUTrail3D.gd" id="5_ix87d"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_hbt7c"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kwomx"]
 render_priority = 0
 shader = ExtResource("1_kgjsk")
 shader_parameter/time = 0.0
-shader_parameter/frame_scope = 0.75000003236512
+shader_parameter/frame_scope = 1.10000004899012
 shader_parameter/use_system_time = false
 shader_parameter/time_accel = 2.0
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_skpk3"]
-material = SubResource("ShaderMaterial_hbt7c")
-top_radius = 0.01
-bottom_radius = 0.01
-height = 1.0
+[sub_resource type="SphereMesh" id="SphereMesh_7mge5"]
+material = SubResource("ShaderMaterial_kwomx")
+radius = 0.1
+height = 0.2
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_t3p5y"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kgjsk"]
 shader = ExtResource("2_kwomx")
 
-[sub_resource type="Gradient" id="Gradient_fnkea"]
-colors = PackedColorArray(1, 0, 0, 1, 1, 1, 1, 0)
+[sub_resource type="Gradient" id="Gradient_kwomx"]
+colors = PackedColorArray(1, 0, 0.15294118, 1, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_pvo3j"]
-gradient = SubResource("Gradient_fnkea")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_b5sly"]
+gradient = SubResource("Gradient_kwomx")
 
-[sub_resource type="Curve" id="Curve_q5gcw"]
+[sub_resource type="Curve" id="Curve_gmlej"]
 bake_resolution = 16
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_iu1en"]
-curve = SubResource("Curve_q5gcw")
+[sub_resource type="CurveTexture" id="CurveTexture_ix87d"]
+curve = SubResource("Curve_gmlej")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_sgr7w"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hbt7c"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("3_b5sly")
 shader_parameter/tex = ExtResource("4_gmlej")
 shader_parameter/uv_offset = Vector2(0, 0)
-shader_parameter/color_ramp = SubResource("GradientTexture1D_pvo3j")
-shader_parameter/curve = SubResource("CurveTexture_iu1en")
+shader_parameter/color_ramp = SubResource("GradientTexture1D_b5sly")
+shader_parameter/curve = SubResource("CurveTexture_ix87d")
 shader_parameter/emmission_transform = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
 shader_parameter/flags = 40
 
-[sub_resource type="QuadMesh" id="QuadMesh_h2two"]
-material = SubResource("ShaderMaterial_sgr7w")
+[sub_resource type="QuadMesh" id="QuadMesh_skpk3"]
+material = SubResource("ShaderMaterial_hbt7c")
 
 [node name="DrainLife" type="Node3D"]
 script = ExtResource("1_kwomx")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("CylinderMesh_skpk3")
+mesh = SubResource("SphereMesh_7mge5")
 
-[node name="GPUTrail3D" type="GPUParticles3D" parent="MeshInstance3D"]
+[node name="GPUTrail3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 0, 0)
 amount = 100
 lifetime = 100.0
 explosiveness = 1.0
 fixed_fps = 75
-process_material = SubResource("ShaderMaterial_t3p5y")
-draw_pass_1 = SubResource("QuadMesh_h2two")
+process_material = SubResource("ShaderMaterial_kgjsk")
+draw_pass_1 = SubResource("QuadMesh_skpk3")
 script = ExtResource("5_ix87d")
 length_seconds = 1.3333333333333333
 texture = ExtResource("4_gmlej")
-color_ramp = SubResource("GradientTexture1D_pvo3j")
-curve = SubResource("CurveTexture_iu1en")
+color_ramp = SubResource("GradientTexture1D_b5sly")
+curve = SubResource("CurveTexture_ix87d")
 _defaults_have_been_set = true
 metadata/_custom_type_script = "uid://wu5qrdxr1m62"

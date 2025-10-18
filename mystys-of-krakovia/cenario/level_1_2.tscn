@@ -1,5 +1,6 @@
-[gd_scene load_steps=24 format=3 uid="uid://ba4ukihssxqv3"]
+[gd_scene load_steps=25 format=3 uid="uid://ba4ukihssxqv3"]
 
+[ext_resource type="Script" uid="uid://usyd614rjvyp" path="res://cenario/level_1_2.gd" id="1_dxskw"]
 [ext_resource type="Terrain3DMaterial" uid="uid://oblulx2secpt" path="res://cenario/Level_1_data/Material_level_1_2.tres" id="1_pf2pk"]
 [ext_resource type="Terrain3DAssets" uid="uid://0d844r5xlpt5" path="res://cenario/Level_1_data/Assets_level_1_2.tres" id="2_dxskw"]
 [ext_resource type="PackedScene" uid="uid://cbde01wgrrm5w" path="res://assets/construcoes/FOREST2.glb" id="21_haewj"]
@@ -51,6 +52,7 @@ volumetric_fog_anisotropy = 0.0
 volumetric_fog_length = 389.37
 
 [node name="Level_1" type="Node3D"]
+script = ExtResource("1_dxskw")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_tr1x6")
@@ -63,7 +65,11 @@ shadow_enabled = true
 data_directory = "res://cenario/Level_1_data"
 material = ExtResource("1_pf2pk")
 assets = ExtResource("2_dxskw")
+collision_mode = 4
+collision_layer = 4
+collision_mask = 0
 top_level = true
+metadata/_edit_lock_ = true
 
 [node name="FOREST2" parent="." instance=ExtResource("21_haewj")]
 transform = Transform3D(-0.61715233, 0, -8.978816, 0, 10, 0, 8.978816, 0, -0.61715233, 108.22236, -0.032242775, -131.79208)

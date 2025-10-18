@@ -37,7 +37,7 @@ export function Download() {
               <li>Processador: Intel Core i5-4460</li>
               <li>Memória RAM: 8 GB</li>
               <li>Placa de Vídeo: NVIDIA GTX 1050</li>
-              <li>Espaço em Disco: 1.2 GB</li>
+              <li>Espaço em Disco: 1.8 GB</li>
             </ul>
           </div>
         </div>

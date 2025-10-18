@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export function Download() {
 
   const getDownloadLink = () => {
-    return '#'
+    return 'https://drive.google.com/file/d/1zqjVVUBU_K0Ik_biAgA-lf4U5VhwQA4V/view?usp=drive_link'
   }
 
   return (

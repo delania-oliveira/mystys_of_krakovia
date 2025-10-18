@@ -3,7 +3,7 @@ import { Skill } from "./skills"
 export const SpillBloodBloodMage: Skill = {
   id: "spill_blood_blood_mage",
   name: "Derramar Sangue",
-  level: 10,
+  level: 1,
   baseDamage: 0,
   range: 30,
   area: 0,

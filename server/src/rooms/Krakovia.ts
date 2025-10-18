@@ -15,7 +15,7 @@ import { items } from "../data/items/items";
 import { levelUp } from "../mechanics/levelUp";
 const GRAVITY = 75
 const JUMP_STRENGTH = 20
-const GROUND_LEVEL = 3
+const GROUND_LEVEL = 0
 const PLAYER_SPEED = 14
 
 export class Krakovia extends Room<KrakoviaState> {
@@ -65,10 +65,10 @@ export class Krakovia extends Room<KrakoviaState> {
         type: monster.type,
         name: monster.name,
         x: monster.x,
-        y: GROUND_LEVEL - 1,
+        y: GROUND_LEVEL,
         z: monster.z,
         spawn_x: monster.x,
-        spawn_y: GROUND_LEVEL - 1,
+        spawn_y: GROUND_LEVEL,
         spawn_z: monster.z,
         speed: monster.speed,
         attack: monster.attack,
@@ -365,6 +365,9 @@ export class Krakovia extends Room<KrakoviaState> {
             target._threatTable[player.id] = (target._threatTable[player.id] || 0) + finalDamage;
           }
           target.health -= finalDamage
+          if (skill.id == "drain_life_blood_mage"){
+            player.health = Math.min(player.health + finalDamage, player.max_health);
+          }
         }
         target.isDead = target.health <= 0
         if (skill.area > 0){
@@ -410,10 +413,10 @@ export class Krakovia extends Room<KrakoviaState> {
                 type: monsterData.type,
                 name: monsterData.name,
                 x: monsterData.spawn_x,
-                y: GROUND_LEVEL - 1,
+                y: GROUND_LEVEL,
                 z: monsterData.spawn_z,
                 spawn_x: monsterData.spawn_x,
-                spawn_y: GROUND_LEVEL - 1,
+                spawn_y: GROUND_LEVEL,
                 spawn_z: monsterData.spawn_z,
                 speed: monsterData.speed,
                 attack: monsterData.attack,
@@ -525,7 +528,7 @@ export class Krakovia extends Room<KrakoviaState> {
       const player = this.state.players.get(client.sessionId)
       if (player) {
         player.x = 0
-        player.y = 3
+        player.y = 1
         player.z = 0
         player.isDead = false
         player.health = player.max_health
@@ -847,11 +850,11 @@ export class Krakovia extends Room<KrakoviaState> {
           player.gold = player.gold
           player.defense = player.level
           player.attack = player.level
-          player.x = character.spawn_x;
-          player.y = 3;
-          player.z = character.spawn_z;
-          player.spawn_x = character.spawn_x
-          player.spawn_z = character.spawn_z
+          player.x = 0;
+          player.y = 1;
+          player.z = 0;
+          player.spawn_x = 92
+          player.spawn_z = -45
           await db.update(schema.characters).set({
             lastLogin: sql`NOW()`
           })

@@ -13,7 +13,6 @@ config_version=5
 config/name="Mystys Of Krakovia"
 run/main_scene="uid://dqws0gwxk1adc"
 config/features=PackedStringArray("4.5", "Forward Plus")
-config/icon="res://icon.svg"
 
 [autoload]
 
@@ -40,9 +39,13 @@ enabled=PackedStringArray("res://addons/GPUTrail/plugin.cfg", "res://addons/godo
 
 folder_colors={
 "res://assets/": "yellow",
-"res://scenes/": "green",
+"res://cenario/": "green",
 "res://shaders/": "purple"
 }
+
+[filesystem]
+
+import/blender/enabled=false
 
 [input]
 

@@ -39,9 +39,13 @@ enabled=PackedStringArray("res://addons/GPUTrail/plugin.cfg", "res://addons/godo
 
 folder_colors={
 "res://assets/": "yellow",
-"res://scenes/": "green",
+"res://cenario/": "green",
 "res://shaders/": "purple"
 }
+
+[filesystem]
+
+import/blender/enabled=false
 
 [input]
 

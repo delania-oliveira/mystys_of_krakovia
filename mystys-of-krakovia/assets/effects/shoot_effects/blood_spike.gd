@@ -12,11 +12,11 @@ func _process(delta):
 	if not is_instance_valid(target):
 		queue_free()
 		return
-	look_at(Vector3(target.x, target.y, target.z), Vector3.UP)
+	look_at(Vector3(target.x, target.y + 1.5, target.z), Vector3.UP)
 	mesh.rotation = Vector3(deg_to_rad(-90), deg_to_rad(0) , deg_to_rad(0))
 	var direction = -global_transform.basis.z
 	global_position += direction * speed * delta
-	if global_position.distance_to(Vector3(target.x, target.y, target.z)) < 0.5:
+	if global_position.distance_to(Vector3(target.x, target.y, target.z)) < 2.0:
 		if playerId == userId:
 			if "monster_id" in target:
 				room.send("attackDealDamage", {"targetId": target.monster_id, "skillId": "default_skill_blood_mage", "playerId": playerId})

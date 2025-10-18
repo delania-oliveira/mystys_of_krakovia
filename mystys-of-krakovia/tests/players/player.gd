@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 @onready var anim_player = $Pivot/AuxScene/AnimationPlayer
 
-@export var speed = 14
+@export var speed = 10
 @export var fall_acceleration = 75
 @export var jump_impulse = 20
 @export var bounce_impulse = 16

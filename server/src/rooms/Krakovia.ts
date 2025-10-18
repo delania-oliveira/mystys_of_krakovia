@@ -19,7 +19,7 @@ const GROUND_LEVEL = 0
 const PLAYER_SPEED = 10
 
 export class Krakovia extends Room<KrakoviaState> {
-  maxClients = 4;
+  maxClients = 100;
   hasProcessedAttack = false
   lifeRegenTimer = 0
   manaRegenTimer = 0

@@ -26,7 +26,7 @@ var class_avatars = {
 
 var characters = []
 var character_selected = {}
-const SERVER_URL = "http://week-characterized.gl.at.ply.gg:29821/api/user"
+const SERVER_URL = "http://localhost:2567/api/user"
 var token = Globals.token
 var headers = ["Content-Type: application/json", "Authorization: Bearer " + token]
 

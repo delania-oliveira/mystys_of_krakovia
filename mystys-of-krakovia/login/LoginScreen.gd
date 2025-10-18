@@ -9,7 +9,7 @@ extends Control
 @onready var warning_dialog = $WarningDialog
 @onready var http_request = $HTTPRequest
 
-const SERVER_URL = "http://week-characterized.gl.at.ply.gg:29821/api/login"
+const SERVER_URL = "http://localhost:2567/api/login"
 const REGISTER_URL = "https://www.playmystysofkrakovia.com.br/register"
 
 func _ready():

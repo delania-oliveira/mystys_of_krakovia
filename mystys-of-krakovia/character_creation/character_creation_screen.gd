@@ -21,7 +21,7 @@ extends Control
 @onready var exit_button = $MarginContainer/LayoutCreation/Panels/ClassContainer/ExitButton
 
 
-const SERVER_URL = "http://week-characterized.gl.at.ply.gg:29821/api/characters"
+const SERVER_URL = "http://localhost:2567/api/characters"
 
 var selected_class = ""
 var is_class_selectable = false

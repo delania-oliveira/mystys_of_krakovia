@@ -32,12 +32,12 @@ func _process(delta):
 		queue_free()
 		return
 
-	look_at(Vector3(target.x, target.y, target.z), Vector3.UP)
+	look_at(Vector3(target.x, target.y + 1.5, target.z), Vector3.UP)
 	
 	var direction = -global_transform.basis.z
 	global_position += direction * speed * delta
 
-	if global_position.distance_to(Vector3(target.x, target.y, target.z)) < 0.5:
+	if global_position.distance_to(Vector3(target.x, target.y, target.z)) < 2.0:
 		if playerId == userId:
 			room.send("attackDealDamage", {"targetId": target.monster_id, "skillId": "flame_arrow_archer", "playerId": playerId})
 		queue_free()

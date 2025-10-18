@@ -17,14 +17,14 @@ func _physics_process(delta):
 		return
 
 	# Keep looking at the target's current position
-	look_at(Vector3(target.x, target.y, target.z), Vector3.UP)
+	look_at(Vector3(target.x, target.y + 1.0, target.z), Vector3.UP)
 
 	# Calculate direction and move forward
 	var direction = -global_transform.basis.z
 	global_position += direction * speed * delta
 
 	# Check for impact
-	if global_position.distance_to(Vector3(target.x, target.y, target.z)) < 0.5:
+	if global_position.distance_to(Vector3(target.x, target.y, target.z)) < 2.0:
 		var forward = -global_transform.basis.z.normalized()
 		var explosion = load("res://assets/effects/shoot_effects/Explosion.tscn").instantiate()
 		get_parent().add_child(explosion)

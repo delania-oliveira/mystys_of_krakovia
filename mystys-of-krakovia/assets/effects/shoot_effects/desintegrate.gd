@@ -33,8 +33,8 @@ func _process(delta):
 
 	look_at(target_position, Vector3.UP)
 	rotate_z(deg_to_rad(90))
+	_emit_sparks()
 	if t >= 1.0:
-		_emit_sparks()
 		if playerId == userId:
 			room.send("attackDealDamage", {"targetId": target.monster_id, "skillId": "desintegrate_mage", "playerId": playerId})
 		queue_free()

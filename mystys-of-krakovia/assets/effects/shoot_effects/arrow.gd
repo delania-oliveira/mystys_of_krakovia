@@ -24,14 +24,14 @@ func _process(delta):
 		return
 
 	# Look at the target
-	look_at(Vector3(target.x, target.y, target.z), Vector3.UP)
+	look_at(Vector3(target.x, target.y + 1.0, target.z), Vector3.UP)
 	
 	# Calculate direction and move forward
 	var direction = -global_transform.basis.z
 	global_position += direction * speed * delta
 
 	# Check if we've reached the target
-	if global_position.distance_to(Vector3(target.x, target.y, target.z)) < 0.5:
+	if global_position.distance_to(Vector3(target.x, target.y, target.z)) < 2.0:
 		# You can add impact effects here (e.g., play an explosion)
 		# and notify the server/target that damage was dealt.
 		if playerId == userId:

@@ -110,7 +110,7 @@ transform = Transform3D(0.70103616, 0, -1.8731122, 0, 2, 0, 1.8731122, 0, 0.7010
 transform = Transform3D(-2.5197124, 0, -1.6282046, 0, 3, 0, 1.6282046, 0, -2.5197124, 103.815216, -0.92520905, -27.872776)
 
 [node name="AuxScene" parent="." instance=ExtResource("25_h1eqi")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 92.62696, 1.5521343, -45.53608)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -125.66992, 17.604015, 148.30188)
 
 [node name="Sketchfab_Scene4" parent="." instance=ExtResource("26_uwuuc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 179.55934, -1.6875362, -13.405497)

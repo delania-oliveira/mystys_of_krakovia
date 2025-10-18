@@ -93,7 +93,7 @@ func spawn_ranged_skill(target_node, scene):
 	skill.target = target_node
 	var spawn_position = global_position
 	get_tree().root.add_child(skill)
-	skill.global_position = spawn_position
+	skill.global_position = spawn_position + Vector3(0, 3.5, 0)
 	
 func _on_set_monster_loot(data):
 	var current_loot = data.loot

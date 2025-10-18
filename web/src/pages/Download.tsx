@@ -22,7 +22,7 @@ export function Download() {
             className="h-16 w-16 mb-4"
           />
           <h3 className="text-2xl font-semibold">Windows</h3>
-          <p className="text-sm text-gray-400 mb-6">64-bit | 1.8 GB</p>
+          <p className="text-sm text-gray-400 mb-6">64-bit | 2.0 GB</p>
           <Button asChild size="lg" className="w-4/5">
             <a href={getDownloadLink()} download>Baixar</a>
           </Button>
@@ -34,21 +34,19 @@ export function Download() {
             <div className="mb-2"><span className="font-bold">Minimo</span></div>
             <ul className="list-disc list-inside text-gray-300 pl-2 space-y-1">
               <li>SO: Windows 10 ou acima (64-bit)</li>
-              <li>Processador: Intel Core i5-4460</li>
               <li>Memória RAM: 8 GB</li>
-              <li>Placa de Vídeo: NVIDIA GTX 1050</li>
-              <li>Espaço em Disco: 1.8 GB</li>
+              <li>Espaço em Disco: 2.0 GB</li>
             </ul>
           </div>
         </div>
 
         <div className="p-6">
-          <h3 className="text-2xl font-semibold mb-4">Como Instalar</h3>
+          <h3 className="text-2xl font-semibold mb-4">Como Jogar</h3>
           <ol className="list-decimal list-inside text-gray-300 space-y-2">
             <li>Baixe o arquivo compactado (.zip)</li>
             <li>Extraia o conteúdo para uma pasta</li>
-            <li>Execute o MystysOfKrakovia.exe</li>
-            <li>Inicie o jogo e divirta-se!</li>
+            <li>Execute o Mystys Of Krakovia.exe</li>
+            <li>Faça login no jogo e divirta-se!</li>
           </ol>
         </div>
       </CardContent>

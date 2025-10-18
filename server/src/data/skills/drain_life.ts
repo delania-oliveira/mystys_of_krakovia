@@ -3,7 +3,7 @@ import { Skill } from "./skills"
 export const DrainLifeBloodMage: Skill = {
   id: "drain_life_blood_mage",
   name: "Drenar Vida",
-  level: 3,
+  level: 1,
   baseDamage: 10,
   range: 30,
   area: 0,

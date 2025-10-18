@@ -22,7 +22,7 @@ export function Download() {
             className="h-16 w-16 mb-4"
           />
           <h3 className="text-2xl font-semibold">Windows</h3>
-          <p className="text-sm text-gray-400 mb-6">64-bit | 5.4 GB</p>
+          <p className="text-sm text-gray-400 mb-6">64-bit | 1.8 GB</p>
           <Button asChild size="lg" className="w-4/5">
             <a href={getDownloadLink()} download>Baixar</a>
           </Button>

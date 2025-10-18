@@ -126,13 +126,13 @@ func _physics_process(delta):
 	var direction = Vector3.ZERO
 	if is_local && !dead:
 		if Input.is_action_pressed("move_right"):
-			direction.x += 1
-		if Input.is_action_pressed("move_left"):
 			direction.x -= 1
+		if Input.is_action_pressed("move_left"):
+			direction.x += 1
 		if Input.is_action_pressed("move_back"):
-			direction.z += 1
-		if Input.is_action_pressed("move_forward"):
 			direction.z -= 1
+		if Input.is_action_pressed("move_forward"):
+			direction.z += 1
 		if direction != Vector3.ZERO:
 			direction = direction.normalized()
 			# Setting the basis property will affect the rotation of the node.
@@ -157,7 +157,6 @@ func _physics_process(delta):
 		var is_colliding_with_wall = false
 		for i in range(get_slide_collision_count()):
 			var collision = get_slide_collision(i)
-			# If the normal's Y value is low, it's a wall or a very steep slope.
 			if collision.get_normal().y < 0.5:
 				is_colliding_with_wall = true
 				break

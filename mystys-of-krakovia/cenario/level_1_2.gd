@@ -122,7 +122,7 @@ func _on_players_add(target, value, key):
 		CharacterHelper.prepare_mana_bar(ch, value.mana, value.max_mana)
 		CharacterHelper.prepare_experience_bar(ch, value.experience, value.level, value.max_exp)
 		ch.is_local = true
-		ch.get_node("Camera3D").current = true
+		ch.get_node("SpringArm3D/Camera3D").current = true
 		var spellbook = ch.get_node("SpellBook")
 		var action_bar = ch.get_node("ActionBar")
 		var inventory = ch.get_node("Inventory")

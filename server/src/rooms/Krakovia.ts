@@ -835,6 +835,10 @@ export class Krakovia extends Room<KrakoviaState> {
         const characterFound = await db.select().from(schema.characters).where(eq(schema.characters.id, options.character_id));
         if (characterFound.length > 0) {
           const character = characterFound[0];
+          if (character.spawn_x == 0 && character.spawn_z == 0) {
+            character.spawn_x = 94
+            character.spawn_z = -89
+          }
           player.id = client.sessionId;
           player.dbId = options.character_id;
           player.name = character.name;
@@ -850,11 +854,9 @@ export class Krakovia extends Room<KrakoviaState> {
           player.gold = player.gold
           player.defense = player.level
           player.attack = player.level
-          player.x = 0;
+          player.x = player.spawn_x;
           player.y = 1;
-          player.z = 0;
-          player.spawn_x = 92
-          player.spawn_z = -45
+          player.z = player.spawn_z;
           await db.update(schema.characters).set({
             lastLogin: sql`NOW()`
           })

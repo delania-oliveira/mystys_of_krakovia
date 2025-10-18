@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://cwrsrwqts0777"]
+
+[ext_resource type="Script" uid="uid://kk6as0podjjq" path="res://assets/effects/aoe_effects/spill_blood.gd" id="1_76x2e"]
+[ext_resource type="Shader" uid="uid://dtaup7sd3bci4" path="res://assets/effects/aoe_effects/arcane_explosion.gdshader" id="2_bsrgs"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bsrgs"]
+render_priority = 0
+shader = ExtResource("2_bsrgs")
+shader_parameter/color_start = Vector4(1, 0, 0, 1)
+shader_parameter/color_end = Vector4(0.6, 0.2, 1, 0.5)
+shader_parameter/progress = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_etfrh"]
+size = Vector2(30, 30)
+center_offset = Vector3(0, 2, 0)
+
+[node name="SpillBlood" type="Node3D"]
+script = ExtResource("1_76x2e")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("ShaderMaterial_bsrgs")
+mesh = SubResource("PlaneMesh_etfrh")

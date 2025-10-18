@@ -18,7 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://d4k2f13e34e6o" path="res://assets/icons/items/equipment/weapon_empty.png" id="12_r5luj"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_ibhvg"]
-radius = 2.0
+radius = 1.5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mp81i"]
 bg_color = Color(0.5350202, 0.44240648, 0.9904612, 1)

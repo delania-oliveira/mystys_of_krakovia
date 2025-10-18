@@ -12,11 +12,11 @@ shader_parameter/progress = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_my1gs"]
 size = Vector2(10, 10)
-center_offset = Vector3(-0.5, -1, 0.5)
 
 [node name="Warcry" type="Node3D"]
 script = ExtResource("1_my1gs")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 material_override = SubResource("ShaderMaterial_pfe04")
 mesh = SubResource("PlaneMesh_my1gs")

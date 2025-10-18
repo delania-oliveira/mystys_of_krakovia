@@ -6,6 +6,7 @@ var speed = 25.0
 var room
 var playerId
 var userId
+var player
 func _ready() -> void:
 	var archer_scene = load("res://assets/character/Archer.glb")
 	var archer_instance = archer_scene.instantiate()

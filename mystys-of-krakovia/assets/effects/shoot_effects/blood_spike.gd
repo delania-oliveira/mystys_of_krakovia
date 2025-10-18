@@ -5,6 +5,7 @@ var target
 var speed = 35.0
 var room
 var playerId
+var player
 var userId
 var targetId
 func _process(delta):

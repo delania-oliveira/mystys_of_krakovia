@@ -1,11 +1,12 @@
 # arrow.gd
 extends Node3D
-
+var player
 var target
 var speed = 25.0
 var room
 var playerId
 var userId
+@onready var arrow_mesh = $MeshInstance3D
 func _ready() -> void:
 	var archer_scene = load("res://assets/character/Archer.glb")
 	var archer_instance = archer_scene.instantiate()
@@ -13,6 +14,7 @@ func _ready() -> void:
 	var eyes_mesh = archer_instance.get_node_or_null("Node/Skeleton3D/Erika_Archer_Eyes_Mesh")
 	if eyes_mesh and eyes_mesh is MeshInstance3D:
 		$MeshInstance3D.mesh = eyes_mesh.mesh
+		arrow_mesh.scale = Vector3(2.0, 2.0, 2.0)
 	else:
 		push_error("Could not find Erika_Archer_Eyes_Mesh in Hunter.glb")
 func _process(delta):

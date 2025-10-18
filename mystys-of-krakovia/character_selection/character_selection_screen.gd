@@ -26,7 +26,7 @@ var class_avatars = {
 
 var characters = []
 var character_selected = {}
-const SERVER_URL = "http://week-characterized.gl.at.ply.gg:29821/api/user"
+const SERVER_URL = "http://localhost:2567/api/user"
 var token = Globals.token
 var headers = ["Content-Type: application/json", "Authorization: Bearer " + token]
 
@@ -177,7 +177,7 @@ func _on_exit_pressed():
 
 func _on_join_game_pressed():
 	CharacterHelper.character_id = character_selected.id
-	get_tree().change_scene_to_file("res://tests/map/TestMap.tscn")
+	get_tree().change_scene_to_file("res://cenario/level_1_2.tscn")
 	
 func _on_success_dialog_confirmed() -> void:
 	get_tree().reload_current_scene()

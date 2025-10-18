@@ -65,6 +65,7 @@ var ARCANEBALL_SCENE = preload("res://assets/effects/shoot_effects/Arcaneball.ts
 var DESINTEGRATE_SCENE = preload("res://assets/effects/shoot_effects/Desintegrate.tscn")
 var FLAME_ARROW_SCENE = preload("res://assets/effects/shoot_effects/FlameArrow.tscn")
 var BLOOD_SPIKE_SCENE = preload("res://assets/effects/shoot_effects/BloodSpike.tscn")
+var DRAIN_LIFE_SCENE = preload("res://assets/effects/shoot_effects/DrainLife.tscn")
 var WARCRY_SCENE = preload("res://assets/effects/aoe_effects/Warcry.tscn")
 signal skills_updated(new_skills)
 var menu_instance = null
@@ -98,6 +99,11 @@ func _ready() -> void:
 		deathAnim = library.get_animation("StandingDeathForward02")
 		library.remove_animation("StandingDeathForward02")
 		library.remove_animation("StandingDrawArrow")
+	elif library.has_animation("AoEHeal1"):
+		# Blood_Mage.glb - Blood Mage model
+		castAnim = library.get_animation("Standing2HMagicAttack04")
+		library.add_animation("DrainLifeCast", castAnim)
+		library.remove_animation("Standing2HMagicAttack04")
 	if deathAnim:
 		library.add_animation("Death", deathAnim)
 		library.add_animation("DefaultAttack", shotAnim)
@@ -108,7 +114,8 @@ func _ready() -> void:
 		library.add_animation("DesintegrateCast", desintegrateAnim)
 	else:
 		push_warning("No death animation found to rename.")
-		
+	
+	
 func _on_set_skills(data):
 	if !is_local:
 		return
@@ -217,11 +224,12 @@ func update_player_health(data):
 		health_bar.max_value = data.max_health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = max_health
-	elif data.health and data.health != current_health and data.health > current_health and (data.health - current_health) > 10:
+	elif data.health and data.health != current_health and data.health > current_health:
 		show_floating_text(data.health - current_health, true, null, "Healing")
 		current_health = data.health
 		health_label.text = str(current_health) + " / " + str(max_health)
 		health_bar.value = current_health
+		
 func update_player_mana(data):
 	# UPDATE OWN PLAYER MANA
 	if data.mana and data.mana != current_mana:
@@ -244,7 +252,7 @@ func _on_experience_gained(data):
 	
 func update_player_experience(data):
 	# UPDATE OWN PLAYER EXPERIENCE
-	var current_experience = data.currentExperience
+	current_experience = data.currentExperience
 	var new_max_exp = data.maxExp
 	var gained_experience = data.experience
 
@@ -271,17 +279,19 @@ func _on_player_attack(data):
 		
 		attack_locked = false
 		if data.skillEffect == "ArcaneBall":
-			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, ARCANEBALL_SCENE, null)
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, ARCANEBALL_SCENE, null, null)
 		elif data.skillEffect == "ArrowShot":
-			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, ARROW_SCENE, null)
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, ARROW_SCENE, null, null)
 		elif data.skillEffect == "ArrowMultiShot":
 			spawn_multi_shot(data, target)
 		elif data.skillEffect == "FlameArrow":
-			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, FLAME_ARROW_SCENE, null)
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, FLAME_ARROW_SCENE, null, null)
 		elif data.skillEffect == "Desintegrate":
-			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, DESINTEGRATE_SCENE, null)
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, DESINTEGRATE_SCENE, null, null)
 		elif data.skillEffect == "BloodSpike":
-			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, BLOOD_SPIKE_SCENE, target_id)
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, BLOOD_SPIKE_SCENE, target_id, null)
+		elif data.skillEffect == "DrainLife":
+			spawn_ranged_skill(target, get_user_by_id(data.id), data.id, DRAIN_LIFE_SCENE, target_id, data.skillEffect)
 		elif data.skillEffect == "DefaultAttackMelee":
 			if data.id == id:
 				if not is_instance_valid(target):
@@ -326,7 +336,7 @@ func spawn_multi_shot(data, target):
 	for result in results:
 		var body = result.collider
 		if body.is_in_group("monsters"):
-			spawn_ranged_skill(get_target_by_id(body.id), get_user_by_id(data.id), data.id, ARROW_SCENE, null)
+			spawn_ranged_skill(get_target_by_id(body.id), get_user_by_id(data.id), data.id, ARROW_SCENE, null, null)
 			
 func cleave_warrior(data, target):
 	var radius = data.area
@@ -626,14 +636,18 @@ func play_skill(target, action_slot, skillId, needTarget):
 	else:
 		room.send("playerStartedAttack", {"skillId": skillId, "targetId": target_id})
 		
-func spawn_ranged_skill(target_node, user, userId, scene, targetId):
+func spawn_ranged_skill(target_node, user, userId, scene, targetId, skillEffect):
 	var skill = scene.instantiate()
 	skill.target = target_node
+	var spawn_position = Vector3(user.x, user.y + 2, user.z)
 	if targetId:
 		skill.targetId = targetId
+	if skillEffect:
+		if skillEffect == "DrainLife":
+			spawn_position = Vector3(target.x, target.y, target.z)
 	skill.userId = userId
 	skill.playerId = id
-	var spawn_position = Vector3(user.x, user.y, user.z)
+	skill.player = self
 	get_tree().root.add_child(skill)
 	skill.global_position = spawn_position
 	skill.room = room

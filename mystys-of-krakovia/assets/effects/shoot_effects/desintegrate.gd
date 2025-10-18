@@ -5,6 +5,7 @@ var target
 var userId
 var playerId
 var room
+var player
 var speed = 5.0
 var start_height = 30.0
 var target_position: Vector3

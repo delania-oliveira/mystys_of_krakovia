@@ -1,6 +1,6 @@
 # fireball.gd
 extends Node3D
-
+var player
 var speed = 20.0
 var target
 var room

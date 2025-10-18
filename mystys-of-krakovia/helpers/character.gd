@@ -36,7 +36,7 @@ func setup_remote_player(player):
 	player.get_node("HealthBar").hide()
 	player.get_node("ExperienceBar").hide()
 	player.is_local = false
-	player.get_node("Camera3D").current = false
+	player.get_node("SpringArm3D/Camera3D").current = false
 	player.get_node("CastBar").hide()
 	player.get_node("Inventory").hide()
 	player.get_node("PlayerMenu").hide()

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Mystys Of Krakovia"
-run/main_scene="uid://dqws0gwxk1adc"
+run/main_scene="uid://c0bjbv3u6kf8n"
 config/features=PackedStringArray("4.5", "Forward Plus")
 
 [autoload]

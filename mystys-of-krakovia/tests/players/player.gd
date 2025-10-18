@@ -67,6 +67,7 @@ var FLAME_ARROW_SCENE = preload("res://assets/effects/shoot_effects/FlameArrow.t
 var BLOOD_SPIKE_SCENE = preload("res://assets/effects/shoot_effects/BloodSpike.tscn")
 var DRAIN_LIFE_SCENE = preload("res://assets/effects/shoot_effects/DrainLife.tscn")
 var WARCRY_SCENE = preload("res://assets/effects/aoe_effects/Warcry.tscn")
+var SPILL_BLOOD_SCENE = preload("res://assets/effects/aoe_effects/SpillBlood.tscn")
 signal skills_updated(new_skills)
 var menu_instance = null
 @onready var spellbook = $SpellBook
@@ -126,13 +127,13 @@ func _physics_process(delta):
 	var direction = Vector3.ZERO
 	if is_local && !dead:
 		if Input.is_action_pressed("move_right"):
-			direction.x += 1
-		if Input.is_action_pressed("move_left"):
 			direction.x -= 1
+		if Input.is_action_pressed("move_left"):
+			direction.x += 1
 		if Input.is_action_pressed("move_back"):
-			direction.z += 1
-		if Input.is_action_pressed("move_forward"):
 			direction.z -= 1
+		if Input.is_action_pressed("move_forward"):
+			direction.z += 1
 		if direction != Vector3.ZERO:
 			direction = direction.normalized()
 			# Setting the basis property will affect the rotation of the node.
@@ -157,7 +158,6 @@ func _physics_process(delta):
 		var is_colliding_with_wall = false
 		for i in range(get_slide_collision_count()):
 			var collision = get_slide_collision(i)
-			# If the normal's Y value is low, it's a wall or a very steep slope.
 			if collision.get_normal().y < 0.5:
 				is_colliding_with_wall = true
 				break
@@ -316,9 +316,44 @@ func _on_player_attack(data):
 			var caster = get_user_by_id(data.id)
 			warcry.global_transform.origin = Vector3(caster.x, caster.y, caster.z)
 			get_tree().current_scene.add_child(warcry)
-			if data.id == id:
-				room.send("playerBuff", {"skillId": data.skillId, "playerId": id})
-				
+			var AOE_RADIUS = 10
+			var area_center = global_position
+			var space_state = get_world_3d().direct_space_state
+			var shape = SphereShape3D.new()
+			shape.radius = AOE_RADIUS
+			var query = PhysicsShapeQueryParameters3D.new()
+			query.shape = shape
+			query.transform = Transform3D(Basis(), area_center)
+			query.collide_with_areas = false
+			query.collide_with_bodies = true
+			var results = space_state.intersect_shape(query, 32)
+			get_tree().current_scene.add_child(warcry)
+			for result in results:
+				var body = result.collider
+				if body.is_in_group("players"):
+					room.send("playerBuff", {"skillId": data.skillId, "playerId": body.id})
+		elif data.skillEffect == "SpillBlood":
+			var spillBlood = SPILL_BLOOD_SCENE.instantiate()
+			var caster = get_user_by_id(data.id)
+			var AOE_RADIUS = 30
+			var area_center = global_position
+
+			var space_state = get_world_3d().direct_space_state
+			var shape = SphereShape3D.new()
+			shape.radius = AOE_RADIUS
+
+			var query = PhysicsShapeQueryParameters3D.new()
+			query.shape = shape
+			query.transform = Transform3D(Basis(), area_center)
+			query.collide_with_areas = false
+			query.collide_with_bodies = true
+			var results = space_state.intersect_shape(query, 32)
+			spillBlood.global_transform.origin = Vector3(caster.x, caster.y, caster.z)
+			get_tree().current_scene.add_child(spillBlood)
+			for result in results:
+				var body = result.collider
+				if body.is_in_group("players"):
+					room.send("playerBuff", {"skillId": data.skillId, "playerId": body.id})
 func spawn_multi_shot(data, target):
 	var radius = data.area
 	var area_center = Vector3(target.x, target.y, target.z)
@@ -378,9 +413,17 @@ func on_network_data_received(data):
 	if data.targetName:
 		current_target_name = data.targetName
 	if is_local:
-		server_authoritative_position = Vector3(data.x, data.y, data.z)
+		if character_class == "Blood Mage":
+			server_authoritative_position = Vector3(data.x, data.y, data.z)
+		else:
+			server_authoritative_position = Vector3(data.x, data.y + 1.2, data.z)
 	else:
-		network_position = Vector3(data.x, data.y, data.z)
+		if character_class == "Blood Mage":
+			server_authoritative_position = Vector3(data.x, 0, data.z)
+			network_position = Vector3(data.x, data.y, data.z)
+		else:
+			server_authoritative_position = Vector3(data.x, data.y + 1.5, data.z)
+			network_position = Vector3(data.x, data.y + 1.2, data.z)
 		network_direction = Vector3(-data.dirX, 0, -data.dirZ)
 	update_player_health(data)
 	update_player_mana(data)
@@ -411,16 +454,17 @@ func on_network_data_received(data):
 					anim.loop_mode = Animation.LOOP_LINEAR
 				anim_player.play(data.animation)
 			if is_local and data.animation.contains("Cast") and "castTime" in data and data.isAttacking == true:
-				cast_bar.player = self
-				cast_bar.room = room
-				cast_bar.visible = true
-				if action_slot:
-					cast_bar.action_slot = action_slot
-				cast_bar.cast_position = global_position
-				cast_bar.cast_skill(data.skillId, data.castTime)
-				var anim = anim_player.get_animation(data.animation)
-				var calculated_speed = (anim.length / data.castTime) - 0.6
-				anim_player.play(data.animation, -1.0, calculated_speed)
+				if not cast_bar.is_casting:
+					cast_bar.player = self
+					cast_bar.room = room
+					cast_bar.visible = true
+					if action_slot:
+						cast_bar.action_slot = action_slot
+					cast_bar.cast_position = global_position
+					cast_bar.cast_skill(data.skillId, data.castTime)
+					var anim = anim_player.get_animation(data.animation)
+					var calculated_speed = (anim.length / data.castTime) - 0.6
+					anim_player.play(data.animation, -1.0, calculated_speed)
 	if data.isDead and not dead:
 		die()
 	elif not data.isDead and dead:

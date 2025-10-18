@@ -94,13 +94,11 @@ func _on_players_add(target, value, key):
 	ch.attack = value.attack
 	ch.max_health = value.max_health
 	ch.character_class = value.character_class
-	if value.character_class == "Blood Mage":
-		ch.get_node("CollisionShape3D").shape.radius = 0.05
-	elif value.character_class == "Archer":
-		ch.get_node("CollisionShape3D").shape.radius = 1.6
 	ch.get_node("Target").hide()
 	value.listen(":change").on(Callable(self, "_on_player"))
 	if key == room.session_id:
+		if value.character_class == "Blood Mage":
+			ch.get_node("CollisionShape3D").shape.radius = 0.05
 		room.on_message("set_skills").on(Callable(ch, "_on_set_skills"))
 		room.on_message("looted_item").on(Callable(ch, "_on_looted_item"))
 		room.on_message("skillFail").on(Callable(ch, "_on_skill_fail"))
@@ -122,7 +120,7 @@ func _on_players_add(target, value, key):
 		CharacterHelper.prepare_mana_bar(ch, value.mana, value.max_mana)
 		CharacterHelper.prepare_experience_bar(ch, value.experience, value.level, value.max_exp)
 		ch.is_local = true
-		ch.get_node("Camera3D").current = true
+		ch.get_node("SpringArm3D/Camera3D").current = true
 		var spellbook = ch.get_node("SpellBook")
 		var action_bar = ch.get_node("ActionBar")
 		var inventory = ch.get_node("Inventory")
@@ -135,7 +133,6 @@ func _on_players_add(target, value, key):
 		ch.get_node("CastBar").visible = false
 	else:
 		CharacterHelper.setup_remote_player(ch)
-	
 func _on_player(target):
 	var ch = target.node
 	ch.on_network_data_received(target) 

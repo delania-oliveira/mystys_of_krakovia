@@ -89,6 +89,9 @@ export class Krakovia extends Room<KrakoviaState> {
     this.onMessage("movePlayer", (client, data) => {
       const player = this.state.players.get(client.sessionId);
       if (player) {
+        if (player.isDead){
+          player.isDead = false;
+        }
         player.inputX = data.x;
         player.inputZ = data.z;
         const isMoving = Math.abs(data.x) >= 0.1 || Math.abs(data.z) >= 0.1;
@@ -112,7 +115,7 @@ export class Krakovia extends Room<KrakoviaState> {
         invitingPlayerClient.send("inviteFail", {"text": "Você não é o líder do grupo!"})
         return
       }
-
+      
       invitedPlayerClient.send("partyInvite", {"invitingPlayerName": invitingPlayer.name, "invitingPlayerId": invitingPlayer.id})
     })
 
@@ -179,7 +182,11 @@ export class Krakovia extends Room<KrakoviaState> {
         const target = this.state.players.get(data.targetId)
         if (target) {
           const skill = skills.get(data.skillId)
-          target.health = Math.min(target.health + skill.healing + player.attack, target.max_health);
+          const maxHeal = skill.healing + player.attack;
+          const minHeal = maxHeal * 0.75;
+          const healAmount = Math.floor(Math.random() * (maxHeal - minHeal) + minHeal);
+
+          target.health = Math.min(target.health + healAmount, target.max_health);
           this.broadcast("playerTargetHealthUpdate", {
             id: client.sessionId,
             targetId: target.id,
@@ -262,7 +269,7 @@ export class Krakovia extends Room<KrakoviaState> {
         }
         if (skill.needTarget) {
           let target
-          if (data.heal){
+          if (data.heal && skill.healing){
             target = this.state.players.get(data.targetId)
           } else {
             target = this.state.monsters.get(data.targetId)
@@ -357,16 +364,15 @@ export class Krakovia extends Room<KrakoviaState> {
         }
         
         const finalDamage = calculatePlayerDamage(player, target, skill)
-        player.animation = "Idle"
         if (!this.damagedTargets.includes(target)){
           if (player.character_class == "Warrior"){
-            target._threatTable[player.id] = (target._threatTable[player.id] || 0) + finalDamage * 1.50;
+            target._threatTable[player.id] = (target._threatTable[player.id] || 0) + finalDamage * 2.5;
           } else {
             target._threatTable[player.id] = (target._threatTable[player.id] || 0) + finalDamage;
           }
           target.health -= finalDamage
           if (skill.id == "drain_life_blood_mage"){
-            player.health = Math.min(player.health + finalDamage, player.max_health);
+            player.health = Math.min(player.health + finalDamage + 5, player.max_health);
           }
         }
         target.isDead = target.health <= 0
@@ -527,9 +533,9 @@ export class Krakovia extends Room<KrakoviaState> {
     this.onMessage("respawnPlayer", (client, data) => {
       const player = this.state.players.get(client.sessionId)
       if (player) {
-        player.x = 0
-        player.y = 1
-        player.z = 0
+        player.x = 94
+        player.y = 5
+        player.z = -89
         player.isDead = false
         player.health = player.max_health
         player.animation = "Idle"
@@ -550,8 +556,8 @@ export class Krakovia extends Room<KrakoviaState> {
       const player = this.state.players.get(client.sessionId)
       if (player) {
         player.x = 0
-        player.y += 10
-        player.vy = 100;
+        player.y += 50
+        player.vy = 10;
         player.z = 0
         player.animation = "Idle"
       }
@@ -618,19 +624,19 @@ export class Krakovia extends Room<KrakoviaState> {
     this.state.players.forEach((player) => {
       this.lifeRegenTimer += dt
       this.manaRegenTimer += dt
-      if (player.health < player.max_health && this.lifeRegenTimer >= 5) {
+      if (player.health < player.max_health && this.lifeRegenTimer >= 10 && !player.isDead) {
         switch (player.character_class) {
           case "Warrior":
-            player.health = Math.min(player.health + 5, player.max_health);
+            player.health = Math.min(player.health + 10, player.max_health);
             break;
           case "Mage":
-            player.health = Math.min(player.health + 2, player.max_health);
+            player.health = Math.min(player.health + 4, player.max_health);
             break;
           case "Archer":
-            player.health = Math.min(player.health + 3, player.max_health);
+            player.health = Math.min(player.health + 6, player.max_health);
             break;
           case "Blood Mage":
-            player.health = Math.min(player.health + 5, player.max_health);
+            player.health = Math.min(player.health + 10, player.max_health);
           default:
             break;
         }
@@ -651,16 +657,16 @@ export class Krakovia extends Room<KrakoviaState> {
         }
         this.lifeRegenTimer = 0
       }
-      if (player.mana < player.max_mana && this.manaRegenTimer >= 5) {
+      if (player.mana < player.max_mana && this.manaRegenTimer >= 10 && !player.isDead) {
         switch (player.character_class) {
           case "Warrior":
-            player.mana = Math.min(player.mana + 3, player.max_mana);
+            player.mana = Math.min(player.mana + 6, player.max_mana);
             break;
           case "Mage":
-            player.mana = Math.min(player.mana + 10, player.max_mana);
+            player.mana = Math.min(player.mana + 20, player.max_mana);
             break;
           case "Archer":
-            player.mana = Math.min(player.mana + 5, player.max_mana);
+            player.mana = Math.min(player.mana + 10, player.max_mana);
             break;
           default:
             break;
@@ -797,6 +803,7 @@ export class Krakovia extends Room<KrakoviaState> {
                     monster.targetId = "";
                     monster.animation = "Running"
                     monster.isTargeting = false;
+                    monster.health = monster.max_health;
                   }
                 }
               });

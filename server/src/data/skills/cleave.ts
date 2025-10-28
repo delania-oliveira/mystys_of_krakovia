@@ -12,6 +12,6 @@ export const CleaveAttackWarrior: Skill = {
   characterClass: "Warrior",
   description: "Executa um ataque em arco que causa dano a todos os inimigos em uma área frontal.",
   needTarget: true,
-  cooldown: 0,
+  cooldown: 3,
   manaCost: 5
 }

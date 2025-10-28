@@ -4,7 +4,7 @@ export const DefaultSkillArcher: Skill = {
   id: "default_skill_archer",
   name: "Flechada",
   level: 1,
-  baseDamage: 2,
+  baseDamage: 6,
   range: 30,
   area: 0,
   animation: "DefaultAttack",
@@ -20,7 +20,7 @@ export const DefaultSkillMage: Skill = {
   id: "default_skill_mage",
   name: "Bola Arcana",
   level: 1,
-  baseDamage: 4,
+  baseDamage: 8,
   range: 25,
   area: 0,
   animation: "DefaultCast",
@@ -37,7 +37,7 @@ export const DefaultSkillWarrior: Skill = {
   id: "default_skill_warrior",
   name: "Ataque Leve",
   level: 1,
-  baseDamage: 2,
+  baseDamage: 4,
   range: 5,
   area: 0,
   animation: "Ataque Leve",
@@ -53,7 +53,7 @@ export const DefaultSkillBloodMage: Skill = {
   id: "default_skill_blood_mage",
   name: "Espinho de Sangue",
   level: 1,
-  baseDamage: 5,
+  baseDamage: 4,
   range: 25,
   area: 0,
   animation: "DefaultCast",
@@ -64,5 +64,5 @@ export const DefaultSkillBloodMage: Skill = {
   cooldown: 0,
   castTime: 1.0,
   manaCost: 5,
-  healing: 10
+  healing: 15
 }

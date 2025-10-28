@@ -1,38 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <monsters>
-    <monster id="mob1" name="Inseto Vampiro" type="beast" health="20" attack="10" defense="10" speed="10" x="-72" y="0" z="63" detection_range="0" difficulty="1" experience="100" respawn="10" attack_range="2"/>
-    <monster id="mob2" name="Galdurg o Obliterador" type="boss" health="500" attack="24" defense="12" speed="7" x="-253" y="2" z="175" detection_range="10" difficulty="10000" experience="25" respawn="3000" attack_range="2"/>
-    <monster id="mob3" name="Goblin" type="humanoid" health="35" attack="8" defense="4" speed="5" x="40" y="0" z="-80" detection_range="10" difficulty="1" experience="200" respawn="30" attack_range="2"/>
-    <monster id="mob4" name="Esqueleto" type="undead" health="45" attack="10" defense="5" speed="5" x="-80" y="0" z="183" detection_range="10" difficulty="3" experience="250" respawn="30" attack_range="2"/>
-    <monster id="mob5" name="Esqueleto Pirata" type="undead" health="75" attack="15" defense="10" speed="7" x="-70" y="0" z="160" detection_range="10" difficulty="3" experience="500" respawn="30" attack_range="2"/>
-    <monster id="mob6" name="Esqueleto Pirata" type="undead" health="75" attack="15" defense="10" speed="7" x="-75" y="0" z="172" detection_range="10" difficulty="3" experience="500" respawn="30" attack_range="2"/>
-    <monster id="mob7" name="Esqueleto" type="undead" health="45" attack="10" defense="5" speed="5" x="-70" y="0" z="172" detection_range="10" difficulty="3" experience="250" respawn="30" attack_range="2"/>
-    <monster id="mob8" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="84" y="0" z="33" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob9" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="85" y="0" z="17" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob10" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="62" y="0" z="17" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob11" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="87" y="0" z="-12" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob12" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="47" y="0" z="-69" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob13" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="47" y="0" z="-86" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob14" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="88" y="0" z="-86" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob15" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="79" y="0" z="30" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob16" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="43" y="0" z="30" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob17" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="43" y="0" z="51" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob18" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="22" y="0" z="11" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob19" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="-6" y="0" z="11" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob20" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="-33" y="0" z="-25" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob21" name="Lobo" type="beast" health="20" attack="3" defense="4" speed="10" x="-11" y="0" z="-51" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob22" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-11" y="0" z="72" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob23" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-29" y="0" z="72" detection_range="10" difficulty="1" experience="25" respawn="30" attack_range="2" />
-    <monster id="mob24" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-9" y="0" z="86" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob25" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-14" y="0" z="99" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob26" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-40" y="0" z="87" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob27" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-27" y="0" z="64" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob28" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-11" y="0" z="-51" detection_range="10" difficulty="1" experience="150" respawn="30" attack_range="2" />
-    <monster id="mob29" name="Aranha Gigante" type="undead" health="105" attack="10" defense="5" speed="10" x="-70" y="0" z="122" detection_range="10" difficulty="3" experience="1500" respawn="30" attack_range="2"/>
-    <monster id="mob30" name="Aranha Gigante" type="undead" health="105" attack="10" defense="5" speed="10" x="103" y="0" z="-24" detection_range="10" difficulty="3" experience="1500" respawn="30" attack_range="2"/>
-    <monster id="mob31" name="Beholder" type="boss" health="250" attack="12" defense="5" speed="6" x="-86" y="0" z="181" detection_range="10" difficulty="4" experience="5000" respawn="30" attack_range="20"/>
-    <monster id="mob32" name="Inseto Vampiro" type="beast" health="20" attack="10" defense="10" speed="10" x="7" y="0" z="22" detection_range="0" difficulty="1" experience="15" respawn="10" attack_range="2"/>
-    <monster id="mob33" name="Inseto Vampiro" type="beast" health="20" attack="10" defense="10" speed="10" x="-48" y="0" z="-53" detection_range="0" difficulty="1" experience="15" respawn="10" attack_range="2"/>
-    <monster id="mob34" name="Inseto Vampiro" type="beast" health="20" attack="10" defense="10" speed="10" x="-78" y="0" z="34" detection_range="0" difficulty="1" experience="15" respawn="10" attack_range="2"/>
-    <monster id="mob35" name="Selvara Nocthyra" type="boss" health="650" attack="20" defense="10" speed="10" x="-278" y="0" z="173" detection_range="0" difficulty="1" experience="20000" respawn="10000" attack_range="2"/>
+    <monster id="mob1" name="Inseto Vampiro" type="beast" health="40" attack="10" defense="10" speed="10" x="-72" y="0" z="63" detection_range="0" difficulty="4" experience="600" respawn="100" attack_range="2"/>
+    <monster id="mob2" name="Galdurg o Obliterador" type="boss" health="850" attack="20" defense="12" speed="7" x="-253" y="2" z="175" detection_range="10" difficulty="14" experience="10000" respawn="3000" attack_range="2"/>
+    <monster id="mob3" name="Goblin" type="humanoid" health="35" attack="8" defense="4" speed="5" x="40" y="0" z="-80" detection_range="10" difficulty="1" experience="350" respawn="60" attack_range="2"/>
+    <monster id="mob4" name="Esqueleto" type="undead" health="45" attack="12" defense="5" speed="5" x="-80" y="0" z="183" detection_range="10" difficulty="3" experience="450" respawn="120" attack_range="2"/>
+    <monster id="mob5" name="Esqueleto Pirata" type="undead" health="75" attack="15" defense="10" speed="7" x="-70" y="0" z="160" detection_range="10" difficulty="3" experience="600" respawn="120" attack_range="2"/>
+    <monster id="mob6" name="Esqueleto Pirata" type="undead" health="75" attack="15" defense="10" speed="7" x="-75" y="0" z="172" detection_range="10" difficulty="3" experience="600" respawn="120" attack_range="2"/>
+    <monster id="mob7" name="Esqueleto" type="undead" health="45" attack="12" defense="5" speed="5" x="-70" y="0" z="172" detection_range="10" difficulty="3" experience="450" respawn="120" attack_range="2"/>
+    <monster id="mob8" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="84" y="0" z="33" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob9" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="85" y="0" z="17" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob10" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="62" y="0" z="17" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob11" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="87" y="0" z="-12" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob12" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="47" y="0" z="-69" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob13" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="47" y="0" z="-86" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob14" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="70" y="0" z="-86" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob15" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="79" y="0" z="30" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob16" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="43" y="0" z="30" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob17" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="43" y="0" z="51" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob18" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="22" y="0" z="11" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob19" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="-6" y="0" z="11" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob20" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="-33" y="0" z="-25" detection_range="10" difficulty="1" experience="350" respawn="60" attack_range="2" />
+    <monster id="mob21" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="-11" y="0" z="-51" detection_range="10" difficulty="1" experience="350" respawn="60" attack_range="2" />
+    <monster id="mob22" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-11" y="0" z="72" detection_range="10" difficulty="3" experience="350" respawn="60" attack_range="2" />
+    <monster id="mob23" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-29" y="0" z="72" detection_range="10" difficulty="3" experience="350" respawn="60" attack_range="2" />
+    <monster id="mob24" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-9" y="0" z="86" detection_range="10" difficulty="3" experience="350" respawn="60" attack_range="2" />
+    <monster id="mob25" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-14" y="0" z="99" detection_range="10" difficulty="3" experience="350" respawn="60" attack_range="2" />
+    <monster id="mob26" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-40" y="0" z="87" detection_range="10" difficulty="3" experience="350" respawn="60" attack_range="2" />
+    <monster id="mob27" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-27" y="0" z="64" detection_range="10" difficulty="3" experience="350" respawn="60" attack_range="2" />
+    <monster id="mob28" name="Goblin" type="beast" health="35" attack="7" defense="4" speed="5" x="-11" y="0" z="-51" detection_range="10" difficulty="3" experience="350" respawn="60" attack_range="2" />
+    <monster id="mob29" name="Aranha Gigante" type="undead" health="105" attack="15" defense="8" speed="10" x="-70" y="0" z="122" detection_range="10" difficulty="5" experience="2500" respawn="30" attack_range="2"/>
+    <monster id="mob30" name="Aranha Gigante" type="undead" health="105" attack="15" defense="8" speed="10" x="103" y="0" z="-24" detection_range="10" difficulty="5" experience="2500" respawn="30" attack_range="2"/>
+    <monster id="mob31" name="Beholder" type="boss" health="350" attack="15" defense="12" speed="6" x="-86" y="0" z="181" detection_range="10" difficulty="10" experience="7000" respawn="600" attack_range="20"/>
+    <monster id="mob32" name="Inseto Vampiro" type="beast" health="40" attack="10" defense="10" speed="10" x="7" y="0" z="22" detection_range="0" difficulty="4" experience="600" respawn="10000" attack_range="2"/>
+    <monster id="mob33" name="Inseto Vampiro" type="beast" health="40" attack="10" defense="10" speed="10" x="-48" y="0" z="-53" detection_range="0" difficulty="4" experience="600" respawn="30" attack_range="2"/>
+    <monster id="mob34" name="Inseto Vampiro" type="beast" health="40" attack="10" defense="10" speed="10" x="-78" y="0" z="34" detection_range="0" difficulty="4" experience="600" respawn="30" attack_range="2"/>
+    <monster id="mob35" name="Selvara Nocthyra" type="boss" health="1650" attack="25" defense="15" speed="10" x="-278" y="0" z="173" detection_range="10" difficulty="20" experience="20000" respawn="10000" attack_range="2"/>
+    <monster id="mob36" name="Aranha Gigante" type="undead" health="105" attack="15" defense="8" speed="10" x="-40" y="0" z="152" detection_range="10" difficulty="5" experience="2500" respawn="60" attack_range="2"/>
+    <monster id="mob37" name="Aranha Gigante" type="undead" health="105" attack="15" defense="8" speed="10" x="-138" y="0" z="132" detection_range="10" difficulty="5" experience="2500" respawn="60" attack_range="2"/>
+    <monster id="mob38" name="Aranha Gigante" type="undead" health="105" attack="15" defense="8" speed="10" x="-187" y="0" z="199" detection_range="10" difficulty="5" experience="2500" respawn="60" attack_range="2"/>
+    <monster id="mob39" name="Aranha Gigante" type="undead" health="105" attack="15" defense="8" speed="10" x="-56" y="0" z="153" detection_range="10" difficulty="5" experience="2500" respawn="60" attack_range="2"/>
+    <monster id="mob40" name="Inseto Vampiro" type="beast" health="40" attack="10" defense="10" speed="10" x="15" y="0" z="-37" detection_range="0" difficulty="4" experience="600" respawn="100" attack_range="2"/>
+    <monster id="mob41" name="Inseto Vampiro" type="beast" health="40" attack="10" defense="10" speed="10" x="-3" y="0" z="-6" detection_range="0" difficulty="4" experience="600" respawn="100" attack_range="2"/>
+    <monster id="mob42" name="Inseto Vampiro" type="beast" health="40" attack="10" defense="10" speed="10" x="-40" y="0" z="31" detection_range="0" difficulty="4" experience="600" respawn="100" attack_range="2"/>
+    <monster id="mob43" name="Inseto Vampiro" type="beast" health="40" attack="10" defense="10" speed="10" x="99" y="0" z="57" detection_range="0" difficulty="4" experience="600" respawn="100" attack_range="2"/>
+    <monster id="mob44" name="Inseto Vampiro" type="beast" health="40" attack="10" defense="10" speed="10" x="34" y="0" z="-33" detection_range="0" difficulty="4" experience="600" respawn="100" attack_range="2"/>
+    <monster id="mob45" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="43" y="0" z="8" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob46" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="43" y="0" z="21" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob47" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="50" y="0" z="17" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob48" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="78" y="0" z="-22" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
+    <monster id="mob49" name="Lobo" type="beast" health="20" attack="5" defense="4" speed="8" x="83" y="0" z="-10" detection_range="10" difficulty="1" experience="250" respawn="30" attack_range="2" />
 </monsters>

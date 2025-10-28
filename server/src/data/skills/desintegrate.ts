@@ -4,7 +4,7 @@ export const DesintegrateMage: Skill = {
   id: "desintegrate_mage",
   name: "Desintegrar",
   level: 10,
-  baseDamage: 30,
+  baseDamage: 40,
   range: 30,
   area: 0,
   animation: "DesintegrateCast",

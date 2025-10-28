@@ -155,13 +155,7 @@ func _physics_process(delta):
 			global_position = global_position.lerp(server_authoritative_position, LERP_SPEED * delta)
 			
 		is_standing = velocity.length() < 0.1
-		var is_colliding_with_wall = false
-		for i in range(get_slide_collision_count()):
-			var collision = get_slide_collision(i)
-			if collision.get_normal().y < 0.5:
-				is_colliding_with_wall = true
-				break
-		if velocity.length() < 0.1 or is_colliding_with_wall:
+		if velocity.length() < 0.1:
 			if is_standing:
 				if not was_idle:
 					room.send("movePlayer", { "x": 0, "y": 0, "z": 0 })
@@ -706,7 +700,7 @@ func set_target(new_target: Node3D):
 		target_health_bar.max_value = new_target.max_health
 		target_health_bar.value = new_target.current_health
 		target_health_label.text = str(new_target.current_health) + " / " + str(new_target.max_health)
-		target_picture.texture = load("res://icon.svg") as Texture2D
+		target_picture.texture = load("res://target.png") as Texture2D
 		current_target_name = new_target.character_name
 		target_frame.show()
 		room.send("setTarget", {"targetName": new_target.character_name, "targetId": new_target.id})
@@ -724,7 +718,6 @@ func _on_set_party_target(data):
 	
 	
 func get_node_at_position(position: Vector3) -> Node3D:
-	# Iterate all nodes in the scene (or a specific group)
 	for node in get_tree().get_nodes_in_group("players"): 
 		if node.global_transform.origin.distance_to(position) < 0.1: # small threshold
 			return node
@@ -736,3 +729,11 @@ func _on_invite_to_party_button_down() -> void:
 
 func _on_cancel_button_down() -> void:
 	player_menu.hide()
+
+
+func _on_spellbook_button_down() -> void:
+	spellbook.visible = not spellbook.visible
+
+
+func _on_inventory_button_down() -> void:
+	inventory.visible = not inventory.visible

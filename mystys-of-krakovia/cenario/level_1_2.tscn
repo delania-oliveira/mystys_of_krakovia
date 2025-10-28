@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://ba4ukihssxqv3"]
+[gd_scene load_steps=29 format=3 uid="uid://ba4ukihssxqv3"]
 
 [ext_resource type="Script" uid="uid://usyd614rjvyp" path="res://cenario/level_1_2.gd" id="1_dxskw"]
 [ext_resource type="Terrain3DMaterial" uid="uid://oblulx2secpt" path="res://cenario/Level_1_data/Material_level_1_2.tres" id="1_pf2pk"]
@@ -6,12 +6,13 @@
 [ext_resource type="PackedScene" uid="uid://duvo8wpeuakiv" path="res://assets/construcoes/altar_ruins.glb" id="21_dxskw"]
 [ext_resource type="PackedScene" uid="uid://cbde01wgrrm5w" path="res://assets/construcoes/FOREST2.glb" id="21_haewj"]
 [ext_resource type="PackedScene" uid="uid://ccx042vv7sflh" path="res://assets/construcoes/ancient_tree.glb" id="22_68r6y"]
-[ext_resource type="PackedScene" uid="uid://bh7fk4xfsjok" path="res://assets/construcoes/medieval_market_tent_prop_02.glb" id="22_ph68w"]
 [ext_resource type="PackedScene" uid="uid://bddxlrnl33n04" path="res://assets/construcoes/pine_forest_high-poly_tree_pack.glb" id="23_4psog"]
-[ext_resource type="PackedScene" uid="uid://b2ukj253qhlab" path="res://assets/construcoes/war_damaged__church.glb" id="24_h2jal"]
 [ext_resource type="PackedScene" uid="uid://dr4cq07whklka" path="res://assets/construcoes/medieval_fountain_empty_free.glb" id="24_i1b66"]
 [ext_resource type="PackedScene" uid="uid://cicj4noaux11i" path="res://assets/construcoes/cave.glb" id="25_cjiqo"]
-[ext_resource type="PackedScene" uid="uid://lam83dulsy53" path="res://assets/character/Mage.glb" id="25_h1eqi"]
+[ext_resource type="PackedScene" path="res://cenario/cemiterio.tscn" id="25_rhoeb"]
+[ext_resource type="PackedScene" path="res://cenario/tent.tscn" id="26_ceve2"]
+[ext_resource type="PackedScene" path="res://cenario/church.tscn" id="26_ewp82"]
+[ext_resource type="PackedScene" path="res://cenario/medieval_sceneray_2.tscn" id="26_mbidw"]
 [ext_resource type="PackedScene" uid="uid://b45yqipymhixv" path="res://assets/construcoes/altar.glb" id="26_rhoeb"]
 [ext_resource type="PackedScene" uid="uid://byjok0knf6xna" path="res://assets/construcoes/free_cliff_rock.glb" id="26_uwuuc"]
 [ext_resource type="PackedScene" uid="uid://bfo72lf72p8g2" path="res://assets/construcoes/old_church_ruins.glb" id="27_ceve2"]
@@ -20,11 +21,8 @@
 [ext_resource type="PackedScene" uid="uid://xsmdritff3kt" path="res://assets/construcoes/trees.glb" id="29_jfljn"]
 [ext_resource type="PackedScene" uid="uid://bv0p8ajk0578s" path="res://assets/construcoes/oak_trees.glb" id="30_amo0m"]
 [ext_resource type="PackedScene" uid="uid://cja5fustooojy" path="res://assets/construcoes/stair_stone.glb" id="31_wnusa"]
-[ext_resource type="PackedScene" uid="uid://bxvieemivrmua" path="res://assets/construcoes/medieval_sceneray2.glb" id="32_dernl"]
 [ext_resource type="PackedScene" uid="uid://c1308m48fmkvc" path="res://assets/construcoes/Cerca.glb" id="33_26hcv"]
-[ext_resource type="PackedScene" uid="uid://s1m65050o1nw" path="res://assets/construcoes/medieval_market_tent_prop_01.glb" id="34_yx0wb"]
 [ext_resource type="PackedScene" uid="uid://2cadx22rxw2t" path="res://assets/construcoes/medieval_crane.glb" id="35_ewhaw"]
-[ext_resource type="PackedScene" uid="uid://ciw0etqyiech8" path="res://assets/construcoes/CEMITERIO.glb" id="36_jjc53"]
 [ext_resource type="PackedScene" uid="uid://crgbu1ptiynh3" path="res://assets/construcoes/simple_tombs.glb" id="37_vsakr"]
 [ext_resource type="PackedScene" uid="uid://d3b2gcysp7h5s" path="res://assets/construcoes/medieval_house.glb" id="38_3rtbf"]
 
@@ -86,6 +84,7 @@ collision_mode = 4
 collision_layer = 4
 collision_mask = 0
 top_level = true
+metadata/_edit_lock_ = true
 
 [node name="FOREST2" parent="." instance=ExtResource("21_haewj")]
 transform = Transform3D(-0.61715233, 0, -8.978816, 0, 10, 0, 8.978816, 0, -0.61715233, 108.22236, -0.032242775, -131.79208)
@@ -122,12 +121,6 @@ transform = Transform3D(-0.17622438, 0, -0.09457786, 0, 0.2, 0, 0.09457786, 0, -
 
 [node name="Sketchfab_Scene2" parent="." instance=ExtResource("23_4psog")]
 transform = Transform3D(0.70103616, 0, -1.8731122, 0, 2, 0, 1.8731122, 0, 0.70103616, 180.517, -0.805233, -126.7331)
-
-[node name="Sketchfab_Scene3" parent="." instance=ExtResource("24_h2jal")]
-transform = Transform3D(-2.5197124, 0, -1.6282046, 0, 3, 0, 1.6282046, 0, -2.5197124, 103.815216, -0.92520905, -27.872776)
-
-[node name="AuxScene" parent="." instance=ExtResource("25_h1eqi")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -78.22424, 1.530901, 127.28778)
 
 [node name="Sketchfab_Scene4" parent="." instance=ExtResource("26_uwuuc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 179.55934, -1.6875362, -13.405497)
@@ -416,9 +409,6 @@ transform = Transform3D(0.6470691, 0, 0.76243126, 0, 1, 0, -0.76243126, 0, 0.647
 [node name="Sketchfab_Scene25" parent="." instance=ExtResource("27_jyro8")]
 transform = Transform3D(0.040882725, 0.024479775, 0.015144074, -0.022955453, 0.043597482, -0.008503324, -0.01736806, 0, 0.046886567, -17.195744, 4.6640244, -97.70173)
 
-[node name="medieval_sceneray2" parent="." instance=ExtResource("32_dernl")]
-transform = Transform3D(-0.08763823, 0, 0.04816159, 0, 0.099999994, 0, -0.04816159, 0, -0.08763823, -28.010708, -0.24708354, 89.52793)
-
 [node name="Cerca" parent="." instance=ExtResource("33_26hcv")]
 transform = Transform3D(0.30313513, 0, 0.9529476, 0, 1, 0, -0.9529476, 0, 0.30313513, 1.4460394, 0, 79.1488)
 
@@ -430,9 +420,6 @@ transform = Transform3D(0.30313513, 0, 0.9529476, 0, 1, 0, -0.9529476, 0, 0.3031
 
 [node name="Sketchfab_Scene32" parent="." instance=ExtResource("26_uwuuc")]
 transform = Transform3D(-0.17110357, 0, -0.103554636, 0, 0.19999999, 0, 0.103554636, 0, -0.17110357, 0.04457563, -3.8537014, 86.30991)
-
-[node name="Sketchfab_Scene33" parent="." instance=ExtResource("34_yx0wb")]
-transform = Transform3D(-0.14426987, 0, 0.9895384, 0, 1, 0, -0.9895384, 0, -0.14426987, -38.5901, 0, 72.42069)
 
 [node name="Sketchfab_Scene34" parent="." instance=ExtResource("35_ewhaw")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -35.15852, 0, 58.7053)
@@ -463,9 +450,6 @@ transform = Transform3D(-0.036810532, 0.3738105, -0.13751632, -0.39807457, -0.03
 
 [node name="Sketchfab_Scene37" parent="." instance=ExtResource("22_68r6y")]
 transform = Transform3D(0.008510402, 0, 0.0052510034, 0, 0.01, 0, -0.0052510034, 0, 0.008510402, -49.029125, 0, 90.5032)
-
-[node name="CEMITERIO" parent="." instance=ExtResource("36_jjc53")]
-transform = Transform3D(-1.7640728, 0, 0.9423629, 0, 2, 0, -0.9423629, 0, -1.7640728, -86.06996, -0.7137625, 183.61633)
 
 [node name="Sketchfab_Scene44" parent="." instance=ExtResource("30_amo0m")]
 transform = Transform3D(4.2426405, 0, 4.2426405, 0, 6, 0, -4.2426405, 0, 4.2426405, -92.41765, -1.9073486e-06, 166.77254)
@@ -575,9 +559,6 @@ transform = Transform3D(-0.40207374, 0, 0.29721493, 0, 0.5, 0, -0.29721493, 0, -
 [node name="altar_ruins" parent="." instance=ExtResource("21_dxskw")]
 transform = Transform3D(-0.24156627, 0, 0.9703843, 0, 1, 0, -0.9703843, 0, -0.24156627, -260.16904, -2.60608, 181.17723)
 
-[node name="Sketchfab_Scene87" parent="." instance=ExtResource("22_ph68w")]
-transform = Transform3D(-1.9074023, 0, -0.6015115, 0, 2, 0, 0.6015115, 0, -1.9074023, -22.723507, -1.4305115e-06, 38.63781)
-
 [node name="Sketchfab_Scene88" parent="." instance=ExtResource("26_uwuuc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -215.76518, -0.6023941, 119.35113)
 
@@ -652,3 +633,18 @@ transform = Transform3D(0.548892, 0, -1.923205, 0, 2, 0, 1.923205, 0, 0.548892, 
 
 [node name="Sketchfab_Scene123" parent="." instance=ExtResource("23_4psog")]
 transform = Transform3D(1.2133368, 0, 1.5899098, 0, 2, 0, -1.5899098, 0, 1.2133368, -675.7387, 0.091, 271.3193)
+
+[node name="Sketchfab_Scene33" parent="." instance=ExtResource("26_ceve2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 0, 59)
+
+[node name="Sketchfab_Scene87" parent="." instance=ExtResource("26_ceve2")]
+transform = Transform3D(-0.50000006, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.50000006, -19.479649, 0, 40.794224)
+
+[node name="medieval_sceneray2" parent="." instance=ExtResource("26_mbidw")]
+transform = Transform3D(-0.09063078, 0, 0.042261835, 0, 0.1, 0, -0.042261835, 0, -0.09063078, -24.128033, 0, 81.75449)
+
+[node name="Sketchfab_Scene124" parent="." instance=ExtResource("26_ewp82")]
+transform = Transform3D(-2.5160117, 0, -1.6339171, 0, 3, 0, 1.6339171, 0, -2.5160117, 104, -0.925, -28)
+
+[node name="CEMITERIO2" parent="." instance=ExtResource("25_rhoeb")]
+transform = Transform3D(-1.7658951, 0, 0.93894315, 0, 2, 0, -0.93894315, 0, -1.7658951, -86, -0.7, 184)

@@ -44,7 +44,7 @@ func _spawn_monster(value, key):
 		monster.position = Vector3(value.x, 1, value.z)
 		monster.spawn_position = Vector3(value.x, 1, value.z)
 		monster.network_position = Vector3(value.x, 1, value.z)
-	elif value.name == "Esqueleto Pirata":
+	elif value.name == "Esqueleto Pirata" or value.name == "Selvara Nocthyra":
 		monster.position = Vector3(value.x, 1.6, value.z)
 		monster.spawn_position = Vector3(value.x, 1.6, value.z)
 		monster.network_position = Vector3(value.x, 1.6, value.z)
@@ -65,7 +65,7 @@ func _on_monster(changes, monster_instance):
 		return
 	if changes.name == "Lobo":
 		monster_instance.network_position = Vector3(changes.x, 1, changes.z)
-	elif changes.name == "Esqueleto Pirata":
+	elif changes.name == "Esqueleto Pirata" or changes.name == "Selvara Nocthyra":
 		monster_instance.network_position = Vector3(changes.x, 1.6, changes.z)
 	else:
 		monster_instance.network_position = Vector3(changes.x, 0, changes.z)
@@ -111,8 +111,6 @@ func _on_players_add(target, value, key):
 	ch.get_node("Target").hide()
 	value.listen(":change").on(Callable(self, "_on_player"))
 	if key == room.session_id:
-		if value.character_class == "Blood Mage":
-			ch.get_node("CollisionShape3D").shape.radius = 0.05
 		room.on_message("set_skills").on(Callable(ch, "_on_set_skills"))
 		room.on_message("looted_item").on(Callable(ch, "_on_looted_item"))
 		room.on_message("skillFail").on(Callable(ch, "_on_skill_fail"))
@@ -146,6 +144,7 @@ func _on_players_add(target, value, key):
 		ch.get_node("PlayerMenu").hide()
 		ch.get_node("CastBar").visible = false
 	else:
+		ch.get_node("UiIcons").hide()
 		CharacterHelper.setup_remote_player(ch)
 func _on_player(target):
 	var ch = target.node

@@ -39,7 +39,6 @@ enabled=PackedStringArray("res://addons/GPUTrail/plugin.cfg", "res://addons/godo
 
 folder_colors={
 "res://assets/": "yellow",
-"res://cenario/": "green",
 "res://shaders/": "purple"
 }
 

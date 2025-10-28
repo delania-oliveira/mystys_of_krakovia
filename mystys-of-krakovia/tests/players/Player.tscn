@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://drsrs7v3ykkwq"]
+[gd_scene load_steps=25 format=3 uid="uid://drsrs7v3ykkwq"]
 
 [ext_resource type="Script" uid="uid://cq0rk5lox1lkw" path="res://tests/players/player.gd" id="1_g5nvm"]
 [ext_resource type="Script" uid="uid://c1dpwny38d0m0" path="res://tests/players/progress_mana_bar.gd" id="2_rel3d"]
@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://bpq703i1bdgbw" path="res://tests/players/target.gd" id="3_ybssk"]
 [ext_resource type="Script" uid="uid://bfkbeaukejw0" path="res://tests/players/progress_health_bar.gd" id="3_ycfmw"]
 [ext_resource type="PackedScene" uid="uid://c01o1kr5nssku" path="res://tests/players/skills/ActionBarSlot.tscn" id="4_qg6v4"]
-[ext_resource type="Script" uid="uid://nbcbqlfilm3u" path="res://tests/players/ui/spell_book.gd" id="5_qg6v4"]
 [ext_resource type="Texture2D" uid="uid://c0l6npoqek6ph" path="res://assets/ui_textures/spellbook.png" id="6_r5luj"]
 [ext_resource type="Script" uid="uid://b55hhr0lbrbw5" path="res://tests/players/ui/cast_bar.gd" id="7_hdun8"]
 [ext_resource type="Script" uid="uid://cpp43ln1c65t2" path="res://tests/players/ui/inventory.gd" id="8_4o6cj"]
@@ -16,6 +15,9 @@
 [ext_resource type="Texture2D" uid="uid://bcjmaebl82lwr" path="res://assets/icons/items/equipment/helmet_empty.png" id="10_r5luj"]
 [ext_resource type="Texture2D" uid="uid://d1xhfiejyqcxp" path="res://assets/icons/items/equipment/body_empty.png" id="11_ybssk"]
 [ext_resource type="Texture2D" uid="uid://d4k2f13e34e6o" path="res://assets/icons/items/equipment/weapon_empty.png" id="12_r5luj"]
+[ext_resource type="Texture2D" uid="uid://niffogppqpaa" path="res://assets/spellbook.png" id="17_8qukd"]
+[ext_resource type="Script" uid="uid://nbcbqlfilm3u" path="res://tests/players/ui/spell_book.gd" id="17_jv8ro"]
+[ext_resource type="Texture2D" uid="uid://bwyg28srvd2rf" path="res://assets/inventory.png" id="19_dlxyg"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_ibhvg"]
 radius = 1.5
@@ -288,7 +290,7 @@ offset_right = 1614.0
 offset_bottom = 608.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
-script = ExtResource("5_qg6v4")
+script = ExtResource("17_jv8ro")
 
 [node name="SkillsGridContainer" type="GridContainer" parent="SpellBook"]
 layout_mode = 1
@@ -549,16 +551,72 @@ size_flags_vertical = 4
 theme_override_font_sizes/font_size = 12
 text = "Convidar para grupo"
 
-[node name="Inspect" type="Button" parent="PlayerMenu/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_font_sizes/font_size = 12
-text = "Inspecionar"
-
 [node name="Cancel" type="Button" parent="PlayerMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Cancelar"
 
+[node name="UiIcons" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -317.0
+offset_top = -102.0
+offset_right = -277.0
+offset_bottom = -59.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UiIcons"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/separation = 64
+
+[node name="Spellbook" type="Button" parent="UiIcons/HBoxContainer"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+script = ExtResource("17_jv8ro")
+
+[node name="TextureRect" type="TextureRect" parent="UiIcons/HBoxContainer/Spellbook"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 22.0
+grow_horizontal = 2
+grow_vertical = 2
+tooltip_text = "Livro de Magias [P]"
+texture = ExtResource("17_8qukd")
+expand_mode = 2
+
+[node name="Inventory" type="Button" parent="UiIcons/HBoxContainer"]
+custom_minimum_size = Vector2(2, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TextureRect" type="TextureRect" parent="UiIcons/HBoxContainer/Inventory"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+tooltip_text = "Inventário [I]"
+texture = ExtResource("19_dlxyg")
+expand_mode = 2
+
 [connection signal="button_down" from="PlayerMenu/VBoxContainer/InviteToParty" to="." method="_on_invite_to_party_button_down"]
 [connection signal="button_down" from="PlayerMenu/VBoxContainer/Cancel" to="." method="_on_cancel_button_down"]
+[connection signal="button_down" from="UiIcons/HBoxContainer/Spellbook" to="." method="_on_spellbook_button_down"]
+[connection signal="button_down" from="UiIcons/HBoxContainer/Inventory" to="." method="_on_inventory_button_down"]
